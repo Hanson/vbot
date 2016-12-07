@@ -9,4 +9,5 @@
 require_once __DIR__ . './../vendor/autoload.php';
 
 $robot = new \Hanson\Robot\Robot();
-print_r($robot->getUuid());
+$robot->getUuid();
+echo $robot->uuid;

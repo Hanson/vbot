@@ -29,22 +29,33 @@ class Robot
         $this->client = new Client();
     }
 
+    /**
+     * 获取UUID
+     * @throws \Exception
+     */
     public function getUuid()
     {
-        $response = $this->client->get('https://login.weixin.qq.com/jslogin', [
+        $content = $this->client->get('https://login.weixin.qq.com/jslogin', [
             'query' => [
                 'appid' => 'wx782c26e4c19acffb',
                 'fun' => 'new',
                 'lang' => 'zh_CN',
                 '_' => time() * 1000 . random_int(1, 999)
             ]
-        ]);
-
-        $content = $response->getBody()->getContents();
+        ])->getBody()->getContents();
 
         preg_match('/window.QRLogin.code = (\d+); window.QRLogin.uuid = \"(\S+?)\"/', $content, $matches);
 
-        return $matches;
+        if(!$matches){
+            throw new \Exception('获取UUID失败');
+        }
+
+        $this->uuid = $matches[2];
+    }
+
+    public function __get($value)
+    {
+        return $this->$value;
     }
 
 }
