@@ -8,6 +8,7 @@
 
 require_once __DIR__ . './../vendor/autoload.php';
 
-$robot = new \Hanson\Robot\Robot();
-$robot->getUuid();
-echo $robot->uuid;
+$robot = new \Hanson\Robot\Robot(['tmp' => realpath('./tmp') . '/']);
+echo $robot->run();
+echo 'finish';
+//echo $robot->uuid;

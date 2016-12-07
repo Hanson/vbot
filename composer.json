@@ -9,7 +9,11 @@
         }
     ],
     "require": {
-        "guzzlehttp/guzzle": "^6.2"
+        "guzzlehttp/guzzle": "^6.2",
+        "querypath/QueryPath": "^3.0",
+        "symfony/dom-crawler": "^3.2",
+        "endroid/qrcode": "^1.7",
+        "symfony/css-selector": "^3.2"
     },
     "autoload": {
         "psr-4": {
