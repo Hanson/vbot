@@ -1,0 +1,19 @@
+{
+    "name": "hanson/wx-bot",
+    "type": "library",
+    "license": "mit",
+    "authors": [
+        {
+            "name": "HanSon",
+            "email": "h@hanc.cc"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^6.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Hanson\\Robot\\": "src/"
+        }
+    }
+}
