@@ -11,6 +11,7 @@ namespace Hanson\Robot;
 
 use Endroid\QrCode\QrCode;
 use GuzzleHttp\Client;
+use Masterminds\HTML5\Exception;
 use Symfony\Component\DomCrawler\Crawler;
 
 class Robot
@@ -19,6 +20,8 @@ class Robot
     private $client;
 
     public $tmpPath;
+
+    public $debug;
 
     private $uuid;
 
@@ -40,9 +43,38 @@ class Robot
 
     private $baseRequest;
 
+    private $syncKey;
+
+    private $myAccount;
+
+    private $syncKeyStr;
+
+    private $memberList;
+
+    private $contactList;
+
+    private $publicList;
+
+    private $specialList;
+
+    private $groupList;
+
+    private $accountInfo = [
+        'groupMember' => [],
+        'normalMember' => []
+    ];
+
+    private $groupMembers;
+
+    private $encryChatRoomId;
+
+    private $syncHost;
+
     public function __construct(Array $option = [])
     {
-        $this->client = new Client();
+        $this->client = new Client([
+            'cookies' => true
+        ]);
 
         $this->handleOption($option);
     }
@@ -55,6 +87,7 @@ class Robot
     private function handleOption($option)
     {
         $this->tmpPath = $option['tmp'] ?? sys_get_temp_dir();
+        $this->debug = $option['debug'] ?? true;
     }
 
     public function run()
@@ -75,7 +108,17 @@ class Robot
 
         $this->log('[INFO] 登录成功');
 
-        $this->init();
+        if(!$this->init()){
+            die('[INFO] 微信初始化失败');
+        }
+
+        $this->log('[INFO] 微信初始化成功');
+
+        $this->statusNotify();
+        $this->getContact();
+
+        $this->log('[INFO] 获取 ' . count($this->contactList) . ' 个联系人');
+        $this->log('[INFO] 开始获取信息');
     }
 
     /**
@@ -157,7 +200,7 @@ class Robot
                     sleep(1);
                     break;
                 default:
-                    $this->log('[ERROR] 微信登录异常。异常码：%s 。1 秒后重试', $code);
+                    $this->log("[ERROR] 微信登录异常。异常码：$code 。1 秒后重试");
                     $tip = 1;
                     $retryTime -= 1;
                     sleep(1);
@@ -167,6 +210,11 @@ class Robot
         return $code;
     }
 
+    /**
+     * 登录
+     *
+     * @return bool
+     */
     public function login()
     {
         $content = $this->client->get($this->redirectUri)->getBody()->getContents();
@@ -193,22 +241,299 @@ class Robot
         return true;
     }
 
+    /**
+     * 初始化
+     *
+     * @return bool
+     */
     public function init()
     {
         $url = sprintf($this->baseUri . '/webwxinit?r=%i&lang=en_US&pass_ticket=%s', time(), $this->passTicket);
 
         $content = $this->client->post($url, [
-            'query' => [
-                'BaseRequest' => json_encode($this->baseRequest)
+            'json' => [
+                'BaseRequest' => $this->baseRequest
             ]
         ])->getBody()->getContents();
 
-        print_r($content);
+        $result = json_decode($content, true);
+
+        $this->generateSyncKey($result);
+
+        $this->myAccount = $result['User'];
+
+        return $result['BaseResponse']['Ret'] == 0;
     }
 
-    private function log($msg, ...$args)
+    public function generateSyncKey($result)
     {
-        echo sprintf($msg . PHP_EOL, $args);
+        $this->syncKey = $result['SyncKey'];
+
+        $syncKey = [];
+
+        foreach ($this->syncKey['List'] as $item) {
+            $syncKey[] = $item['Key'] . '_' . $item['Val'];
+        }
+
+        $this->syncKeyStr = implode('|', $syncKey);
+    }
+
+    public function statusNotify()
+    {
+        $url = sprintf($this->baseUri . '/webwxstatusnotify?lang=zh_CN&pass_ticket=%s', $this->passTicket);
+
+        $content = $this->client->post($url, [
+            'json' => [
+                'BaseRequest' => $this->baseRequest,
+                'Code' => 3,
+                'FromUserName' => $this->myAccount['UserName'],
+                'ToUserName' => $this->myAccount['UserName'],
+                'ClientMsgId' => time()
+            ]
+        ])->getBody()->getContents();
+
+        $this->debug($content);
+
+        return json_decode($content)->BaseResponse->Ret == 0;
+    }
+
+    public function getContact()
+    {
+        $url = sprintf($this->baseUri . '/webwxgetcontact?pass_ticket=%s&skey=%s&r=%s', $this->passTicket, $this->skey, time());
+
+        $content = $this->client->post($url, ['json' => []])->getBody()->getContents();
+
+        if($this->debug){
+            file_put_contents($this->tmpPath . 'contacts.json', $content);
+        }
+
+        $result = json_decode($content, true);
+
+        $this->memberList = $result['MemberList'];
+
+        $specialUsers = ['newsapp', 'fmessage', 'filehelper', 'weibo', 'qqmail',
+            'fmessage', 'tmessage', 'qmessage', 'qqsync', 'floatbottle',
+            'lbsapp', 'shakeapp', 'medianote', 'qqfriend', 'readerapp',
+            'blogapp', 'facebookapp', 'masssendapp', 'meishiapp',
+            'feedsapp', 'voip', 'blogappweixin', 'weixin', 'brandsessionholder',
+            'weixinreminder', 'wxid_novlwrv3lqwv11', 'gh_22b87fa7cb3c',
+            'officialaccounts', 'notification_messages', 'wxid_novlwrv3lqwv11',
+            'gh_22b87fa7cb3c', 'wxitil', 'userexperience_alarm', 'notification_messages'];
+
+        foreach ($this->memberList as $contact) {
+            if($contact['VerifyFlag'] & 8 != 0){ #公众号
+                $this->publicList[] = $contact;
+                $this->accountInfo['normalMember'][$contact['UserName']] = ['type' => 'public', 'info' => $contact];
+            }elseif (in_array($contact['UserName'], $specialUsers)){ # 特殊账户
+                $this->specialList[] = $contact;
+                $this->accountInfo['normalMember'][$contact['UserName']] = ['type' => 'special', 'info' => $contact];
+            }elseif (strstr($contact['UserName'], '@@') !== false){ # 群聊
+                $this->groupList[] = $contact;
+                $this->accountInfo['normalMember'][$contact['UserName']] = ['type' => 'group', 'info' => $contact];
+            }elseif ($contact['UserName'] === $this->myAccount['UserName']){ # 自己
+                $this->accountInfo['normalMember'][$contact['UserName']] = ['type' => 'self', 'info' => $contact];
+            }else{
+                $this->contactList[] = $contact;
+                $this->accountInfo['normalMember'][$contact['UserName']] = ['type' => 'contact', 'info' => $contact];
+            }
+        }
+
+        $this->getBatchGroupMembers();
+
+        foreach ($this->groupMembers as $key => $group) {
+            foreach ($group as $member) {
+                if(!in_array($member['UserName'], $this->accountInfo)){
+                    $this->accountInfo['groupMember'][$member['UserName']] = ['type' => 'group_member', 'info' => $member, 'group' => $group];
+                }
+            }
+        }
+
+        if($this->debug){
+            file_put_contents($this->tmpPath . 'contact_list.json', json_encode($this->contactList));
+            file_put_contents($this->tmpPath . 'special_list.json', json_encode($this->specialList));
+            file_put_contents($this->tmpPath . 'group_list.json', json_encode($this->groupList));
+            file_put_contents($this->tmpPath . 'public_list.json', json_encode($this->publicList));
+            file_put_contents($this->tmpPath . 'member_list.json', json_encode($this->memberList));
+            file_put_contents($this->tmpPath . 'group_users.json', json_encode($this->groupMembers));
+            file_put_contents($this->tmpPath . 'account_info.json', json_encode($this->accountInfo));
+        }
+
+        return true;
+    }
+
+    public function getBatchGroupMembers()
+    {
+        $url = sprintf($this->baseUri . '/webwxbatchgetcontact?type=ex&r=%s&pass_ticket=%s', time(), $this->passTicket);
+
+        $list = [];
+        foreach ($this->groupList as $group) {
+            $list[] = ['UserName' => $group['UserName'], 'EncryChatRoomId' => ''];
+        }
+
+        $content = $this->client->post($url, [
+            'json' => [
+                'BaseRequest' => $this->baseRequest,
+                'Count' => count($this->groupList),
+                'List' => $list
+            ]
+        ])->getBody()->getContents();
+
+        $result = json_decode($content, true);
+
+        $groupMembers = [];
+        $encry = [];
+        foreach ($result['ContactList'] as $group) {
+            $gid = $group['UserName'];
+            $members = $group['MemberList'];
+            $groupMembers[$gid] = $members;
+            $encry[$gid] = $group['EncryChatRoomId'];
+        }
+        $this->groupMembers = $groupMembers;
+        $this->encryChatRoomId = $encry;
+    }
+
+    # 消息处理（第二期再分开到另一个类）
+
+    public function processMsg()
+    {
+        $this->testSyncCheck();
+        while (true){
+            list($retCode, $selector) = $this->syncCheck();
+
+            if(in_array($retCode, ['1100', '1101'])){ # 微信客户端上登出或者其他设备登录
+                break;
+            }elseif ($retCode == '0'){
+                if($selector == 2){
+                    $msg = $this->sync();
+                    if($msg !== null){
+                        $this->handleMsg($msg);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 测试域名同步
+     *
+     * @return bool
+     */
+    public function testSyncCheck()
+    {
+        foreach (['webpush.', 'webpush2.'] as $host) {
+            $this->syncHost = $host . $this->baseHost;
+            $retCode = $this->syncCheck()[0];
+
+            if($retCode == 0){
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    public function syncCheck()
+    {
+        $url = 'https://' . $this->syncHost . '/cgi-bin/mmwebwx-bin/synccheck?' . http_build_query([
+            'r' => time(),
+            'sid' => $this->sid,
+            'uin' => $this->uin,
+            'skey' => $this->skey,
+            'deviceid' => $this->deviceId,
+            'synckey' => $this->syncKeyStr,
+            '_' => time()
+        ]);
+
+        try{
+            $content = $this->client->get($url, [
+                'connect_timeout' => 60
+            ])->getBody()->getContents();
+
+            preg_match('/window.synccheck=\{retcode:"(\d+)",selector:"(\d+)"\}/', $content, $matches);
+
+            return [$matches[1], $matches[2]];
+        }catch (Exception $e){
+            return [-1, -1];
+        }
+    }
+
+    public function sync()
+    {
+        $url = sprintf($this->baseUri . '/webwxsync?sid=%s&skey=%s&lang=en_US&pass_ticket=%s', $this->sid, $this->skey, $this->passTicket);
+
+        try{
+            $content = $this->client->post($url, [
+                'json' => [
+                    'BaseRequest' => $this->baseRequest,
+                    'SyncKey' => $this->syncKey,
+                    'rr' => ~time()
+                ],
+                'connect_timeout' => 60
+            ])->getBody()->getContents();
+
+            $result = json_decode($content, true);
+
+            if($result['BaseResponse']['Ret'] == 0){
+                $this->generateSyncKey($result);
+            }
+
+            return $result;
+        }catch (\Exception $e){
+            return null;
+        }
+    }
+
+    public function handleMsg($message)
+    {
+        foreach ($message['AddMsgList'] as $msg) {
+            $user = ['id' => $msg['FromUserName'], 'name' => 'unknown'];
+            if($msg['MsgType'] == 51){
+                $msgTypeId = 0;
+                $user['name'] = 'system';
+            }elseif ($msg['MsgType'] == 37){
+                $msgTypeId = 37;
+                continue;
+            }elseif ($msg['FromUserName'] === $this->myAccount['UserName']){
+                $msgTypeId = 1;
+                $user['name'] = 'self';
+            }elseif ($msg['ToUserName'] === 'filehelper'){
+                $msgTypeId = 2;
+                $user['name'] = 'file_helper';
+            }elseif (substr($msg['FromUserName'], 0, 2) === '@@'){
+                $msgTypeId = 3;
+//                $user['name'] =
+            }
+        }
+    }
+
+    public function getContactName($uid)
+    {
+        $info = $this->getContactInfo($uid);
+        if($info === null){
+            return null;
+        }
+
+        $name = [];
+        $info = $info['info'];
+
+        $name['remarkName'] = $info['RemarkName'] ?? null;
+        $name['nickName'] = $info['NickName'] ?? null;
+        $name['displayName'] = $info['DisplayName'] ?? null;
+    }
+
+    public function getContactInfo($uid)
+    {
+        return $this->accountInfo['normalMember'][$uid] ?? null;
+    }
+
+    private function debug($content)
+    {
+        file_put_contents($this->tmpPath . 'debug.json', $content);
+    }
+
+    private function log($msg)
+    {
+        echo $msg . PHP_EOL;
     }
 
     public function __get($value)
