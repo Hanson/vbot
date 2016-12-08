@@ -501,11 +501,34 @@ class Robot
                 $user['name'] = 'file_helper';
             }elseif (substr($msg['FromUserName'], 0, 2) === '@@'){
                 $msgTypeId = 3;
-//                $user['name'] =
+                $user['name'] = $this->getContactPreferName($this->getContactName($user['id']));
+            }elseif ($this->isBelong($msg['FromUserName'], $this->contactList)){
+                $msgTypeId = 4;
+                $user['name'] = $this->getContactPreferName($this->getContactName($user['id']));
+            }elseif($this->isBelong($msg['FromUserName'], $this->publicList)){
+                $msgTypeId = 5;
+                $user['name'] = $this->getContactPreferName($this->getContactName($user['id']));
+            }elseif($this->isBelong($msg['FromUserName'], $this->specialList)){
+                $msgTypeId = 6;
+                $user['name'] = $this->getContactPreferName($this->getContactName($user['id']));
+            }else{
+                $msgTypeId = 99;
+            }
+
+            $user['name'] = html_entity_decode($user['name']);
+
+            if($this->debug && $msgTypeId !== 0){
+                $this->log("[MSG] {$user['name']} :");
             }
         }
     }
 
+    /**
+     * 获取联系人名称数组
+     *
+     * @param $uid
+     * @return array|null
+     */
     public function getContactName($uid)
     {
         $info = $this->getContactInfo($uid);
@@ -516,14 +539,128 @@ class Robot
         $name = [];
         $info = $info['info'];
 
-        $name['remarkName'] = $info['RemarkName'] ?? null;
-        $name['nickName'] = $info['NickName'] ?? null;
-        $name['displayName'] = $info['DisplayName'] ?? null;
+        if($info['RemarkName']){
+            $name['remarkName'] = $info['RemarkName'];
+        }
+        if($info['NickName']){
+            $name['nickname'] = $info['NickName'];
+        }
+        if($info['DisplayName']){
+            $name['displayName'] = $info['DisplayName'];
+        }
+
+        return count($name) === 0 ? null : $name;
     }
 
+    /**
+     * 根据ID获取用户信息
+     *
+     * @param $uid
+     * @return null
+     */
     public function getContactInfo($uid)
     {
         return $this->accountInfo['normalMember'][$uid] ?? null;
+    }
+
+    /**
+     * 根据优先级获取用户名称
+     *
+     * @param $name
+     * @return null
+     */
+    public function getContactPreferName($name)
+    {
+        if(!$name){
+            return null;
+        }
+
+        return $name['remarkName'] ?? $name['nickname'] ?? $name['displayName'] ?? null;
+    }
+
+    /**
+     * 是否联系人
+     *
+     * @param $uid
+     * @param $list
+     * @return bool
+     */
+    public function isBelong($uid, $list)
+    {
+        foreach ($list as $contact) {
+            if($uid === $contact['UserName']){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function extractMsgContent($msgTypeId, $msg)
+    {
+        $content = html_entity_decode($msg['Content']);
+
+        $msgContent = [];
+
+        if($msgTypeId === 0){
+            return ['type' => 11, 'data' => ''];
+        }elseif($msgTypeId === 2){
+            return ['type' => 0, 'data' => str_replace('<br/>', '\n', $content)];
+        }elseif ($msgTypeId === 3){
+            $spilt = explode('<br/>', $content, 2);
+            $uid = substr($spilt[0], 0, -1);
+            $content = str_replace('<br/>', '', $content);
+            $name = $this->getContactPreferName($this->getContactName($uid));
+            $name = $name ?? $this->getGroupMemberPreferName($this->getGroupMemberName($msg['FromUserName'], $uid)) ?? 'unknown';
+
+            $msgContent['user'] = ['id' => $uid, 'name' => $name];
+        }
+
+        $msgPrefix = isset($msgContent['user']) ? $msgContent['user']['name'] . ':' : '';
+
+
+    }
+
+    public function getGroupMemberPreferName($name)
+    {
+        if(!$name){
+            return null;
+        }
+
+        return $name['remarkName'] ?? $name['displayName'] ?? $name['nickname'] ?? null;
+    }
+
+    /**
+     * 获取群聊用户名称
+     *
+     * @param $gid
+     * @param $uid
+     * @return array|null
+     */
+    public function getGroupMemberName($gid, $uid)
+    {
+        if(!isset($this->groupMembers)){
+            return null;
+        }
+
+        $group = $this->groupMembers[$gid];
+        foreach ($group as $member) {
+            if($member['UserName'] === $uid){
+                $name = [];
+                if($member['RemarkName']){
+                    $name['remarkName'] = $member['RemarkName'];
+                }
+                if($member['NickName']){
+                    $name['nickname'] = $member['NickName'];
+                }
+                if($member['DisplayName']){
+                    $name['displayName'] = $member['DisplayName'];
+                }
+                return $name;
+            }
+        }
+
+        return null;
     }
 
     private function debug($content)
