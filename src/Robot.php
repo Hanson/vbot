@@ -119,6 +119,8 @@ class Robot
 
         $this->log('[INFO] 获取 ' . count($this->contactList) . ' 个联系人');
         $this->log('[INFO] 开始获取信息');
+
+        $this->processMsg();
     }
 
     /**
@@ -403,12 +405,14 @@ class Robot
             if(in_array($retCode, ['1100', '1101'])){ # 微信客户端上登出或者其他设备登录
                 break;
             }elseif ($retCode == '0'){
-                if($selector == 2){
-                    $msg = $this->sync();
-                    if($msg !== null){
-                        $this->handleMsg($msg);
-                    }
-                }
+//                if($selector == 2){
+//                    $msg = $this->sync();
+//                    if($msg !== null){
+//                        $this->handleMsg($msg);
+//                    }
+//                }
+                $msg = $this->sync();
+                $this->log('[MSG]' . json_encode($msg));
             }
         }
     }
@@ -618,7 +622,11 @@ class Robot
 
         $msgPrefix = isset($msgContent['user']) ? $msgContent['user']['name'] . ':' : '';
 
+        if($msg['MsgType'] == 1){
+            if(strstr($content, 'http://weixin.qq.com/cgi-bin/redirectforward?args=') !== false){
 
+            }
+        }
     }
 
     public function getGroupMemberPreferName($name)
