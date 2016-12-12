@@ -181,7 +181,7 @@ class Robot
         while($retryTime > 0){
             $url = sprintf($urlTemplate, $tip, $this->uuid, time());
 
-            $content = $this->client->get($url)->getBody()->getContents();
+            $content = $this->client->get($url, ['query' => []])->getBody()->getContents();
 
             preg_match('/window.code=(\d+);/', $content, $matches);
 

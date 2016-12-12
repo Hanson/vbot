@@ -13,7 +13,9 @@
         "querypath/QueryPath": "^3.0",
         "symfony/dom-crawler": "^3.2",
         "endroid/qrcode": "^1.7",
-        "symfony/css-selector": "^3.2"
+        "symfony/css-selector": "^3.2",
+        "pimple/pimple": "^3.0",
+        "illuminate/support": "^5.3"
     },
     "autoload": {
         "psr-4": {
