@@ -37,4 +37,4 @@ $robot = new \Hanson\Robot\Foundation\Robot([
     'tuling_key' => ''
 ]);
 
-//$robot->server->run();
+$robot->server->run();

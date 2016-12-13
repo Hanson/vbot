@@ -12,6 +12,7 @@ namespace Hanson\Robot\Core;
 use Endroid\QrCode\QrCode;
 use GuzzleHttp\Client;
 use Hanson\Robot\Models\ContactFactory;
+use Hanson\Robot\Models\GroupAccount;
 use Hanson\Robot\Support\Log;
 use QueryPath\Exception;
 use Symfony\Component\DomCrawler\Crawler;
@@ -41,7 +42,7 @@ class Server
 
     protected $syncKeyStr;
 
-    protected $http;
+    public $http;
 
     protected $config;
 
@@ -67,6 +68,10 @@ class Server
         Log::echo('[INFO] init success!');
 
         $this->statusNotify();
+        $this->initContact();
+
+        Log::echo('[INFO] init contacts success!');
+        print_r(GroupAccount::getInstance()->first());
     }
 
     public function prepare()
@@ -124,10 +129,9 @@ class Server
     /**
      * waiting user to login
      *
-     * @return int
      * @throws \Exception
      */
-    protected function waitForLogin(): int
+    protected function waitForLogin()
     {
         $retryTime = 10;
         $tip = 1;
@@ -136,6 +140,8 @@ class Server
             $url = sprintf('https://login.weixin.qq.com/cgi-bin/mmwebwx-bin/login?tip=%s&uuid=%s&_=%s', $tip, $this->uuid, time());
 
             $content = $this->http->get($url);
+
+            Log::echo($content);
 
             preg_match('/window.code=(\d+);/', $content, $matches);
 
@@ -206,6 +212,7 @@ class Server
             'BaseRequest' => $this->baseRequest
         ]);
 
+
         $result = json_decode($content, true);
         $this->generateSyncKey($result);
 
@@ -214,8 +221,6 @@ class Server
         if($result['BaseResponse']['Ret'] != 0){
             throw new Exception('[ERROR] init fail!');
         }
-
-        $this->initContact();
     }
 
     protected function initContact()
