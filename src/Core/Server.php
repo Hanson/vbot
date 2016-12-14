@@ -44,7 +44,9 @@ class Server
 
     public $http;
 
-    protected $config;
+    public $config;
+
+    public $messageHandler;
 
     protected $debug = false;
 
@@ -68,10 +70,11 @@ class Server
         Log::echo('[INFO] init success!');
 
         $this->statusNotify();
+        Log::echo('[INFO] begin to init contacts');
         $this->initContact();
-
         Log::echo('[INFO] init contacts success!');
-        print_r(GroupAccount::getInstance()->first());
+
+        MessageHandler::listen();
     }
 
     public function prepare()

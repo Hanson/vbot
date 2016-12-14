@@ -29,9 +29,11 @@ class Http
         return $this->request($url, 'POST', [$key => $options]);
     }
 
-    public function json($url, $options = [])
+    public function json($url, $options = [], $array = false)
     {
-        return $this->request($url, 'POST', ['json' => $options]);
+        $content = $this->request($url, 'POST', ['json' => $options]);
+
+        return $array ? json_decode($content, true) : $content;
     }
 
     public function setClient(HttpClient $client)

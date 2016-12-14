@@ -44,24 +44,73 @@ class ContactFactory
         $this->makeContactList($memberList);
     }
 
+    /**
+     * make instance model
+     *
+     * @param $memberList
+     */
     protected function makeContactList($memberList)
     {
         foreach ($memberList as $contact) {
             if($contact['VerifyFlag'] & 8 != 0){ #公众号
                 $type = 'public';
-                OfficialAccount::getInstance()->push($contact);
+                OfficialAccount::getInstance()->put($contact['UserName'], $contact);
             }elseif (in_array($contact['UserName'], static::SPECIAL_USERS)){ # 特殊账户
                 $type = 'special';
-                SpecialAccount::getInstance()->push($contact);
+                SpecialAccount::getInstance()->put($contact['UserName'], $contact);
             }elseif (strstr($contact['UserName'], '@@') !== false){ # 群聊
                 $type = 'group';
-                GroupAccount::getInstance()->push($contact);
+                GroupAccount::getInstance()->put($contact['UserName'], $contact);
             }else{
                 $type = 'contact';
-                ContactAccount::getInstance()->push($contact);
+                ContactAccount::getInstance()->put($contact['UserName'], $contact);
             }
             Account::getInstance()->put($contact['UserName'], ['type' => $type, 'info' => $contact]);
         }
+        $this->getBatchGroupMembers();
+    }
+
+    /**
+     * get group members by api
+     */
+    public function getBatchGroupMembers()
+    {
+        $url = sprintf(Server::BASE_URI . '/webwxbatchgetcontact?type=ex&r=%s&pass_ticket=%s', time(), $this->server->passTicket);
+
+        $list = [];
+        GroupAccount::getInstance()->each(function($item, $key) use (&$list){
+            $list[] = ['UserName' => $key, 'EncryChatRoomId' => ''];
+        });
+
+        file_put_contents($this->server->config['tmp'] . 'debug.json', json_encode([
+            'BaseRequest' => $this->server->baseRequest,
+            'Count' => GroupAccount::getInstance()->count(),
+            'List' => $list
+        ]));
+
+        $content = $this->server->http->json($url, [
+            'BaseRequest' => $this->server->baseRequest,
+            'Count' => GroupAccount::getInstance()->count(),
+            'List' => $list
+        ], true);
+
+        $this->initGroupMembers($content);
+    }
+
+    /**
+     * init group members and chat room id
+     *
+     * @param $array
+     */
+    private function initGroupMembers($array)
+    {
+        foreach ($array['ContactList'] as $group) {
+            $groupAccount =  GroupAccount::getInstance()->get($group['UserName']);
+            $groupAccount['MemberList'] = $group['MemberList'];
+            $groupAccount['ChatRoomId'] = $group['EncryChatRoomId'];
+            GroupAccount::getInstance()->put($group['UserName'], $groupAccount);
+        }
+
     }
 
 }
