@@ -18,3 +18,8 @@ Robot->special
 Robot->contact
 Robot->group
 
+# what can wx-robot do?
+
+* 转发消息
+* 记录特别消息
+* 特别关注某人

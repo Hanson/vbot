@@ -26,21 +26,21 @@ class Server
 
     public $skey;
 
-    protected $sid;
+    public $sid;
 
-    protected $uin;
+    public $uin;
 
     public $passTicket;
 
-    protected $deviceId;
+    public $deviceId;
 
     public $baseRequest;
 
-    protected $syncKey;
+    public $syncKey;
 
-    protected $myAccount;
+    static $myAccount;
 
-    protected $syncKeyStr;
+    public $syncKeyStr;
 
     public $http;
 
@@ -74,7 +74,7 @@ class Server
         $this->initContact();
         Log::echo('[INFO] init contacts success!');
 
-        MessageHandler::listen();
+        MessageHandler::getInstance()->listen();
     }
 
     public function prepare()
@@ -143,8 +143,6 @@ class Server
             $url = sprintf('https://login.weixin.qq.com/cgi-bin/mmwebwx-bin/login?tip=%s&uuid=%s&_=%s', $tip, $this->uuid, time());
 
             $content = $this->http->get($url);
-
-            Log::echo($content);
 
             preg_match('/window.code=(\d+);/', $content, $matches);
 
@@ -219,7 +217,7 @@ class Server
         $result = json_decode($content, true);
         $this->generateSyncKey($result);
 
-        $this->myAccount = $result['User'];
+        static::$myAccount = $result['User'];
 
         if($result['BaseResponse']['Ret'] != 0){
             throw new Exception('[ERROR] init fail!');
@@ -241,8 +239,8 @@ class Server
         $this->http->json($url, [
             'BaseRequest' => $this->baseRequest,
             'Code' => 3,
-            'FromUserName' => $this->myAccount['UserName'],
-            'ToUserName' => $this->myAccount['UserName'],
+            'FromUserName' => static::$myAccount['UserName'],
+            'ToUserName' => static::$myAccount['UserName'],
             'ClientMsgId' => time()
         ]);
     }
@@ -258,6 +256,20 @@ class Server
         }
 
         $this->syncKeyStr = implode('|', $syncKey);
+    }
+
+    public static function isMyself($fromUserName)
+    {
+        return $fromUserName === static::$myAccount['UserName'];
+    }
+
+    public function setMessageHandler(\Closure $closure)
+    {
+        if(!is_callable($closure)){
+            throw new \Exception('[ERROR] message handler must be a closure!');
+        }
+
+        MessageHandler::getInstance($this)->setMessageHandler($closure);
     }
 
     public function debug($debug = true)

@@ -15,19 +15,6 @@ $robot = new \Hanson\Robot\Robot([
     'tuling_key' => ''
 ]);
 
-//$robot->setMessageHandler(function($message){
-//    if($message->type === 'text'){
-//
-//    }elseif ($message->type === 'location'){
-//        return Message::make();
-//    }
-//
-//    if($message->FromUserName === ''){
-//        # do something;
-//    }
-//
-//});
-
 //$robot->run();
 
 $robot = new \Hanson\Robot\Foundation\Robot([
@@ -37,4 +24,17 @@ $robot = new \Hanson\Robot\Foundation\Robot([
     'tuling_key' => ''
 ]);
 
+
+$robot->server->setMessageHandler(function($message){
+//    if($message->type === 'text'){
+//
+//    }elseif ($message->type === 'location'){
+//        return Message::make();
+//    }
+//
+//    if($message->FromUserName === ''){
+//        # do something;
+//    }
+
+});
 $robot->server->run();
