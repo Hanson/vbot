@@ -91,7 +91,7 @@ class MessageHandler
 
         $message = $this->sync();
 
-        Message::make($selector, $message);
+//        Message::make($selector, $message);
 //        print_r($message);
         Log::echo(json_encode($message));
     }

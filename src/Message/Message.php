@@ -10,6 +10,7 @@ namespace Hanson\Robot\Message;
 
 
 use Hanson\Robot\Core\Server;
+use Hanson\Robot\Models\Account;
 
 class Message
 {
@@ -41,13 +42,20 @@ class Message
     {
         $msg = $message['AddMsgList'][0];
 
-        if($msg['MsgType'] == 51){
+        if ($msg['MsgType'] == 51) {
             $this->sender->name = 'system';
             $this->sender->type = 0;
-        }elseif ($msg['MsgType'] == 37){
+        } elseif ($msg['MsgType'] == 37) {
             $this->sender->type = 37;
-        }elseif (Server::isMyself($msg['FromUserName'])){
-
+        } elseif (Server::isMyself($msg['FromUserName'])) {
+            $this->sender->name = 'self';
+            $this->sender->type = 1;
+        } elseif ($msg['ToUserName'] === 'filehelper') {
+            $this->sender->name = 'file_helper';
+            $this->sender->type = 2;
+        } elseif (substr($msg['FromUserName'], 0, 2) === '@@'){
+            $this->sender->name = Account::getInstance()->getContactName($msg['FromUserName'], Account::GROUP_MEMBER, true);
+            $this->sender->type = 3;
         }
     }
 

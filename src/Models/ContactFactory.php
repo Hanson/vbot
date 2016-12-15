@@ -65,7 +65,7 @@ class ContactFactory
                 $type = 'contact';
                 ContactAccount::getInstance()->put($contact['UserName'], $contact);
             }
-            Account::getInstance()->put($contact['UserName'], ['type' => $type, 'info' => $contact]);
+            Account::getInstance()->addNormalMember([$contact['UserName'] => ['type' => $type, 'info' => $contact]]);
         }
         $this->getBatchGroupMembers();
     }
@@ -109,6 +109,9 @@ class ContactFactory
             $groupAccount['MemberList'] = $group['MemberList'];
             $groupAccount['ChatRoomId'] = $group['EncryChatRoomId'];
             GroupAccount::getInstance()->put($group['UserName'], $groupAccount);
+            foreach ($group['MemberList'] as $member) {
+                Account::getInstance()->addGroupMember([$member['UserName'] => ['type' => 'groupMember', 'info' => $member, 'group' => $group]]);
+            }
         }
 
     }
