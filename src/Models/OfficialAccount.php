@@ -14,6 +14,9 @@ use Illuminate\Support\Collection;
 class OfficialAccount extends Collection
 {
 
+    /**
+     * @var OfficialAccount
+     */
     static $instance = null;
 
     /**
@@ -28,6 +31,11 @@ class OfficialAccount extends Collection
         }
 
         return static::$instance;
+    }
+
+    public function isPublic($id)
+    {
+        return static::$instance->get($id, false);
     }
 
 }

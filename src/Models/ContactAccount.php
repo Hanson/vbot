@@ -14,6 +14,9 @@ use Illuminate\Support\Collection;
 class ContactAccount extends Collection
 {
 
+    /**
+     * @var ContactAccount
+     */
     static $instance = null;
 
     /**
@@ -28,6 +31,11 @@ class ContactAccount extends Collection
         }
 
         return static::$instance;
+    }
+
+    public function isContact($id)
+    {
+        return static::$instance->get($id, false);
     }
 
 }

@@ -90,10 +90,16 @@ class MessageHandler
         }
 
         $message = $this->sync();
-
-//        Message::make($selector, $message);
-//        print_r($message);
+        foreach ($message['AddMsgList'] as $msg) {
+            
+        }
         Log::echo(json_encode($message));
+
+//        $messages = (new Message)->make($selector, $message);
+//
+//        foreach ($messages as $message) {
+//            call_user_func_array($this->handler, [$message]);
+//        }
     }
 
     /**

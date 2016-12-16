@@ -18,6 +18,18 @@ Robot->special
 Robot->contact
 Robot->group
 
+# API
+
+## Message
+
+### sender
+
+* user 发送者
+> * uid 发送者ID
+> * 
+* gid 群聊ID
+* type 消息发送者类型
+
 # what can wx-robot do?
 
 * 转发消息
