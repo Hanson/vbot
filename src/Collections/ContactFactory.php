@@ -6,7 +6,7 @@
  * Time: 20:41
  */
 
-namespace Hanson\Robot\Models;
+namespace Hanson\Robot\Collections;
 
 
 use Hanson\Robot\Core\Server;

@@ -6,12 +6,12 @@
  * Time: 20:56
  */
 
-namespace Hanson\Robot\Models;
+namespace Hanson\Robot\Collections;
 
 
 use Illuminate\Support\Collection;
 
-class SpecialAccount extends Collection
+class GroupAccount extends Collection
 {
 
     static $instance = null;
@@ -19,12 +19,12 @@ class SpecialAccount extends Collection
     /**
      * create a single instance
      *
-     * @return SpecialAccount
+     * @return GroupAccount
      */
     public static function getInstance()
     {
         if(static::$instance === null){
-            static::$instance = new SpecialAccount();
+            static::$instance = new GroupAccount();
         }
 
         return static::$instance;
