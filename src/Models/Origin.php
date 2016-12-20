@@ -12,4 +12,13 @@ namespace Hanson\Robot\Models;
 class Origin
 {
 
+    public $type;
+
+    public $id;
+
+    const GROUP = 'Group';
+    const CONTACT = 'Contact';
+
+
+
 }

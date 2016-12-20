@@ -37,6 +37,11 @@ class Account extends Collection
         return static::$instance;
     }
 
+    /**
+     * 增加群聊天
+     *
+     * @param $groupMember
+     */
     public function addGroupMember($groupMember)
     {
         $account = static::$instance->all();
@@ -46,6 +51,11 @@ class Account extends Collection
         static::$instance->make($account);
     }
 
+    /**
+     * 增加联系人聊天
+     *
+     * @param $normalMember
+     */
     public function addNormalMember($normalMember)
     {
         $account = static::$instance->all();
@@ -55,6 +65,14 @@ class Account extends Collection
         static::$instance->make($account);
     }
 
+    /**
+     * 获取联系人名称
+     *
+     * @param string $id
+     * @param string $type 群或者联系人
+     * @param bool $prefer 返回最佳名称或名称数组
+     * @return array|null
+     */
     public function getContactName($id, $type, $prefer = false)
     {
         $target = static::$instance->get($type);
@@ -75,7 +93,21 @@ class Account extends Collection
             return null;
         }
 
-        return $prefer ? array_values($name)[0] : $name;
+        return $prefer ? current($name) : $name;
+    }
+
+    /**
+     * 获取联系人
+     *
+     * @param $id
+     * @param string $type 类型
+     * @return array
+     */
+    public function getContact($id, $type)
+    {
+        $target = static::$instance->get($type);
+
+        return $target[$id] ?? null;
     }
 
 }

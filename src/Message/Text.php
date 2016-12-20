@@ -12,4 +12,8 @@ namespace Hanson\Robot\Message;
 class Text
 {
 
+    public static function make($msg)
+    {
+
+    }
 }

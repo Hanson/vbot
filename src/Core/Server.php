@@ -11,8 +11,8 @@ namespace Hanson\Robot\Core;
 
 use Endroid\QrCode\QrCode;
 use GuzzleHttp\Client;
-use Hanson\Robot\Models\ContactFactory;
-use Hanson\Robot\Models\GroupAccount;
+use Hanson\Robot\Collections\ContactFactory;
+use Hanson\Robot\Collections\GroupAccount;
 use Hanson\Robot\Support\Log;
 use QueryPath\Exception;
 use Symfony\Component\DomCrawler\Crawler;
@@ -220,6 +220,7 @@ class Server
         static::$myAccount = $result['User'];
 
         if($result['BaseResponse']['Ret'] != 0){
+            file_put_contents($this->config['tmp'] . 'debug.json', $content);
             throw new Exception('[ERROR] init fail!');
         }
     }

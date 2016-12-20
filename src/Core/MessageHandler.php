@@ -91,7 +91,7 @@ class MessageHandler
 
         $message = $this->sync();
         foreach ($message['AddMsgList'] as $msg) {
-            
+            Log::echo((new Message)->make($selector, $msg)->content->msg);
         }
         Log::echo(json_encode($message));
 

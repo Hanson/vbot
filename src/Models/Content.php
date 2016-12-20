@@ -12,4 +12,9 @@ namespace Hanson\Robot\Models;
 class Content
 {
 
+    public $type;
+
+    public $msg;
+
+    public $raw;
 }
