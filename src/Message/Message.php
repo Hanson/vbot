@@ -20,20 +20,27 @@ use Hanson\Robot\Models\Sender;
 class Message
 {
 
-    /**
-     * @var Sender
-     */
     public $from;
+
+    /**
+     * @var array 当from为群组时，sender为用户发送者
+     */
+    public $sender;
 
     public $to;
 
-    /**
-     * @var Content
-     */
     public $content;
 
     public $time;
 
+    /**
+     * @var string 消息发送者类型
+     */
+    public $FromType;
+
+    /**
+     * @var string 消息类型
+     */
     public $type;
 
     static $message = [];
@@ -63,9 +70,17 @@ class Message
 //        $this->sender = new Sender();
 //        $this->content = new Content();
 
-        $this->setSender();
+//        $this->setSender();
+
+        $this->setFrom();
+
+        $this->setTo();
 
         $this->setContent();
+
+        $this->setType();
+
+        $this->setFromType();
 
         return $this;
     }
@@ -73,7 +88,7 @@ class Message
     /**
      * 设置消息发送者
      */
-    private function setSender()
+    private function setFrom()
     {
         $account = Account::getInstance();
 
@@ -83,34 +98,7 @@ class Message
 
         $this->from = $account->getContact($from, $fromType);
 
-//        if ($this->rawMsg['MsgType'] == 51) {
-//            $this->sender->name = 'system';
-//            $this->sender->type = 'System';
-//        } elseif ($this->rawMsg['MsgType'] == 37) {
-//            $this->sender->type = 'FriendRequest';
-//        } elseif (Server::isMyself($this->rawMsg['FromUserName'])) {
-//            $this->sender->name = 'self';
-//            $this->sender->type = 'Self';
-//        } elseif ($this->rawMsg['ToUserName'] === 'filehelper') {
-//            $this->sender->name = 'file_helper';
-//            $this->sender->type = 'FileHelper';
-//        } elseif (substr($this->rawMsg['FromUserName'], 0, 2) === '@@') { # group
-//            $this->sender->name = $account->getContactName($this->rawMsg['FromUserName'], Account::GROUP_MEMBER, true);
-//            $this->sender->type = 'Group';
-//            $this->sender->group = $account->getContact($this->rawMsg['FromUserName'], Account::GROUP_MEMBER);
-//        } elseif (ContactAccount::getInstance()->isContact($this->rawMsg['FromUserName'])) {
-//            $this->sender->name = $account->getContactName($this->rawMsg['FromUserName'], Account::NORMAL_MEMBER, true);
-//            $this->sender->type = 'Contact';
-//        } elseif (OfficialAccount::getInstance()->isPublic($this->rawMsg['FromUserName'])) {
-//            $this->sender->name = $account->getContactName($this->rawMsg['FromUserName'], Account::NORMAL_MEMBER, true);
-//            $this->sender->type = 'Public';
-//        } elseif (SpecialAccount::getInstance()->get($this->rawMsg['FromUserName'], false)) {
-//            $this->sender->name = $account->getContactName($this->rawMsg['FromUserName'], Account::NORMAL_MEMBER, true);
-//            $this->sender->type = 'Special';
-//        } else {
-//            $this->sender->name = 'unknown';
-//            $this->sender->type = 'Unknown';
-//        }
+
 //
 //        if($this->sender->type !== 'Group'){
 //            $this->sender->from = $account->getContact($this->rawMsg['FromUserName'], Account::NORMAL_MEMBER);
@@ -119,18 +107,47 @@ class Message
 //        $this->sender->name = html_entity_decode($this->sender->name);
     }
 
-    private function setContent()
+    private function setTo()
     {
-        $this->handleContent();
+        $account = Account::getInstance();
+
+        $from = $this->rawMsg['ToUserName'];
+
+        $fromType = substr($this->rawMsg['ToUserName'], 0, 2) === '@@' ? Account::GROUP_MEMBER : Account::NORMAL_MEMBER;
+
+        $this->to = $account->getContact($from, $fromType);
     }
 
-    private function handleContent()
+    private function setFromType()
+    {
+        if ($this->rawMsg['MsgType'] == 51) {
+            $this->FromType = 'System';
+        } elseif ($this->rawMsg['MsgType'] == 37) {
+            $this->FromType = 'FriendRequest';
+        } elseif (Server::isMyself($this->rawMsg['FromUserName'])) {
+            $this->FromType = 'Self';
+        } elseif ($this->rawMsg['ToUserName'] === 'filehelper') {
+            $this->FromType = 'FileHelper';
+        } elseif (substr($this->rawMsg['FromUserName'], 0, 2) === '@@') { # group
+            $this->FromType = 'Group';
+        } elseif (ContactAccount::getInstance()->isContact($this->rawMsg['FromUserName'])) {
+            $this->FromType = 'Contact';
+        } elseif (OfficialAccount::getInstance()->isPublic($this->rawMsg['FromUserName'])) {
+            $this->FromType = 'Public';
+        } elseif (SpecialAccount::getInstance()->get($this->rawMsg['FromUserName'], false)) {
+            $this->FromType = 'Special';
+        } else {
+            $this->FromType = 'Unknown';
+        }
+    }
+
+    private function setType()
     {
 //        $msgType = $msg['MsgType'];
         $this->rawMsg['Content'] = html_entity_decode($this->rawMsg['Content']);
 //        $msgId = $msg['MsgId'];
 
-        $this->handleContentByType();
+        $this->setTypeByFrom();
 
         $this->handleMessageByType();
     }
@@ -138,14 +155,14 @@ class Message
     /**
      * 根据消息来源处理消息
      */
-    private function handleContentByType()
+    private function setTypeByFrom()
     {
-        if($this->sender->type === 'System'){
-            $this->content->type = 'Empty';
-        }elseif ($this->sender->type === 'FileHelper'){ # File Helper
-            $this->content->type = 'Text';
+        if($this->FromType === 'System'){
+            $this->type = 'Empty';
+        }elseif ($this->FromType === 'FileHelper'){ # File Helper
+            $this->type = 'Text';
             $this->content->msg = $this->formatContent($this->rawMsg['Content']);
-        }elseif ($this->sender->type === 'Group'){ # group
+        }elseif ($this->FromType === 'Group'){
             $this->handleGroupContent($this->rawMsg['Content']);
         }
     }
@@ -155,12 +172,34 @@ class Message
      */
     private function handleMessageByType()
     {
-        if($this->rawMsg['MsgType'] == 1){
-            if(Location::isLocation($this->rawMsg['Content'])){
-                $this->setLocationMessage();
-            }else{
+        switch($this->rawMsg['MsgType']){
+            case 1:
+                if(Location::isLocation($this->rawMsg['Content'])){
+//                $this->setLocationMessage();
+                    $this->type = 'Location';
+                }else{
+                    $this->type = 'Text';
+                }
+                break;
+            case 3:
+                $this->type = 'Image';
+                break;
+            case 34:
+                $this->type = 'Voice';
+                break;
+            case 37:
+                $this->type = 'AddUser';
+                break;
+            case 42:
+                $this->type = 'Recommend';
+                break;
+            case 47:
+                $this->type = 'Animation';
+                break;
+            case 49:
+                $this->type = 'Animation';
+                break;
 
-            }
         }
     }
 
@@ -169,7 +208,7 @@ class Message
      */
     private function setLocationMessage()
     {
-        $this->type = 'Location';
+        $this->FromType = 'Location';
         $this->url = $this->rawMsg['Url'];
         $this->content->msg = Location::getLocationText($this->rawMsg['Content']);
     }
@@ -183,8 +222,8 @@ class Message
     {
         list($uid, $content) = explode('<br/>', $content, 2);
 
-        $this->sender->user = Account::getInstance()->get('normalMember')[substr($uid, 0, -1)];
-        $this->content->msg = $this->formatContent($content);
+        $this->sender = Account::getInstance()->get('normalMember')[substr($uid, 0, -1)];
+        $this->rawMsg['Content'] = $this->formatContent($content);
     }
 
     private function formatContent($content)
