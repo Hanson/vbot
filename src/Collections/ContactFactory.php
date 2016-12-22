@@ -67,7 +67,9 @@ class ContactFactory
             }
             Account::getInstance()->addNormalMember([$contact['UserName'] => ['type' => $type, 'info' => $contact]]);
         }
+
         $this->getBatchGroupMembers();
+        file_put_contents($this->server->config['tmp'] . 'account.json', json_encode(Account::getInstance()->all()));
     }
 
     /**

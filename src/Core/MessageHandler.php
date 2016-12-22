@@ -9,6 +9,7 @@
 namespace Hanson\Robot\Core;
 
 use Closure;
+use Hanson\Robot\Collections\Account;
 use Hanson\Robot\Message\Message;
 use Hanson\Robot\Support\Log;
 
@@ -90,16 +91,30 @@ class MessageHandler
         }
 
         $message = $this->sync();
-        foreach ($message['AddMsgList'] as $msg) {
-            Log::echo((new Message)->make($selector, $msg)->content->msg);
-        }
-        Log::echo(json_encode($message));
 
-//        $messages = (new Message)->make($selector, $message);
-//
-//        foreach ($messages as $message) {
-//            call_user_func_array($this->handler, [$message]);
-//        }
+        foreach ($message['AddMsgList'] as $msg) {
+            $content = (new Message)->make($selector, $msg);
+            $response = call_user_func_array($this->handler, [$content]);
+            $this->send($response, $content);
+        }
+//        Log::echo(json_encode($message));
+    }
+
+    private function send($response, $content)
+    {
+        if(!$response && !is_string($response)){
+            return false;
+        }
+
+        $this->server->http->json(Server::BASE_URI . '/webwxsendmsg?pass_ticket=' . $this->server->passTicket, [
+            'BaseRequest' => $this->server->baseRequest,
+            'Msg' => [
+                'Type' => 1,
+                'Content' => urlencode($response),
+                'FromUserName' => $this->server->getMyAccount(),
+                'ToUserName' => $content->to
+            ]
+        ]);
     }
 
     /**

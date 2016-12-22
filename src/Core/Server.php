@@ -264,6 +264,11 @@ class Server
         return $fromUserName === static::$myAccount['UserName'];
     }
 
+    public function getMyAccount()
+    {
+        return static::$myAccount['UserName'];
+    }
+
     public function setMessageHandler(\Closure $closure)
     {
         if(!is_callable($closure)){

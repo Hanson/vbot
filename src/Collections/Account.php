@@ -48,7 +48,7 @@ class Account extends Collection
 
         $account[static::GROUP_MEMBER][] = $groupMember;
 
-        static::$instance->make($account);
+        static::$instance = static::$instance->make($account);
     }
 
     /**
@@ -62,7 +62,7 @@ class Account extends Collection
 
         $account[static::NORMAL_MEMBER][] = $normalMember;
 
-        static::$instance->make($account);
+        static::$instance = static::$instance->make($account);
     }
 
     /**
@@ -100,12 +100,11 @@ class Account extends Collection
      * 获取联系人
      *
      * @param $id
-     * @param string $type 类型
      * @return array
      */
-    public function getContact($id, $type)
+    public function getContact($id)
     {
-        $target = static::$instance->get($type);
+        $target = static::$instance->get(static::NORMAL_MEMBER);
 
         return $target[$id] ?? null;
     }

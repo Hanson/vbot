@@ -76,7 +76,7 @@ class Message
 
         $this->setTo();
 
-        $this->setContent();
+//        $this->setContent();
 
         $this->setType();
 
@@ -90,32 +90,12 @@ class Message
      */
     private function setFrom()
     {
-        $account = Account::getInstance();
-
-        $from = $this->rawMsg['FromUserName'];
-
-        $fromType = substr($this->rawMsg['FromUserName'], 0, 2) === '@@' ? Account::GROUP_MEMBER : Account::NORMAL_MEMBER;
-
-        $this->from = $account->getContact($from, $fromType);
-
-
-//
-//        if($this->sender->type !== 'Group'){
-//            $this->sender->from = $account->getContact($this->rawMsg['FromUserName'], Account::NORMAL_MEMBER);
-//        }
-//
-//        $this->sender->name = html_entity_decode($this->sender->name);
+        $this->from = Account::getInstance()->getContact($this->rawMsg['FromUserName']);
     }
 
     private function setTo()
     {
-        $account = Account::getInstance();
-
-        $from = $this->rawMsg['ToUserName'];
-
-        $fromType = substr($this->rawMsg['ToUserName'], 0, 2) === '@@' ? Account::GROUP_MEMBER : Account::NORMAL_MEMBER;
-
-        $this->to = $account->getContact($from, $fromType);
+        $this->to = Account::getInstance()->getContact($this->rawMsg['ToUserName']);
     }
 
     private function setFromType()
@@ -197,8 +177,24 @@ class Message
                 $this->type = 'Animation';
                 break;
             case 49:
-                $this->type = 'Animation';
+                $this->type = 'Share';
                 break;
+            case 62:
+                $this->type = 'Video';
+                break;
+            case 53:
+                $this->type = 'VideoCall';
+                break;
+            case 10002:
+                $this->type = 'Redraw';
+                break;
+            case 10000:
+                $this->type = 'Unknown';
+                break;
+            default:
+                $this->type = 'Unknown';
+                break;
+
 
         }
     }

@@ -36,5 +36,7 @@ $robot->server->setMessageHandler(function($message){
 //        # do something;
 //    }
 
+    print_r($message);
+
 });
 $robot->server->run();
