@@ -70,6 +70,10 @@ class ContactFactory
 
         $this->getBatchGroupMembers();
         file_put_contents($this->server->config['tmp'] . 'account.json', json_encode(Account::getInstance()->all()));
+        file_put_contents($this->server->config['tmp'] . 'OfficialAccount.json', json_encode(OfficialAccount::getInstance()->all()));
+        file_put_contents($this->server->config['tmp'] . 'SpecialAccount.json', json_encode(SpecialAccount::getInstance()->all()));
+        file_put_contents($this->server->config['tmp'] . 'GroupAccount.json', json_encode(GroupAccount::getInstance()->all()));
+        file_put_contents($this->server->config['tmp'] . 'ContactAccount.json', json_encode(ContactAccount::getInstance()->all()));
     }
 
     /**

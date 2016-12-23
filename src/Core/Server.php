@@ -213,6 +213,8 @@ class Server
             'BaseRequest' => $this->baseRequest
         ]);
 
+        print_r($this->baseRequest);
+
 
         $result = json_decode($content, true);
         $this->generateSyncKey($result);
@@ -220,6 +222,7 @@ class Server
         static::$myAccount = $result['User'];
 
         if($result['BaseResponse']['Ret'] != 0){
+            print_r($result);
             file_put_contents($this->config['tmp'] . 'debug.json', $content);
             throw new Exception('[ERROR] init fail!');
         }
