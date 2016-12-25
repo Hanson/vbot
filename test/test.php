@@ -8,35 +8,23 @@
 
 require_once __DIR__ . './../vendor/autoload.php';
 
-$robot = new \Hanson\Robot\Robot([
-    'tmp' => realpath('./tmp') . '/',
-    'debug' => true,
-    'tuling' => true,
-    'tuling_key' => ''
-]);
-
-//$robot->run();
-
 $robot = new \Hanson\Robot\Foundation\Robot([
     'tmp' => realpath('./tmp') . '/',
     'debug' => true,
-    'tuling' => true,
-    'tuling_key' => ''
 ]);
 
+$client = new \GuzzleHttp\Client();
 
-$robot->server->setMessageHandler(function($message){
-//    if($message->type === 'text'){
-//
-//    }elseif ($message->type === 'location'){
-//        return Message::make();
-//    }
-//
-//    if($message->FromUserName === ''){
-//        # do something;
-//    }
+$robot->server->setMessageHandler(function($message) use ($client, $robot){
+    $url = 'http://www.tuling123.com/openapi/api';
 
+    $result = $robot->server->http->post($url, [
+        'key' => '1dce02aef026258eff69635a06b0ab7d',
+        'info' => $message->rawMsg['Content']
+    ], true);
     print_r($message);
+    print_r($result);
+    return $result['text'];
 
 });
 $robot->server->run();

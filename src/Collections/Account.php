@@ -40,13 +40,14 @@ class Account extends Collection
     /**
      * 增加群聊天
      *
+     * @param $id
      * @param $groupMember
      */
-    public function addGroupMember($groupMember)
+    public function addGroupMember($id, $groupMember)
     {
         $account = static::$instance->all();
 
-        $account[static::GROUP_MEMBER][] = $groupMember;
+        $account[static::GROUP_MEMBER][$id] = $groupMember;
 
         static::$instance = static::$instance->make($account);
     }
@@ -54,13 +55,14 @@ class Account extends Collection
     /**
      * 增加联系人聊天
      *
+     * @param $id
      * @param $normalMember
      */
-    public function addNormalMember($normalMember)
+    public function addNormalMember($id, $normalMember)
     {
         $account = static::$instance->all();
 
-        $account[static::NORMAL_MEMBER][] = $normalMember;
+        $account[static::NORMAL_MEMBER][$id] = $normalMember;
 
         static::$instance = static::$instance->make($account);
     }
@@ -105,6 +107,13 @@ class Account extends Collection
     public function getContact($id)
     {
         $target = static::$instance->get(static::NORMAL_MEMBER);
+
+        return $target[$id] ?? null;
+    }
+
+    public function getGroupMember($id)
+    {
+        $target = static::$instance->get(static::GROUP_MEMBER);
 
         return $target[$id] ?? null;
     }

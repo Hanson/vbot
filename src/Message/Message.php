@@ -78,9 +78,9 @@ class Message
 
 //        $this->setContent();
 
-        $this->setType();
-
         $this->setFromType();
+
+        $this->setType();
 
         return $this;
     }
@@ -205,7 +205,7 @@ class Message
     private function setLocationMessage()
     {
         $this->FromType = 'Location';
-        $this->url = $this->rawMsg['Url'];
+//        $this->url = $this->rawMsg['Url'];
         $this->content->msg = Location::getLocationText($this->rawMsg['Content']);
     }
 
@@ -218,7 +218,7 @@ class Message
     {
         list($uid, $content) = explode('<br/>', $content, 2);
 
-        $this->sender = Account::getInstance()->get('normalMember')[substr($uid, 0, -1)];
+        $this->sender = Account::getInstance()->getGroupMember(substr($uid, 0, -1));
         $this->rawMsg['Content'] = $this->formatContent($content);
     }
 

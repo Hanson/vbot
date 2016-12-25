@@ -11,6 +11,7 @@ namespace Hanson\Robot\Core;
 
 use Endroid\QrCode\QrCode;
 use GuzzleHttp\Client;
+use Hanson\Robot\Collections\Account;
 use Hanson\Robot\Collections\ContactFactory;
 use Hanson\Robot\Collections\GroupAccount;
 use Hanson\Robot\Support\Log;
@@ -212,19 +213,28 @@ class Server
         $content = $this->http->json($url, [
             'BaseRequest' => $this->baseRequest
         ]);
-
-        print_r($this->baseRequest);
-
-
+        
         $result = json_decode($content, true);
         $this->generateSyncKey($result);
 
         static::$myAccount = $result['User'];
 
+        $this->initContactList($result['ContactList']);
+
         if($result['BaseResponse']['Ret'] != 0){
-            print_r($result);
-            file_put_contents($this->config['tmp'] . 'debug.json', $content);
             throw new Exception('[ERROR] init fail!');
+        }
+    }
+
+    protected function initContactList($contactList)
+    {
+        if($contactList){
+            foreach ($contactList as $contact) {
+                if(GroupAccount::isGroup($contact['UserName'])){
+                    GroupAccount::getInstance()->put($contact['UserName'], $contact);
+                    Account::getInstance()->addNormalMember($contact['UserName'], ['type' => 'group', 'info' => $contact]);
+                }
+            }
         }
     }
 

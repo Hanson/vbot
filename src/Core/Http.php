@@ -22,11 +22,13 @@ class Http
         return $this->request($url, 'GET', $query);
     }
 
-    public function post($url, $options = [])
+    public function post($url, $options = [], $array = false)
     {
         $key = is_array($options) ? 'form_params' : 'body';
 
-        return $this->request($url, 'POST', [$key => $options]);
+        $content = $this->request($url, 'POST', [$key => $options]);
+
+        return $array ? json_decode($content, true) : $content;
     }
 
     public function json($url, $options = [], $array = false)

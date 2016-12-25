@@ -21,5 +21,8 @@
         "psr-4": {
             "Hanson\\Robot\\": "src/"
         }
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^0.4.2"
     }
 }

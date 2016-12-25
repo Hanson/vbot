@@ -30,4 +30,8 @@ class GroupAccount extends Collection
         return static::$instance;
     }
 
+    public static function isGroup($userName){
+        return strstr($userName, '@@') !== false;
+    }
+
 }

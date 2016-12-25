@@ -37,11 +37,10 @@ class ContactFactory
 
         $content = $this->server->http->json($url, [
             'BaseRequest' => $this->server->baseRequest
-        ]);
+        ], true);
+//        file_put_contents($this->server->config['tmp'] . 'debug.json', json_encode($content));
 
-        $memberList = json_decode($content, true)['MemberList'];
-
-        $this->makeContactList($memberList);
+        $this->makeContactList($content['MemberList']);
     }
 
     /**
@@ -65,7 +64,7 @@ class ContactFactory
                 $type = 'contact';
                 ContactAccount::getInstance()->put($contact['UserName'], $contact);
             }
-            Account::getInstance()->addNormalMember([$contact['UserName'] => ['type' => $type, 'info' => $contact]]);
+            Account::getInstance()->addNormalMember($contact['UserName'], ['type' => $type, 'info' => $contact]);
         }
 
         $this->getBatchGroupMembers();
@@ -88,11 +87,11 @@ class ContactFactory
             $list[] = ['UserName' => $key, 'EncryChatRoomId' => ''];
         });
 
-        file_put_contents($this->server->config['tmp'] . 'debug.json', json_encode([
-            'BaseRequest' => $this->server->baseRequest,
-            'Count' => GroupAccount::getInstance()->count(),
-            'List' => $list
-        ]));
+//        file_put_contents($this->server->config['tmp'] . 'debug.json', json_encode([
+//            'BaseRequest' => $this->server->baseRequest,
+//            'Count' => count($list),
+//            'List' => $list
+//        ]));
 
         $content = $this->server->http->json($url, [
             'BaseRequest' => $this->server->baseRequest,
@@ -116,7 +115,7 @@ class ContactFactory
             $groupAccount['ChatRoomId'] = $group['EncryChatRoomId'];
             GroupAccount::getInstance()->put($group['UserName'], $groupAccount);
             foreach ($group['MemberList'] as $member) {
-                Account::getInstance()->addGroupMember([$member['UserName'] => ['type' => 'groupMember', 'info' => $member, 'group' => $group]]);
+                Account::getInstance()->addGroupMember($member['UserName'], ['type' => 'groupMember', 'info' => $member, 'group' => $group]);
             }
         }
 
