@@ -92,12 +92,13 @@ class MessageHandler
 
         $message = $this->sync();
 
-        foreach ($message['AddMsgList'] as $msg) {
-            $content = (new Message)->make($selector, $msg);
-            $response = call_user_func_array($this->handler, [$content]);
-            $this->send($response, $content);
+        if($message['AddMsgList']){
+            foreach ($message['AddMsgList'] as $msg) {
+                $content = (new Message)->make($selector, $msg);
+                $response = call_user_func_array($this->handler, [$content]);
+                $this->send($response, $content);
+            }
         }
-//        Log::echo(json_encode($message));
     }
 
     private function send($word, $content)
