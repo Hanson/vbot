@@ -100,36 +100,31 @@ class MessageHandler
 //        Log::echo(json_encode($message));
     }
 
-    private function send($response, $content)
+    private function send($word, $content)
     {
-        if(!$response && !is_string($response)){
+        if(!$word && !is_string($word)){
             return false;
         }
 
         $random = strval(time() * 1000) . '0' . strval(rand(100, 999));
-        echo $response;
-        $result = $this->server->http->json(Server::BASE_URI . '/webwxsendmsg?pass_ticket=' . $this->server->passTicket, [
+        echo $word;
+        $result = $this->server->http->post(Server::BASE_URI . '/webwxsendmsg?pass_ticket=' . $this->server->passTicket,
+            json_encode([
             'BaseRequest' => $this->server->baseRequest,
             'Msg' => [
                 'Type' => 1,
-                'Content' => $response,
+                'Content' => $word,
                 'FromUserName' => $this->server->getMyAccount(),
                 'ToUserName' => $content->rawMsg['FromUserName'],
                 'LocalID' => $random,
-                'ClientMsgId' => $random
-            ]
-        ], true);
+                'ClientMsgId' => $random,
+            ],
+            'Scene' => 0
+        ], JSON_UNESCAPED_UNICODE), true);
 
         if($result['BaseResponse']['Ret'] != 0){
             Log::echo('发送消息失败');
         }
-    }
-
-    private function unicode($utf8_str) {
-        $unicode = (ord($utf8_str[0]) & 0x1F) << 12;
-        $unicode |= (ord($utf8_str[1]) & 0x3F) << 6;
-        $unicode |= (ord($utf8_str[2]) & 0x3F);
-        return dechex($unicode);
     }
 
     /**
