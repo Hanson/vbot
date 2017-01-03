@@ -14,12 +14,14 @@ use GuzzleHttp\Client;
 use Hanson\Robot\Collections\Account;
 use Hanson\Robot\Collections\ContactFactory;
 use Hanson\Robot\Collections\GroupAccount;
-use Hanson\Robot\Support\Log;
+use Hanson\Robot\Support\Console;
 use QueryPath\Exception;
 use Symfony\Component\DomCrawler\Crawler;
 
 class Server
 {
+
+    static $instance;
 
     protected $uuid;
 
@@ -39,11 +41,7 @@ class Server
 
     public $syncKey;
 
-    static $myAccount;
-
     public $syncKeyStr;
-
-    public $http;
 
     public $config;
 
@@ -57,8 +55,20 @@ class Server
 
     public function __construct($config = [])
     {
-        $this->http = new Http();
         $this->config = $config;
+    }
+
+    /**
+     * @param array $config
+     * @return Server
+     */
+    public static function getInstance($config = [])
+    {
+        if(!static::$instance){
+            static::$instance = new Server($config);
+        }
+
+        return static::$instance;
     }
 
     /**
@@ -68,12 +78,12 @@ class Server
     {
         $this->prepare();
         $this->init();
-        Log::echo('[INFO] init success!');
+        Console::log('[INFO] init success!');
 
         $this->statusNotify();
-        Log::echo('[INFO] begin to init contacts');
+        Console::log('[INFO] begin to init contacts');
         $this->initContact();
-        Log::echo('[INFO] init contacts success!');
+        Console::log('[INFO] init contacts success!');
 
         MessageHandler::getInstance()->listen();
     }
@@ -82,11 +92,11 @@ class Server
     {
         $this->getUuid();
         $this->generateQrCode();
-        Log::echo('[INFO] please scan qrcode to login');
+        Console::log('[INFO] please scan qrcode to login');
 
         $this->waitForLogin();
         $this->login();
-        Log::echo('[INFO] login success!');
+        Console::log('[INFO] login success!');
     }
 
     /**
@@ -96,7 +106,7 @@ class Server
      */
     protected function getUuid()
     {
-        $content = $this->http->get('https://login.weixin.qq.com/jslogin', [
+        $content = http()->get('https://login.weixin.qq.com/jslogin', [
             'appid' => 'wx782c26e4c19acffb',
             'fun' => 'new',
             'lang' => 'zh_CN',
@@ -143,14 +153,14 @@ class Server
         while($retryTime > 0){
             $url = sprintf('https://login.weixin.qq.com/cgi-bin/mmwebwx-bin/login?tip=%s&uuid=%s&_=%s', $tip, $this->uuid, time());
 
-            $content = $this->http->get($url);
+            $content = http()->get($url);
 
             preg_match('/window.code=(\d+);/', $content, $matches);
 
             $code = $matches[1];
             switch($code){
                 case '201':
-                    Log::echo('[INFO] please confirm to login');
+                    Console::log('[INFO] please confirm to login');
                     $tip = 0;
                     break;
                 case '200':
@@ -158,13 +168,13 @@ class Server
                     $this->redirectUri = $matches[1] . '&fun=new';
                     return;
                 case '408':
-                    Log::echo('[ERROR] login timeout. please try 1 second later.');
+                    Console::log('[ERROR] login timeout. please try 1 second later.');
                     $tip = 1;
                     $retryTime -= 1;
                     sleep(1);
                     break;
                 default:
-                    Log::echo("[ERROR] login fail. exception code：$code . please try 1 second later.");
+                    Console::log("[ERROR] login fail. exception code：$code . please try 1 second later.");
                     $tip = 1;
                     $retryTime -= 1;
                     sleep(1);
@@ -182,7 +192,7 @@ class Server
      */
     public function login()
     {
-        $content = $this->http->get($this->redirectUri);
+        $content = http()->get($this->redirectUri);
 
         $crawler = new Crawler($content);
         $this->skey = $crawler->filter('error skey')->text();
@@ -210,18 +220,19 @@ class Server
     {
         $url = sprintf(self::BASE_URI . '/webwxinit?r=%i&lang=en_US&pass_ticket=%s', time(), $this->passTicket);
 
-        $content = $this->http->json($url, [
+        $content = http()->json($url, [
             'BaseRequest' => $this->baseRequest
         ]);
         
         $result = json_decode($content, true);
         $this->generateSyncKey($result);
 
-        static::$myAccount = $result['User'];
+        myself()->init($result['User']);
 
         $this->initContactList($result['ContactList']);
 
         if($result['BaseResponse']['Ret'] != 0){
+//            Log::echo('init fail!');
             throw new Exception('[ERROR] init fail!');
         }
     }
@@ -240,7 +251,7 @@ class Server
 
     protected function initContact()
     {
-        new ContactFactory($this);
+        new ContactFactory();
     }
 
     /**
@@ -250,11 +261,11 @@ class Server
     {
         $url = sprintf(self::BASE_URI . '/webwxstatusnotify?lang=zh_CN&pass_ticket=%s', $this->passTicket);
 
-        $this->http->json($url, [
+        http()->json($url, [
             'BaseRequest' => $this->baseRequest,
             'Code' => 3,
-            'FromUserName' => static::$myAccount['UserName'],
-            'ToUserName' => static::$myAccount['UserName'],
+            'FromUserName' => myself()->userName,
+            'ToUserName' => myself()->userName,
             'ClientMsgId' => time()
         ]);
     }
@@ -272,23 +283,13 @@ class Server
         $this->syncKeyStr = implode('|', $syncKey);
     }
 
-    public static function isMyself($fromUserName)
-    {
-        return $fromUserName === static::$myAccount['UserName'];
-    }
-
-    public function getMyAccount()
-    {
-        return static::$myAccount['UserName'];
-    }
-
     public function setMessageHandler(\Closure $closure)
     {
         if(!is_callable($closure)){
             throw new \Exception('[ERROR] message handler must be a closure!');
         }
 
-        MessageHandler::getInstance($this)->setMessageHandler($closure);
+        MessageHandler::getInstance()->setMessageHandler($closure);
     }
 
     public function debug($debug = true)

@@ -10,9 +10,15 @@ namespace Hanson\Robot\Foundation;
 
 
 use Hanson\Robot\Core\Http;
+use Hanson\Robot\Core\Server;
 use Illuminate\Support\Collection;
 use Pimple\Container;
 
+/**
+ * Class Robot
+ * @package Hanson\Robot\Foundation
+ * @property Server $server
+ */
 class Robot extends Container
 {
 

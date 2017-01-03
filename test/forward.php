@@ -17,15 +17,9 @@ $client = new \GuzzleHttp\Client();
 
 $robot->server->setMessageHandler(function($message) use ($client, $robot){
     if($message->type === 'Text'){
-        $url = 'http://www.tuling123.com/openapi/api';
-
-        $result = $robot->server->http->post($url, [
-            'key' => '1dce02aef026258eff69635a06b0ab7d',
-            'info' => $message->content
-        ], true);
-        print_r($message);
-        print_r($result);
-        return $result['text'];
+//        print_r($message);
+//        echo  $message->rawMsg['FromUserName'];
+        \Hanson\Robot\Message\Message::send('hi', $message->rawMsg['FromUserName']);
     }
 });
 $robot->server->run();

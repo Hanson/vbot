@@ -11,7 +11,7 @@ namespace Hanson\Robot\Core;
 use Closure;
 use Hanson\Robot\Collections\Account;
 use Hanson\Robot\Message\Message;
-use Hanson\Robot\Support\Log;
+use Hanson\Robot\Support\Console;
 
 class MessageHandler
 {
@@ -23,29 +23,15 @@ class MessageHandler
 
     static $instance = null;
 
-    const MESSAGE_MAP = [
-        2 => 'text', // 新消息
-        3 => 'unknown', // 未知
-        4 => 'contactUpdate', // 通讯录更新
-        6 => 'money', // 可能是红包
-        7 => 'mobile' // 手机上操作了微信
-    ];
-
-    public function __construct(Server $server)
-    {
-        $this->server = $server;
-    }
-
     /**
      * get a message handler single instance
      *
-     * @param Server $server
      * @return MessageHandler
      */
-    public static function getInstance($server = null)
+    public static function getInstance()
     {
         if(static::$instance === null){
-            static::$instance = new MessageHandler($server);
+            static::$instance = new MessageHandler();
         }
 
         return static::$instance;
@@ -81,7 +67,6 @@ class MessageHandler
 
             $this->checkTime($time);
         }
-//        call_user_func_array($this->handler, []);
     }
 
     private function handlerMessage($selector)
@@ -108,23 +93,22 @@ class MessageHandler
         }
 
         $random = strval(time() * 1000) . '0' . strval(rand(100, 999));
-        echo $word;
-        $result = $this->server->http->post(Server::BASE_URI . '/webwxsendmsg?pass_ticket=' . $this->server->passTicket,
+        $result = http()->post(Server::BASE_URI . '/webwxsendmsg?pass_ticket=' . server()->passTicket,
             json_encode([
-            'BaseRequest' => $this->server->baseRequest,
-            'Msg' => [
-                'Type' => 1,
-                'Content' => $word,
-                'FromUserName' => $this->server->getMyAccount(),
-                'ToUserName' => $content->rawMsg['FromUserName'],
-                'LocalID' => $random,
-                'ClientMsgId' => $random,
-            ],
-            'Scene' => 0
-        ], JSON_UNESCAPED_UNICODE), true);
+                'BaseRequest' => server()->baseRequest,
+                'Msg' => [
+                    'Type' => 1,
+                    'Content' => $word,
+                    'FromUserName' => myself()->userName,
+                    'ToUserName' => $content->rawMsg['FromUserName'],
+                    'LocalID' => $random,
+                    'ClientMsgId' => $random,
+                ],
+                'Scene' => 0
+            ], JSON_UNESCAPED_UNICODE), true);
 
         if($result['BaseResponse']['Ret'] != 0){
-            Log::echo('发送消息失败');
+            Console::log('发送消息失败');
         }
     }
 
@@ -137,16 +121,16 @@ class MessageHandler
     {
         $url = 'https://' . $this->syncHost . '/cgi-bin/mmwebwx-bin/synccheck?' . http_build_query([
                 'r' => time(),
-                'sid' => $this->server->sid,
-                'uin' => $this->server->uin,
-                'skey' => $this->server->skey,
-                'deviceid' => $this->server->deviceId,
-                'synckey' => $this->server->syncKeyStr,
+                'sid' => server()->sid,
+                'uin' => server()->uin,
+                'skey' => server()->skey,
+                'deviceid' => server()->deviceId,
+                'synckey' => server()->syncKeyStr,
                 '_' => time()
             ]);
 
         try{
-            $content = $this->server->http->get($url);
+            $content = http()->get($url);
 
             preg_match('/window.synccheck=\{retcode:"(\d+)",selector:"(\d+)"\}/', $content, $matches);
 
@@ -177,13 +161,13 @@ class MessageHandler
 
     private function sync()
     {
-        $url = sprintf(Server::BASE_URI . '/webwxsync?sid=%s&skey=%s&lang=en_US&pass_ticket=%s', $this->server->sid, $this->server->skey, $this->server->passTicket);
+        $url = sprintf(Server::BASE_URI . '/webwxsync?sid=%s&skey=%s&lang=en_US&pass_ticket=%s', server()->sid, server()->skey, server()->passTicket);
 
         try{
-            $result = $this->server->http->json($url, [
-                    'BaseRequest' => $this->server->baseRequest,
-                    'SyncKey' => $this->server->syncKey,
-                    'rr' => ~time()
+            $result = http()->json($url, [
+                'BaseRequest' => server()->baseRequest,
+                'SyncKey' => server()->syncKey,
+                'rr' => ~time()
             ], true);
 
             if($result['BaseResponse']['Ret'] == 0){
@@ -203,15 +187,15 @@ class MessageHandler
      */
     private function generateSyncKey($result)
     {
-        $this->server->syncKey = $result['SyncKey'];
+        server()->syncKey = $result['SyncKey'];
 
         $syncKey = [];
 
-        foreach ($this->server->syncKey['List'] as $item) {
+        foreach (server()->syncKey['List'] as $item) {
             $syncKey[] = $item['Key'] . '_' . $item['Val'];
         }
 
-        $this->server->syncKeyStr = implode('|', $syncKey);
+        server()->syncKeyStr = implode('|', $syncKey);
     }
 
     /**
@@ -237,7 +221,7 @@ class MessageHandler
      */
     private function debugMessage($retCode, $selector, $sleep = null)
     {
-        Log::echo('[DEBUG] retcode:' . $retCode . ' selector:' . $selector);
+        Console::log('[DEBUG] retcode:' . $retCode . ' selector:' . $selector);
 
         if($sleep){
             sleep($sleep);

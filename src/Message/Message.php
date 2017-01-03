@@ -16,6 +16,8 @@ use Hanson\Robot\Collections\OfficialAccount;
 use Hanson\Robot\Collections\SpecialAccount;
 use Hanson\Robot\Models\Content;
 use Hanson\Robot\Models\Sender;
+use Hanson\Robot\Support\FileManager;
+use Hanson\Robot\Support\Console;
 
 class Message
 {
@@ -64,19 +66,11 @@ class Message
 
     public function make($selector, $msg)
     {
-
         $this->rawMsg = $msg;
-
-//        $this->sender = new Sender();
-//        $this->content = new Content();
-
-//        $this->setSender();
 
         $this->setFrom();
 
         $this->setTo();
-
-//        $this->setContent();
 
         $this->setFromType();
 
@@ -104,7 +98,7 @@ class Message
             $this->FromType = 'System';
         } elseif ($this->rawMsg['MsgType'] == 37) {
             $this->FromType = 'FriendRequest';
-        } elseif (Server::isMyself($this->rawMsg['FromUserName'])) {
+        } elseif ($this->rawMsg['FromUserName'] === myself()->userName) {
             $this->FromType = 'Self';
         } elseif ($this->rawMsg['ToUserName'] === 'filehelper') {
             $this->FromType = 'FileHelper';
@@ -123,9 +117,7 @@ class Message
 
     private function setType()
     {
-//        $msgType = $msg['MsgType'];
         $this->rawMsg['Content'] = html_entity_decode($this->rawMsg['Content']);
-//        $msgId = $msg['MsgId'];
 
         $this->setTypeByFrom();
 
@@ -155,23 +147,30 @@ class Message
         switch($this->rawMsg['MsgType']){
             case 1:
                 if(Location::isLocation($this->rawMsg['Content'])){
-//                $this->setLocationMessage();
                     $this->type = 'Location';
                 }else{
                     $this->type = 'Text';
+                    $this->content = $this->rawMsg['Content'];
                 }
                 break;
             case 3:
                 $this->type = 'Image';
+                $this->content = Server::BASE_URI . sprintf('/webwxgetmsgimg?MsgID=%s&skey=%s', $this->rawMsg['MsgId'], server()->skey);
+                $content = http()->get($this->content);
+                FileManager::download(server()->config['tmp'] . $this->rawMsg['MsgId'] . '.jpg', $content);
                 break;
             case 34:
                 $this->type = 'Voice';
+                $this->content = Server::BASE_URI . sprintf('/webwxgetvoice?msgid=%s&skey=%s', $this->rawMsg['MsgId'], server()->skey);
+                $content = http()->get($this->content);
+                FileManager::download(server()->config['tmp'] . $this->rawMsg['MsgId'] . '.mp3', $content);
                 break;
             case 37:
                 $this->type = 'AddUser';
                 break;
             case 42:
                 $this->type = 'Recommend';
+                $this->content = (object)$this->rawMsg['RecommendInfo'];
                 break;
             case 47:
                 $this->type = 'Animation';
@@ -225,6 +224,45 @@ class Message
     private function formatContent($content)
     {
         return str_replace('<br/>', '\n', $content);
+    }
+
+    /**
+     * 发送消息
+     *
+     * @param $word string 消息内容
+     * @param $fromUser string 目标username
+     * @return bool
+     */
+    public static function send($word, $fromUser)
+    {
+        if(!$word && !is_string($word)){
+            return false;
+        }
+
+        $random = strval(time() * 1000) . '0' . strval(rand(100, 999));
+
+        $data = [
+            'BaseRequest' => server()->baseRequest,
+            'Msg' => [
+                'Type' => 1,
+                'Content' => $word,
+                'FromUserName' => myself()->userName,
+                'ToUserName' => $fromUser,
+                'LocalID' => $random,
+                'ClientMsgId' => $random,
+            ],
+            'Scene' => 0
+        ];
+        $result = http()->post(Server::BASE_URI . '/webwxsendmsg?pass_ticket=' . server()->passTicket,
+            json_encode($data, JSON_UNESCAPED_UNICODE), true
+        );
+
+        if($result['BaseResponse']['Ret'] != 0){
+            Console::log('发送消息失败');
+            return false;
+        }
+
+        return true;
     }
 
 }

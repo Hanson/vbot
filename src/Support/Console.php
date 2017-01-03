@@ -9,10 +9,10 @@
 namespace Hanson\Robot\Support;
 
 
-class Log
+class Console
 {
 
-    public static function echo($str)
+    public static function log($str)
     {
         echo $str . PHP_EOL;
     }

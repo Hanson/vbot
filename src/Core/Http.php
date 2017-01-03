@@ -13,7 +13,22 @@ use GuzzleHttp\Client as HttpClient;
 class Http
 {
 
+    static $instance;
+
     protected $client;
+
+    /**
+     * @return Http
+     */
+    public static function getInstance()
+    {
+        if(!static::$instance){
+            echo 'http is null';
+            static::$instance = new Http();
+        }
+
+        return static::$instance;
+    }
 
     public function get($url, array $options = [])
     {

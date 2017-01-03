@@ -10,11 +10,11 @@ namespace Hanson\Robot\Collections;
 
 
 use Hanson\Robot\Core\Server;
-use Hanson\Robot\Support\Log;
+use Hanson\Robot\Support\Console;
 
 class ContactFactory
 {
-    protected $server;
+//    protected $server;
 
     const SPECIAL_USERS = ['newsapp', 'fmessage', 'filehelper', 'weibo', 'qqmail',
         'fmessage', 'tmessage', 'qmessage', 'qqsync', 'floatbottle',
@@ -25,18 +25,17 @@ class ContactFactory
         'officialaccounts', 'notification_messages', 'wxid_novlwrv3lqwv11',
         'gh_22b87fa7cb3c', 'wxitil', 'userexperience_alarm', 'notification_messages'];
 
-    public function __construct(Server $server)
+    public function __construct()
     {
-        $this->server = $server;
         $this->getContacts();
     }
 
     public function getContacts()
     {
-        $url = sprintf(Server::BASE_URI . '/webwxgetcontact?pass_ticket=%s&skey=%s&r=%s', $this->server->passTicket, $this->server->skey, time());
+        $url = sprintf(Server::BASE_URI . '/webwxgetcontact?pass_ticket=%s&skey=%s&r=%s', server()->passTicket, server()->skey, time());
 
-        $content = $this->server->http->json($url, [
-            'BaseRequest' => $this->server->baseRequest
+        $content = http()->json($url, [
+            'BaseRequest' => server()->baseRequest
         ], true);
 //        file_put_contents($this->server->config['tmp'] . 'debug.json', json_encode($content));
 
@@ -68,11 +67,11 @@ class ContactFactory
         }
 
         $this->getBatchGroupMembers();
-        file_put_contents($this->server->config['tmp'] . 'account.json', json_encode(Account::getInstance()->all()));
-        file_put_contents($this->server->config['tmp'] . 'OfficialAccount.json', json_encode(OfficialAccount::getInstance()->all()));
-        file_put_contents($this->server->config['tmp'] . 'SpecialAccount.json', json_encode(SpecialAccount::getInstance()->all()));
-        file_put_contents($this->server->config['tmp'] . 'GroupAccount.json', json_encode(GroupAccount::getInstance()->all()));
-        file_put_contents($this->server->config['tmp'] . 'ContactAccount.json', json_encode(ContactAccount::getInstance()->all()));
+        file_put_contents(server()->config['tmp'] . 'account.json', json_encode(Account::getInstance()->all()));
+        file_put_contents(server()->config['tmp'] . 'OfficialAccount.json', json_encode(OfficialAccount::getInstance()->all()));
+        file_put_contents(server()->config['tmp'] . 'SpecialAccount.json', json_encode(SpecialAccount::getInstance()->all()));
+        file_put_contents(server()->config['tmp'] . 'GroupAccount.json', json_encode(GroupAccount::getInstance()->all()));
+        file_put_contents(server()->config['tmp'] . 'ContactAccount.json', json_encode(ContactAccount::getInstance()->all()));
     }
 
     /**
@@ -80,7 +79,7 @@ class ContactFactory
      */
     public function getBatchGroupMembers()
     {
-        $url = sprintf(Server::BASE_URI . '/webwxbatchgetcontact?type=ex&r=%s&pass_ticket=%s', time(), $this->server->passTicket);
+        $url = sprintf(Server::BASE_URI . '/webwxbatchgetcontact?type=ex&r=%s&pass_ticket=%s', time(), server()->passTicket);
 
         $list = [];
         GroupAccount::getInstance()->each(function($item, $key) use (&$list){
@@ -93,8 +92,8 @@ class ContactFactory
 //            'List' => $list
 //        ]));
 
-        $content = $this->server->http->json($url, [
-            'BaseRequest' => $this->server->baseRequest,
+        $content = http()->json($url, [
+            'BaseRequest' => server()->baseRequest,
             'Count' => GroupAccount::getInstance()->count(),
             'List' => $list
         ], true);

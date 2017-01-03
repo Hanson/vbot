@@ -14,11 +14,7 @@ class ServerServiceProvider implements ServiceProviderInterface
     public function register(Container $pimple)
     {
         $pimple['server'] = function ($pimple) {
-            $server = new Server($pimple['config']);
-
-            $server->debug($pimple['config']['debug']);
-
-            return $server;
+            return server($pimple['config']);
         };
     }
 }

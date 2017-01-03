@@ -18,6 +18,9 @@
         "illuminate/support": "^5.3"
     },
     "autoload": {
+        "files": [
+            "src/Support/helpers.php"
+        ],
         "psr-4": {
             "Hanson\\Robot\\": "src/"
         }
