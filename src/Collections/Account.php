@@ -104,7 +104,7 @@ class Account extends Collection
      * @param $id
      * @return array
      */
-    public function getContact($id)
+    public function getContactByUsername($id)
     {
         $target = static::$instance->get(static::NORMAL_MEMBER);
 
@@ -116,6 +116,53 @@ class Account extends Collection
         $target = static::$instance->get(static::GROUP_MEMBER);
 
         return $target[$id] ?? null;
+    }
+
+    /**
+     * 获取联系人列表
+     *
+     * @return Collection
+     */
+    public function getNormalMembers()
+    {
+        $target = static::$instance->get(static::NORMAL_MEMBER);
+
+        return collect($target);
+    }
+
+
+    /**
+     * 根据微信号获取联系人
+     *
+     * @param $id
+     * @return mixed
+     */
+    public function getContactById($id)
+    {
+        $contact = $this->getNormalMembers()->filter(function($item, $key) use ($id){
+            if($item['info']['Alias'] === $id){
+                return true;
+            }
+        })->first();
+
+        return $contact;
+    }
+
+    /**
+     * 根据微信号获取联系username
+     *
+     * @param $id
+     * @return mixed
+     */
+    public function getUsernameById($id)
+    {
+        $contact = $this->getNormalMembers()->search(function($item, $key) use ($id){
+            if($item['info']['Alias'] === $id){
+                return true;
+            }
+        });
+
+        return $contact;
     }
 
 }

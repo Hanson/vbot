@@ -292,6 +292,15 @@ class Server
         MessageHandler::getInstance()->setMessageHandler($closure);
     }
 
+    public function setCustomerHandler(\Closure $closure)
+    {
+        if(!is_callable($closure)){
+            throw new \Exception('[ERROR] message handler must be a closure!');
+        }
+
+        MessageHandler::getInstance()->setCustomHandler($closure);
+    }
+
     public function debug($debug = true)
     {
         $this->debug = $debug;

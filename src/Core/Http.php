@@ -23,7 +23,6 @@ class Http
     public static function getInstance()
     {
         if(!static::$instance){
-            echo 'http is null';
             static::$instance = new Http();
         }
 

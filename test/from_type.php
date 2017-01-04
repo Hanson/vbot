@@ -16,12 +16,9 @@ $robot = new \Hanson\Robot\Foundation\Robot([
 $client = new \GuzzleHttp\Client();
 
 $robot->server->setMessageHandler(function($message) use ($client, $robot){
+    /** @var $message \Hanson\Robot\Message\Message */
     if($message->type === 'Text'){
-        $contact = \Hanson\Robot\Collections\Account::getInstance()->getUsernameById('hanson1994');
-        \Hanson\Robot\Message\Message::send('hi', $message->rawMsg['FromUserName']);
-        \Hanson\Robot\Message\Message::send($message->content, $contact);
+        \Hanson\Robot\Message\Message::send($message->fromType, $message->username);
     }
-});
-$robot->server->setCustomerHandler(function(){
 });
 $robot->server->run();

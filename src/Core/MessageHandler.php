@@ -21,6 +21,8 @@ class MessageHandler
 
     private $handler;
 
+    private $customHandler;
+
     static $instance = null;
 
     /**
@@ -46,6 +48,15 @@ class MessageHandler
         $this->handler = $closure;
     }
 
+    public function setCustomHandler(Closure $closure)
+    {
+        if(!$closure instanceof Closure){
+            throw new \Exception('message handler must be a closure!');
+        }
+
+        $this->customHandler = $closure;
+    }
+
     /**
      * listen the chat api
      */
@@ -54,6 +65,11 @@ class MessageHandler
         $this->preCheckSync();
 
         while (true){
+
+            if($this->customHandler){
+                call_user_func_array($this->customHandler, []);
+            }
+
             $time = time();
             list($retCode, $selector) = $this->checkSync();
 
