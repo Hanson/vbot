@@ -1,6 +1,6 @@
 <?php
 /**
- * Created by PhpStorm.
+ * 发送给所有群消息！！！慎重！！！
  * User: HanSon
  * Date: 2016/12/7
  * Time: 16:33
@@ -16,11 +16,14 @@ $robot = new Robot([
     'debug' => true
 ]);
 
+// 发送给所有群消息！！！慎重！！！
 $robot->server->setCustomerHandler(function(){
     /** @var $message Message */
 
-    $group = group()->getGroupsByNickname('stackoverflow', true)->first();
-    Message::send('测试' . \Carbon\Carbon::now()->toDateTimeString(), $group['UserName']);
+    $groups = group()->getGroupsByNickname('stackoverflow', true);
+    foreach ($groups as $group) {
+        Message::send('测试' . \Carbon\Carbon::now()->toDateTimeString(), $group['UserName']);
+    }
 
 });
 

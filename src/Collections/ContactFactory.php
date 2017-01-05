@@ -48,7 +48,7 @@ class ContactFactory
     protected function makeContactList($memberList)
     {
         foreach ($memberList as $contact) {
-            if($contact['VerifyFlag'] & 8 != 0){ #公众号
+            if(($contact['VerifyFlag'] & 8) != 0){ #公众号
                 OfficialAccount::getInstance()->put($contact['UserName'], $contact);
             }elseif (in_array($contact['UserName'], static::SPECIAL_USERS)){ # 特殊账户
                 SpecialAccount::getInstance()->put($contact['UserName'], $contact);

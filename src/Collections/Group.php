@@ -9,6 +9,7 @@
 namespace Hanson\Robot\Collections;
 
 
+use Hanson\Robot\Support\Console;
 use Illuminate\Support\Collection;
 
 class Group extends Collection
@@ -51,7 +52,7 @@ class Group extends Collection
     public function getGroupsByNickname($name, $blur = false, $onlyUsername = false)
     {
         $groups = $this->filter(function($value, $key) use ($name, $blur){
-           if($blur){
+           if(!$blur){
                return $value['NickName'] === $name;
            }else{
                return str_contains($value['NickName'], $name);

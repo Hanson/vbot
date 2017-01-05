@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "37f52ae2334d2a7d5f4435c7d835c45a",
-    "content-hash": "45acbc8560c0df766dc94338616aefe5",
+    "hash": "b8d45b4e0794f3855f36113b444420a7",
+    "content-hash": "4208bf2e5381a25360c7b542e17fd4a0",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -76,22 +76,29 @@
         },
         {
             "name": "endroid/qrcode",
-            "version": "1.7.4",
+            "version": "1.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/endroid/QrCode.git",
-                "reference": "ba35ed8f0686bc4ec82874752778ccb427261a41"
+                "reference": "ab09b42778ad67cfe850f9c23165f8d08b756680"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packagist.phpcomposer.com/files/endroid/QrCode/ba35ed8f0686bc4ec82874752778ccb427261a41.zip",
-                "reference": "ba35ed8f0686bc4ec82874752778ccb427261a41",
+                "url": "https://packagist.phpcomposer.com/files/endroid/QrCode/ab09b42778ad67cfe850f9c23165f8d08b756680.zip",
+                "reference": "ab09b42778ad67cfe850f9c23165f8d08b756680",
                 "shasum": ""
             },
             "require": {
                 "ext-gd": "*",
-                "php": ">=5.3.0",
+                "php": ">=5.4",
                 "symfony/options-resolver": "^2.3|^3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.0|^5.0",
+                "sensio/framework-extra-bundle": "^3.0",
+                "symfony/browser-kit": "^2.3|^3.0",
+                "symfony/framework-bundle": "^2.3|^3.0",
+                "symfony/http-kernel": "^2.3|^3.0"
             },
             "type": "library",
             "extra": {
@@ -118,12 +125,14 @@
             "description": "Endroid QR Code",
             "homepage": "https://github.com/endroid/QrCode",
             "keywords": [
+                "bundle",
                 "code",
                 "endroid",
                 "qr",
-                "qrcode"
+                "qrcode",
+                "symfony"
             ],
-            "time": "2016-07-26 09:39:07"
+            "time": "2017-01-03 11:02:14"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -189,28 +198,28 @@
         },
         {
             "name": "guzzlehttp/promises",
-            "version": "1.3.0",
+            "version": "v1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/promises.git",
-                "reference": "2693c101803ca78b27972d84081d027fca790a1e"
+                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packagist.phpcomposer.com/files/guzzle/promises/2693c101803ca78b27972d84081d027fca790a1e.zip",
-                "reference": "2693c101803ca78b27972d84081d027fca790a1e",
+                "url": "https://packagist.phpcomposer.com/files/guzzle/promises/a59da6cf61d80060647ff4d3eb2c03a2bc694646.zip",
+                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.5.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.0"
+                "phpunit/phpunit": "^4.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0-dev"
+                    "dev-master": "1.4-dev"
                 }
             },
             "autoload": {
@@ -236,7 +245,7 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2016-11-18 17:47:58"
+            "time": "2016-12-20 10:07:11"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -1341,16 +1350,16 @@
         },
         {
             "name": "nette/robot-loader",
-            "version": "v2.4.1",
+            "version": "v2.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/robot-loader.git",
-                "reference": "980d7c5f20f4792d0be49285c7b2ffde8c8d9fe5"
+                "reference": "f23f8885624b249d5ec7bb525b9d6b007ab00293"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packagist.phpcomposer.com/files/nette/robot-loader/980d7c5f20f4792d0be49285c7b2ffde8c8d9fe5.zip",
-                "reference": "980d7c5f20f4792d0be49285c7b2ffde8c8d9fe5",
+                "url": "https://packagist.phpcomposer.com/files/nette/robot-loader/f23f8885624b249d5ec7bb525b9d6b007ab00293.zip",
+                "reference": "f23f8885624b249d5ec7bb525b9d6b007ab00293",
                 "shasum": ""
             },
             "require": {
@@ -1396,7 +1405,7 @@
             ],
             "description": "Nette RobotLoader: comfortable autoloading",
             "homepage": "https://nette.org",
-            "time": "2016-09-29 15:55:27"
+            "time": "2017-01-02 17:15:22"
         },
         {
             "name": "nette/utils",

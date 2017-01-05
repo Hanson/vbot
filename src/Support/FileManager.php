@@ -15,7 +15,7 @@ class FileManager
     public static function download($msgId, $data, $type)
     {
         $path = server()->config['tmp'] . $type;
-        if(!is_dir($path)){
+        if(!is_dir(realpath($path))){
             mkdir($path, 0700, true);
         }
 
