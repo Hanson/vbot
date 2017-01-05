@@ -14,7 +14,6 @@ use Hanson\Robot\Support\Console;
 
 class ContactFactory
 {
-//    protected $server;
 
     const SPECIAL_USERS = ['newsapp', 'fmessage', 'filehelper', 'weibo', 'qqmail',
         'fmessage', 'tmessage', 'qmessage', 'qqsync', 'floatbottle',
@@ -37,7 +36,6 @@ class ContactFactory
         $content = http()->json($url, [
             'BaseRequest' => server()->baseRequest
         ], true);
-//        file_put_contents($this->server->config['tmp'] . 'debug.json', json_encode($content));
 
         $this->makeContactList($content['MemberList']);
     }
@@ -51,50 +49,41 @@ class ContactFactory
     {
         foreach ($memberList as $contact) {
             if($contact['VerifyFlag'] & 8 != 0){ #公众号
-                $type = 'public';
                 OfficialAccount::getInstance()->put($contact['UserName'], $contact);
             }elseif (in_array($contact['UserName'], static::SPECIAL_USERS)){ # 特殊账户
-                $type = 'special';
                 SpecialAccount::getInstance()->put($contact['UserName'], $contact);
             }elseif (strstr($contact['UserName'], '@@') !== false){ # 群聊
-                $type = 'group';
-                GroupAccount::getInstance()->put($contact['UserName'], $contact);
+                group()->put($contact['UserName'], $contact);
             }else{
-                $type = 'contact';
-                ContactAccount::getInstance()->put($contact['UserName'], $contact);
+                contact()->put($contact['UserName'], $contact);
             }
-            Account::getInstance()->addNormalMember($contact['UserName'], ['type' => $type, 'info' => $contact]);
         }
 
         $this->getBatchGroupMembers();
-        file_put_contents(server()->config['tmp'] . 'account.json', json_encode(Account::getInstance()->all()));
-        file_put_contents(server()->config['tmp'] . 'OfficialAccount.json', json_encode(OfficialAccount::getInstance()->all()));
-        file_put_contents(server()->config['tmp'] . 'SpecialAccount.json', json_encode(SpecialAccount::getInstance()->all()));
-        file_put_contents(server()->config['tmp'] . 'GroupAccount.json', json_encode(GroupAccount::getInstance()->all()));
-        file_put_contents(server()->config['tmp'] . 'ContactAccount.json', json_encode(ContactAccount::getInstance()->all()));
+        if(server()->config['debug']){
+            file_put_contents(server()->config['tmp'] . 'contact.json', json_encode(contact()->all()));
+            file_put_contents(server()->config['tmp'] . 'member.json', json_encode(member()->all()));
+            file_put_contents(server()->config['tmp'] . 'group.json', json_encode(group()->all()));
+            file_put_contents(server()->config['tmp'] . 'OfficialAccount.json', json_encode(OfficialAccount::getInstance()->all()));
+            file_put_contents(server()->config['tmp'] . 'SpecialAccount.json', json_encode(SpecialAccount::getInstance()->all()));
+        }
     }
 
     /**
-     * get group members by api
+     * 获取群组成员
      */
     public function getBatchGroupMembers()
     {
         $url = sprintf(Server::BASE_URI . '/webwxbatchgetcontact?type=ex&r=%s&pass_ticket=%s', time(), server()->passTicket);
 
         $list = [];
-        GroupAccount::getInstance()->each(function($item, $key) use (&$list){
+        group()->each(function($item, $key) use (&$list){
             $list[] = ['UserName' => $key, 'EncryChatRoomId' => ''];
         });
 
-//        file_put_contents($this->server->config['tmp'] . 'debug.json', json_encode([
-//            'BaseRequest' => $this->server->baseRequest,
-//            'Count' => count($list),
-//            'List' => $list
-//        ]));
-
         $content = http()->json($url, [
             'BaseRequest' => server()->baseRequest,
-            'Count' => GroupAccount::getInstance()->count(),
+            'Count' => group()->count(),
             'List' => $list
         ], true);
 
@@ -102,19 +91,19 @@ class ContactFactory
     }
 
     /**
-     * init group members and chat room id
+     * 初始化群组成员
      *
      * @param $array
      */
     private function initGroupMembers($array)
     {
         foreach ($array['ContactList'] as $group) {
-            $groupAccount =  GroupAccount::getInstance()->get($group['UserName']);
+            $groupAccount =  group()->get($group['UserName']);
             $groupAccount['MemberList'] = $group['MemberList'];
             $groupAccount['ChatRoomId'] = $group['EncryChatRoomId'];
-            GroupAccount::getInstance()->put($group['UserName'], $groupAccount);
+            group()->put($group['UserName'], $groupAccount);
             foreach ($group['MemberList'] as $member) {
-                Account::getInstance()->addGroupMember($member['UserName'], ['type' => 'groupMember', 'info' => $member, 'group' => $group]);
+                member()->put($member['UserName'], $member);
             }
         }
 

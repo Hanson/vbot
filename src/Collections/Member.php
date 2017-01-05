@@ -11,31 +11,39 @@ namespace Hanson\Robot\Collections;
 
 use Illuminate\Support\Collection;
 
-class ContactAccount extends Collection
+class Member extends Collection
 {
 
     /**
-     * @var ContactAccount
+     * @var Member
      */
     static $instance = null;
 
     /**
      * create a single instance
      *
-     * @return ContactAccount
+     * @return Member
      */
     public static function getInstance()
     {
         if(static::$instance === null){
-            static::$instance = new ContactAccount();
+            static::$instance = new Member();
         }
 
         return static::$instance;
     }
 
-    public function isContact($id)
+    /**
+     * 根据username获取群成员
+     *
+     * @param $id
+     * @return array
+     */
+    public function getMemberByUsername($id)
     {
-        return static::$instance->get($id, false);
+        $member = $this->get($id);
+
+        return $member ?? null;
     }
 
 }

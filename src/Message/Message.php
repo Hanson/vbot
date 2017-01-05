@@ -9,19 +9,20 @@
 namespace Hanson\Robot\Message;
 
 
+use Carbon\Carbon;
 use Hanson\Robot\Core\Server;
-use Hanson\Robot\Collections\Account;
-use Hanson\Robot\Collections\ContactAccount;
+use Hanson\Robot\Collections\Contact;
 use Hanson\Robot\Collections\OfficialAccount;
 use Hanson\Robot\Collections\SpecialAccount;
-use Hanson\Robot\Models\Content;
-use Hanson\Robot\Models\Sender;
 use Hanson\Robot\Support\FileManager;
 use Hanson\Robot\Support\Console;
 
 class Message
 {
 
+    /**
+     * @var array 消息来源
+     */
     public $from;
 
     /**
@@ -29,12 +30,24 @@ class Message
      */
     public $sender;
 
+    /**
+     * @var string 来源的username，用于回复
+     */
     public $username;
 
+    /**
+     * @var array 消息接收者
+     */
     public $to;
 
+    /**
+     * @var string 经过处理的内容
+     */
     public $content;
 
+    /**
+     * @var Carbon 时间
+     */
     public $time;
 
     /**
@@ -46,8 +59,6 @@ class Message
      * @var string 消息类型
      */
     public $type;
-
-    static $message = [];
 
     const USER_TYPE = [
         0 => 'Init',
@@ -62,20 +73,14 @@ class Message
 
     public $rawMsg;
 
-//    const MESSAGE_TYPE = [
-//        0 => 'Text',
-//    ]
-
     public function make($selector, $msg)
     {
         $this->rawMsg = $msg;
+        $this->time = Carbon::now();
 
         $this->setFrom();
-
         $this->setTo();
-
         $this->setFromType();
-
         $this->setType();
 
         return $this;
@@ -86,13 +91,13 @@ class Message
      */
     private function setFrom()
     {
-        $this->from = Account::getInstance()->getContactByUsername($this->rawMsg['FromUserName']);
+        $this->from = contact()->getContactByUsername($this->rawMsg['FromUserName']);
         $this->username = $this->rawMsg['FromUserName'];
     }
 
     private function setTo()
     {
-        $this->to = Account::getInstance()->getContactByUsername($this->rawMsg['ToUserName']);
+        $this->to = contact()->getContactByUsername($this->rawMsg['ToUserName']);
     }
 
     private function setFromType()
@@ -107,7 +112,7 @@ class Message
             $this->fromType = 'FileHelper';
         } elseif (substr($this->rawMsg['FromUserName'], 0, 2) === '@@') { # group
             $this->fromType = 'Group';
-        } elseif (ContactAccount::getInstance()->isContact($this->rawMsg['FromUserName'])) {
+        } elseif (Contact::getInstance()->isContact($this->rawMsg['FromUserName'])) {
             $this->fromType = 'Contact';
         } elseif (OfficialAccount::getInstance()->isPublic($this->rawMsg['FromUserName'])) {
             $this->fromType = 'Public';
@@ -151,6 +156,7 @@ class Message
             case 1:
                 if(Location::isLocation($this->rawMsg['Content'])){
                     $this->type = 'Location';
+                    $this->content = Location::getLocationText($this->rawMsg['Content']);
                 }else{
                     $this->type = 'Text';
                     $this->content = $this->rawMsg['Content'];
@@ -160,13 +166,13 @@ class Message
                 $this->type = 'Image';
                 $this->content = Server::BASE_URI . sprintf('/webwxgetmsgimg?MsgID=%s&skey=%s', $this->rawMsg['MsgId'], server()->skey);
                 $content = http()->get($this->content);
-                FileManager::download(server()->config['tmp'] . $this->rawMsg['MsgId'] . '.jpg', $content);
+                FileManager::download($this->rawMsg['MsgId'], $content, 'jpg');
                 break;
             case 34:
                 $this->type = 'Voice';
                 $this->content = Server::BASE_URI . sprintf('/webwxgetvoice?msgid=%s&skey=%s', $this->rawMsg['MsgId'], server()->skey);
                 $content = http()->get($this->content);
-                FileManager::download(server()->config['tmp'] . $this->rawMsg['MsgId'] . '.mp3', $content);
+                FileManager::download($this->rawMsg['MsgId'], $content, 'mp3');
                 break;
             case 37:
                 $this->type = 'AddUser';
@@ -196,31 +202,19 @@ class Message
             default:
                 $this->type = 'Unknown';
                 break;
-
-
         }
     }
 
     /**
-     * 设置当前message 为 location
-     */
-    private function setLocationMessage()
-    {
-        $this->fromType = 'Location';
-//        $this->url = $this->rawMsg['Url'];
-        $this->content->msg = Location::getLocationText($this->rawMsg['Content']);
-    }
-
-    /**
-     * handle group content
+     * 处理群发消息的内容
      *
-     * @param $content
+     * @param $content string 内容
      */
     private function handleGroupContent($content)
     {
         list($uid, $content) = explode('<br/>', $content, 2);
 
-        $this->sender = Account::getInstance()->getGroupMember(substr($uid, 0, -1));
+        $this->sender = member()->getMemberByUsername(substr($uid, 0, -1));
         $this->rawMsg['Content'] = $this->formatContent($content);
     }
 

@@ -1,5 +1,5 @@
 {
-    "name": "hanson/wx-bot",
+    "name": "hanson/vbot",
     "type": "library",
     "license": "mit",
     "authors": [
@@ -15,7 +15,8 @@
         "endroid/qrcode": "^1.7",
         "symfony/css-selector": "^3.2",
         "pimple/pimple": "^3.0",
-        "illuminate/support": "^5.3"
+        "illuminate/support": "^5.3",
+        "nesbot/carbon": "^1.21"
     },
     "autoload": {
         "files": [

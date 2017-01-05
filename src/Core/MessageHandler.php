@@ -39,6 +39,12 @@ class MessageHandler
         return static::$instance;
     }
 
+    /**
+     * 消息处理器
+     *
+     * @param Closure $closure
+     * @throws \Exception
+     */
     public function setMessageHandler(Closure $closure)
     {
         if(!$closure instanceof Closure){
@@ -48,6 +54,12 @@ class MessageHandler
         $this->handler = $closure;
     }
 
+    /**
+     * 自定义处理器
+     *
+     * @param Closure $closure
+     * @throws \Exception
+     */
     public function setCustomHandler(Closure $closure)
     {
         if(!$closure instanceof Closure){
@@ -66,7 +78,7 @@ class MessageHandler
 
         while (true){
 
-            if($this->customHandler){
+            if($this->customHandler instanceof Closure){
                 call_user_func_array($this->customHandler, []);
             }
 
@@ -96,35 +108,11 @@ class MessageHandler
         if($message['AddMsgList']){
             foreach ($message['AddMsgList'] as $msg) {
                 $content = (new Message)->make($selector, $msg);
-                $response = call_user_func_array($this->handler, [$content]);
-                $this->send($response, $content);
+                if($this->handler instanceof Closure){
+                    $reply = call_user_func_array($this->handler, [$content]);
+                    Message::send($reply, $content->username);
+                }
             }
-        }
-    }
-
-    private function send($word, $content)
-    {
-        if(!$word && !is_string($word)){
-            return false;
-        }
-
-        $random = strval(time() * 1000) . '0' . strval(rand(100, 999));
-        $result = http()->post(Server::BASE_URI . '/webwxsendmsg?pass_ticket=' . server()->passTicket,
-            json_encode([
-                'BaseRequest' => server()->baseRequest,
-                'Msg' => [
-                    'Type' => 1,
-                    'Content' => $word,
-                    'FromUserName' => myself()->userName,
-                    'ToUserName' => $content->rawMsg['FromUserName'],
-                    'LocalID' => $random,
-                    'ClientMsgId' => $random,
-                ],
-                'Scene' => 0
-            ], JSON_UNESCAPED_UNICODE), true);
-
-        if($result['BaseResponse']['Ret'] != 0){
-            Console::log('发送消息失败');
         }
     }
 

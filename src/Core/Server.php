@@ -13,7 +13,7 @@ use Endroid\QrCode\QrCode;
 use GuzzleHttp\Client;
 use Hanson\Robot\Collections\Account;
 use Hanson\Robot\Collections\ContactFactory;
-use Hanson\Robot\Collections\GroupAccount;
+use Hanson\Robot\Collections\Group;
 use Hanson\Robot\Support\Console;
 use QueryPath\Exception;
 use Symfony\Component\DomCrawler\Crawler;
@@ -56,6 +56,8 @@ class Server
     public function __construct($config = [])
     {
         $this->config = $config;
+
+        $this->config['debug'] = $this->config['debug'] ?? false;
     }
 
     /**
@@ -241,9 +243,8 @@ class Server
     {
         if($contactList){
             foreach ($contactList as $contact) {
-                if(GroupAccount::isGroup($contact['UserName'])){
-                    GroupAccount::getInstance()->put($contact['UserName'], $contact);
-                    Account::getInstance()->addNormalMember($contact['UserName'], ['type' => 'group', 'info' => $contact]);
+                if(Group::isGroup($contact['UserName'])){
+                    group()->put($contact['UserName'], $contact);
                 }
             }
         }
