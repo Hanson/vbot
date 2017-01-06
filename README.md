@@ -300,6 +300,11 @@ $robot->server->setCustomHandler(function(){
 
 [overtrue/wechat](https://github.com/overtrue/wechat) 参考了部分代码的书写格式与设计思路
 
+# to do list
+
+- [ ] 命令行操作信息发送
+- [ ] 消息处理
+
 # 已知bug
 
 * 20% 的几率初始化失败（暂时无解，如清楚问题欢迎PR）
