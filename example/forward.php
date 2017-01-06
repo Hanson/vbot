@@ -12,14 +12,14 @@ use Hanson\Robot\Foundation\Robot;
 use Hanson\Robot\Message\Message;
 
 $robot = new Robot([
-    'tmp' => __DIR__ . './../tmp/',
+    'tmp' => __DIR__ . '/./../tmp/',
     'debug' => true
 ]);
 
 $robot->server->setMessageHandler(function($message){
     if($message->type === 'Text'){
         /** @var $message Message */
-        $contact = contact()->getUsernameById('L907159127');
+        $contact = contact()->getUsernameById('hanson1994');
         Message::send($message->content, $contact);
     }
 });

@@ -9,6 +9,7 @@
 namespace Hanson\Robot\Core;
 
 use GuzzleHttp\Client as HttpClient;
+use Hanson\Robot\Support\Console;
 
 class Http
 {
@@ -29,18 +30,18 @@ class Http
         return static::$instance;
     }
 
-    public function get($url, array $options = [])
+    public function get($url, array $query = [])
     {
-        $query = $options ? ['query' => $options] : [];
+        $query = $query ? ['query' => $query] : [];
 
         return $this->request($url, 'GET', $query);
     }
 
-    public function post($url, $options = [], $array = false)
+    public function post($url, $query = [], $array = false)
     {
-        $key = is_array($options) ? 'form_params' : 'body';
+        $key = is_array($query) ? 'form_params' : 'body';
 
-        $content = $this->request($url, 'POST', [$key => $options]);
+        $content = $this->request($url, 'POST', [$key => $query]);
 
         return $array ? json_decode($content, true) : $content;
     }
@@ -75,9 +76,15 @@ class Http
 
     public function request($url, $method = 'GET', $options = [])
     {
-        $response = $this->getClient()->request($method, $url, $options);
+        try{
+            $response = $this->getClient()->request($method, $url, $options);
 
-        return $response->getBody()->getContents();
+            return $response->getBody()->getContents();
+        }catch (\Exception $e){
+            Console::log('http链接失败：' . $e->getMessage());
+            Console::log('错误URL：' . $url);
+        }
+
     }
 
 

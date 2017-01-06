@@ -60,6 +60,8 @@ class Message
      */
     public $type;
 
+    public $isAt = false;
+
     const USER_TYPE = [
         0 => 'Init',
         1 => 'Self',
@@ -82,6 +84,7 @@ class Message
         $this->setTo();
         $this->setFromType();
         $this->setType();
+        $this->rawMsg['selector'] = $selector;
 
         return $this;
     }
@@ -112,10 +115,10 @@ class Message
             $this->fromType = 'FileHelper';
         } elseif (substr($this->rawMsg['FromUserName'], 0, 2) === '@@') { # group
             $this->fromType = 'Group';
-        } elseif (Contact::getInstance()->isContact($this->rawMsg['FromUserName'])) {
+        } elseif (contact()->getContactByUsername($this->rawMsg['FromUserName'])) {
             $this->fromType = 'Contact';
         } elseif (OfficialAccount::getInstance()->isPublic($this->rawMsg['FromUserName'])) {
-            $this->fromType = 'Public';
+            $this->fromType = 'Official';
         } elseif (SpecialAccount::getInstance()->get($this->rawMsg['FromUserName'], false)) {
             $this->fromType = 'Special';
         } else {
@@ -141,7 +144,7 @@ class Message
             $this->type = 'Empty';
         }elseif ($this->fromType === 'FileHelper'){ # File Helper
             $this->type = 'Text';
-            $this->content->msg = $this->formatContent($this->rawMsg['Content']);
+            $this->content = $this->formatContent($this->rawMsg['Content']);
         }elseif ($this->fromType === 'Group'){
             $this->handleGroupContent($this->rawMsg['Content']);
         }
@@ -154,7 +157,7 @@ class Message
     {
         switch($this->rawMsg['MsgType']){
             case 1:
-                if(Location::isLocation($this->rawMsg['Content'])){
+                if(Location::isLocation($this->rawMsg)){
                     $this->type = 'Location';
                     $this->content = Location::getLocationText($this->rawMsg['Content']);
                 }else{
@@ -166,13 +169,13 @@ class Message
                 $this->type = 'Image';
                 $this->content = Server::BASE_URI . sprintf('/webwxgetmsgimg?MsgID=%s&skey=%s', $this->rawMsg['MsgId'], server()->skey);
                 $content = http()->get($this->content);
-                FileManager::download($this->rawMsg['MsgId'], $content, 'jpg');
+                FileManager::download(time().$this->rawMsg['MsgId'].'.jpg', $content, 'jpg');
                 break;
             case 34:
                 $this->type = 'Voice';
                 $this->content = Server::BASE_URI . sprintf('/webwxgetvoice?msgid=%s&skey=%s', $this->rawMsg['MsgId'], server()->skey);
                 $content = http()->get($this->content);
-                FileManager::download($this->rawMsg['MsgId'], $content, 'mp3');
+                FileManager::download(time().$this->rawMsg['MsgId'].'.mp3', $content, 'mp3');
                 break;
             case 37:
                 $this->type = 'AddUser';
@@ -197,7 +200,11 @@ class Message
                 $this->type = 'Redraw';
                 break;
             case 10000:
-                $this->type = 'Unknown';
+                if($this->rawMsg['Status'] == 4){
+                    $this->type = 'RedPacket'; // 红包
+                }else{
+                    $this->type = 'Unknown';
+                }
                 break;
             default:
                 $this->type = 'Unknown';
@@ -212,25 +219,29 @@ class Message
      */
     private function handleGroupContent($content)
     {
+        if(!$content){
+            return;
+        }
         list($uid, $content) = explode('<br/>', $content, 2);
 
         $this->sender = member()->getMemberByUsername(substr($uid, 0, -1));
         $this->rawMsg['Content'] = $this->formatContent($content);
+        $this->isAt = str_contains($this->rawMsg['Content'], '@'.myself()->nickname);
     }
 
     private function formatContent($content)
     {
-        return str_replace('<br/>', '\n', $content);
+        return str_replace('<br/>', "\n", $content);
     }
 
     /**
      * 发送消息
      *
      * @param $word string 消息内容
-     * @param $fromUser string 目标username
+     * @param $username string 目标username
      * @return bool
      */
-    public static function send($word, $fromUser)
+    public static function send($word, $username)
     {
         if(!$word && !is_string($word)){
             return false;
@@ -244,7 +255,7 @@ class Message
                 'Type' => 1,
                 'Content' => $word,
                 'FromUserName' => myself()->userName,
-                'ToUserName' => $fromUser,
+                'ToUserName' => $username,
                 'LocalID' => $random,
                 'ClientMsgId' => $random,
             ],

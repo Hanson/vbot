@@ -14,7 +14,7 @@ class Location
 
     public static function isLocation($content)
     {
-        return str_contains('webwxgetpubliclinkimg', $content);
+        return str_contains('webwxgetpubliclinkimg', $content['Content']) && $content['Url'];
     }
 
     public static function getLocationText($content)

@@ -12,14 +12,14 @@ namespace Hanson\Robot\Support;
 class FileManager
 {
 
-    public static function download($msgId, $data, $type)
+    public static function download($name, $data, $path)
     {
-        $path = server()->config['tmp'] . $type;
+        $path = server()->config['tmp'] . $path;
         if(!is_dir(realpath($path))){
             mkdir($path, 0700, true);
         }
 
-        file_put_contents("$path/$msgId.$type", $data);
+        file_put_contents("$path/$name", $data);
     }
 
 }

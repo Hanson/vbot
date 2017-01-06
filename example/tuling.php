@@ -12,7 +12,7 @@ use Hanson\Robot\Foundation\Robot;
 use Hanson\Robot\Message\Message;
 
 $robot = new Robot([
-    'tmp' => __DIR__ . './../tmp/',
+    'tmp' => __DIR__ . '/./../tmp/',
 ]);
 
 $robot->server->setMessageHandler(function($message){

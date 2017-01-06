@@ -33,11 +33,6 @@ class Contact extends Collection
         return static::$instance;
     }
 
-    public function isContact($id)
-    {
-        return static::$instance->get($id, false);
-    }
-
     /**
      * 根据username获取联系人
      *
