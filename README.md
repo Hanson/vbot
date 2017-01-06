@@ -17,11 +17,17 @@ composer require hanson/robot
 ## 例子
 
 [自动回复](https://github.com/HanSon/vbot/blob/before/example/tuling.php)
+
 [红包提醒](https://github.com/HanSon/vbot/blob/before/example/hongbao.php)
+
 [轰炸群](https://github.com/HanSon/vbot/blob/before/example/groups.php)
+
 [发送消息到某群名](https://github.com/HanSon/vbot/blob/before/example/group.php)
+
 [消息转发](https://github.com/HanSon/vbot/blob/before/example/forward.php)
+
 [自定义处理器](https://github.com/HanSon/vbot/blob/before/example/custom.php)
+
 [是否@了我](https://github.com/HanSon/vbot/blob/before/example/is_at.php)
 
 
@@ -189,6 +195,7 @@ $robot->server->setCustomHandler(function(){
 
 `getAccount($username)` 根据username返回账号
 `返回值 array`
+
 | 参数名 | 类型 | 解释 |
 | ------ | ---- | ---- |
 | username| string | 账号数组 |
@@ -199,18 +206,21 @@ $robot->server->setCustomHandler(function(){
 
 `getContactByUsername($username)` 根据username获取Contact
 `返回值 array`
+
 | 参数名 | 类型 | 解释 |
 | ------ | ---- | ---- |
 | username| string | 联系人的username|
 
 `getContactById($id)` 根据微信号获取Contact
 `返回值 array`
+
 | 参数名 | 类型 | 解释 |
 | ------ | ---- | ---- |
 | id| string | 联系人的微信号|
 
 `getUsernameById($id)` 根据微信号获取 username
 `返回值 array`
+
 | 参数名 | 类型 | 解释 |
 | ------ | ---- | ---- |
 | id| string | 联系人的微信号|
@@ -221,12 +231,14 @@ $robot->server->setCustomHandler(function(){
 
 `isGroup($userName)` 根据username判断是否群组
 `返回值 bool`
+
 | 参数名 | 类型 | 解释 |
 | ------ | ---- | ---- |
 | username| string | 联系人的username|
 
 `getGroupsByNickname($name, $blur = false, $onlyUsername = false)` 根据名称筛选群组
 `返回值 array`
+
 | 参数名 | 类型 | 解释 |
 | ------ | ---- | ---- |
 | name| string | 需要筛选的名称|
@@ -239,6 +251,7 @@ $robot->server->setCustomHandler(function(){
 
 `getMemberByUsername($username)` 根据username获取成员
 `返回值 array`
+
 | 参数名 | 类型 | 解释 |
 | ------ | ---- | ---- |
 | name| string | 成员的username|
@@ -257,6 +270,7 @@ $robot->server->setCustomHandler(function(){
 
 `get($url, array $query = [])` ajax get请求
 `返回值 string`
+
 | 参数名 | 类型 | 解释 |
 | ------ | ---- | ---- |
 | url| string | 请求链接|
@@ -264,6 +278,7 @@ $robot->server->setCustomHandler(function(){
 
 `post($url, array $query = [], $json = false)` ajax post请求
 `返回值 string|array`
+
 | 参数名 | 类型 | 解释 |
 | ------ | ---- | ---- |
 | url| string | 请求链接|
@@ -272,6 +287,7 @@ $robot->server->setCustomHandler(function(){
 
 `json($url, array $query = [], $json = false)` ajax post json请求
 `返回值 string|array`
+
 | 参数名 | 类型 | 解释 |
 | ------ | ---- | ---- |
 | url| string | 请求链接|
@@ -281,6 +297,7 @@ $robot->server->setCustomHandler(function(){
 # 特别感谢
 
 [liuwons/wxBot](https://github.com/liuwons/wxBot) 参考了整个微信的登录流程与消息处理
+
 [overtrue/wechat](https://github.com/overtrue/wechat) 参考了部分代码的书写格式与设计思路
 
 # 已知bug
