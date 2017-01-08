@@ -16,7 +16,7 @@ class Myself
 
     public $nickname;
 
-    public $userName;
+    public $username;
 
     public $uin;
 
@@ -34,7 +34,7 @@ class Myself
     public function init($user)
     {
         $this->nickname = $user['NickName'];
-        $this->userName = $user['UserName'];
+        $this->username = $user['UserName'];
         $this->sex = $user['Sex'];
         $this->uin= $user['Uin'];
     }

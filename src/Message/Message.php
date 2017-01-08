@@ -85,7 +85,7 @@ class Message
         $this->setFromType();
         $this->setType();
         $this->rawMsg['selector'] = $selector;
-
+        $this->addMessageCollection();
         return $this;
     }
 
@@ -109,7 +109,7 @@ class Message
             $this->fromType = 'System';
         } elseif ($this->rawMsg['MsgType'] == 37) {
             $this->fromType = 'FriendRequest';
-        } elseif ($this->rawMsg['FromUserName'] === myself()->userName) {
+        } elseif ($this->rawMsg['FromUserName'] === myself()->username) {
             $this->fromType = 'Self';
         } elseif ($this->rawMsg['ToUserName'] === 'filehelper') {
             $this->fromType = 'FileHelper';
@@ -155,6 +155,7 @@ class Message
      */
     private function handleMessageByType()
     {
+        print_r($this->rawMsg);
         switch($this->rawMsg['MsgType']){
             case 1:
                 if(Location::isLocation($this->rawMsg)){
@@ -169,13 +170,13 @@ class Message
                 $this->type = 'Image';
                 $this->content = Server::BASE_URI . sprintf('/webwxgetmsgimg?MsgID=%s&skey=%s', $this->rawMsg['MsgId'], server()->skey);
                 $content = http()->get($this->content);
-                FileManager::download(time().$this->rawMsg['MsgId'].'.jpg', $content, 'jpg');
+                FileManager::download($this->rawMsg['MsgId'].'.jpg', $content, 'jpg');
                 break;
             case 34:
                 $this->type = 'Voice';
                 $this->content = Server::BASE_URI . sprintf('/webwxgetvoice?msgid=%s&skey=%s', $this->rawMsg['MsgId'], server()->skey);
                 $content = http()->get($this->content);
-                FileManager::download(time().$this->rawMsg['MsgId'].'.mp3', $content, 'mp3');
+                FileManager::download($this->rawMsg['MsgId'].'.mp3', $content, 'mp3');
                 break;
             case 37:
                 $this->type = 'AddUser';
@@ -197,7 +198,13 @@ class Message
                 $this->type = 'VideoCall';
                 break;
             case 10002:
-                $this->type = 'Redraw';
+                $this->type = 'Recall'; // 撤回
+                $msgId = $this->parseMsgId($this->rawMsg['Content']);
+                $message = message()->get($msgId);
+                $nickname = $message['sender'] ? $message['sender']['NickName'] : account()->getAccount($message['username'])['NickName'];
+                print_r($message);
+                Console::log('nickname:'.$nickname);
+                $this->content = "{$nickname} 刚撤回了消息 \"{$message['content']}\"";
                 break;
             case 10000:
                 if($this->rawMsg['Status'] == 4){
@@ -219,7 +226,7 @@ class Message
      */
     private function handleGroupContent($content)
     {
-        if(!$content){
+        if(!$content || $this->rawMsg['MsgType'] == 10002){
             return;
         }
         list($uid, $content) = explode('<br/>', $content, 2);
@@ -232,6 +239,34 @@ class Message
     private function formatContent($content)
     {
         return str_replace('<br/>', "\n", $content);
+    }
+
+    /**
+     * 解析message获取msgId
+     *
+     * @param $xml
+     * @return string msgId
+     */
+    private function parseMsgId($xml)
+    {
+        preg_match('/<msgid>(\d+)<\/msgid>/', $xml, $matches);
+        return $matches[1];
+    }
+
+    /**
+     * 存储消息到 Message 集合
+     */
+    public function addMessageCollection()
+    {
+        message()->put($this->rawMsg['MsgId'], [
+            'content' => $this->content,
+            'username' => $this->username,
+            'sender' => $this->sender,
+            'msg_type' => $this->rawMsg['MsgType'],
+            'type' => $this->type,
+            'created_at' => $this->rawMsg['CreateTime'],
+            'from_type' => $this->fromType
+        ]);
     }
 
     /**
@@ -254,7 +289,7 @@ class Message
             'Msg' => [
                 'Type' => 1,
                 'Content' => $word,
-                'FromUserName' => myself()->userName,
+                'FromUserName' => myself()->username,
                 'ToUserName' => $username,
                 'LocalID' => $random,
                 'ClientMsgId' => $random,

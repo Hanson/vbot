@@ -55,7 +55,9 @@ class Account
     {
         $account = static::$group->get($username, null);
 
-        return $account ? : static::$contact->get($username, null);
+        $account = $account ? : static::$contact->get($username, null);
+
+        return $account ? : member()->get($username, null);
     }
 
 }

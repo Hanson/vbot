@@ -303,6 +303,7 @@ $robot->server->setCustomHandler(function(){
 # to do list
 
 - [ ] 命令行操作信息发送
+- [ ] 增加消息集合存储
 - [ ] 消息处理
 
 # 已知bug

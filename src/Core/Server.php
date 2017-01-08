@@ -265,8 +265,8 @@ class Server
         http()->json($url, [
             'BaseRequest' => $this->baseRequest,
             'Code' => 3,
-            'FromUserName' => myself()->userName,
-            'ToUserName' => myself()->userName,
+            'FromUserName' => myself()->username,
+            'ToUserName' => myself()->username,
             'ClientMsgId' => time()
         ]);
     }
