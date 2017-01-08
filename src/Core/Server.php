@@ -218,7 +218,7 @@ class Server
         return true;
     }
 
-    protected function init()
+    protected function init($first = true)
     {
         $url = sprintf(self::BASE_URI . '/webwxinit?r=%i&lang=en_US&pass_ticket=%s', time(), $this->passTicket);
 
@@ -227,7 +227,7 @@ class Server
         ]);
         
         $result = json_decode($content, true);
-        $this->generateSyncKey($result);
+        $this->generateSyncKey($result, $first);
 
         myself()->init($result['User']);
 
@@ -271,14 +271,18 @@ class Server
         ]);
     }
 
-    protected function generateSyncKey($result)
+    protected function generateSyncKey($result, $first)
     {
         $this->syncKey = $result['SyncKey'];
 
         $syncKey = [];
 
-        foreach ($this->syncKey['List'] as $item) {
-            $syncKey[] = $item['Key'] . '_' . $item['Val'];
+        if(is_array($this->syncKey['List'])){
+            foreach ($this->syncKey['List'] as $item) {
+                $syncKey[] = $item['Key'] . '_' . $item['Val'];
+            }
+        }elseif($first){
+            $this->init(false);
         }
 
         $this->syncKeyStr = implode('|', $syncKey);

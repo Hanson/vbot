@@ -157,7 +157,7 @@ class Message
     {
         print_r($this->rawMsg);
         switch($this->rawMsg['MsgType']){
-            case 1:
+            case 1: //文本消息
                 if(Location::isLocation($this->rawMsg)){
                     $this->type = 'Location';
                     $this->content = Location::getLocationText($this->rawMsg['Content']);
@@ -166,26 +166,29 @@ class Message
                     $this->content = $this->rawMsg['Content'];
                 }
                 break;
-            case 3:
+            case 3: // 图片消息
                 $this->type = 'Image';
                 $this->content = Server::BASE_URI . sprintf('/webwxgetmsgimg?MsgID=%s&skey=%s', $this->rawMsg['MsgId'], server()->skey);
                 $content = http()->get($this->content);
                 FileManager::download($this->rawMsg['MsgId'].'.jpg', $content, 'jpg');
                 break;
-            case 34:
+            case 34: // 语音消息
                 $this->type = 'Voice';
                 $this->content = Server::BASE_URI . sprintf('/webwxgetvoice?msgid=%s&skey=%s', $this->rawMsg['MsgId'], server()->skey);
                 $content = http()->get($this->content);
                 FileManager::download($this->rawMsg['MsgId'].'.mp3', $content, 'mp3');
                 break;
-            case 37:
+            case 37: // 好友验证
                 $this->type = 'AddUser';
                 break;
-            case 42:
+            case 42: //共享名片
                 $this->type = 'Recommend';
                 $this->content = (object)$this->rawMsg['RecommendInfo'];
                 break;
-            case 47:
+            case 43:
+                $this->type = 'VideoCall';
+                break;
+            case 47: // 动画表情
                 $this->type = 'Animation';
                 break;
             case 49:
@@ -194,8 +197,18 @@ class Message
             case 62:
                 $this->type = 'Video';
                 break;
+            case 51:
+                $this->type = 'Init';
+                break;
             case 53:
                 $this->type = 'VideoCall';
+                break;
+            case 10000:
+                if($this->rawMsg['Status'] == 4){
+                    $this->type = 'RedPacket'; // 红包
+                }else{
+                    $this->type = 'Unknown';
+                }
                 break;
             case 10002:
                 $this->type = 'Recall'; // 撤回
@@ -205,13 +218,6 @@ class Message
                 print_r($message);
                 Console::log('nickname:'.$nickname);
                 $this->content = "{$nickname} 刚撤回了消息 \"{$message['content']}\"";
-                break;
-            case 10000:
-                if($this->rawMsg['Status'] == 4){
-                    $this->type = 'RedPacket'; // 红包
-                }else{
-                    $this->type = 'Unknown';
-                }
                 break;
             default:
                 $this->type = 'Unknown';
@@ -307,5 +313,34 @@ class Message
 
         return true;
     }
+
+    public static function sendImg($username, $mediaId)
+    {
+        $url = sprintf(Server::BASE_URI . '/webwxsendmsgimg?fun=async&f=json&pass_ticket=%s' , server()->passTicket);
+        $clientMsgId = (time() * 1000) .substr(uniqid(), 0,5);
+        $data = [
+            'BaseRequest'=> server()->baseRequest,
+            'Msg'=> [
+                'Type'=> 3,
+                'MediaId'=> $mediaId,
+                'FromUserName'=> myself()->username,
+                'ToUserName'=> $username,
+                'LocalID'=> $clientMsgId,
+                'ClientMsgId'=> $clientMsgId
+            ]
+        ];
+        $result = http()->post($url,
+            json_encode($data, JSON_UNESCAPED_UNICODE), true
+        );
+
+        if($result['BaseResponse']['Ret'] != 0){
+            Console::log('发送消息失败');
+            return false;
+        }
+
+        return true;
+    }
+
+//    pri
 
 }
