@@ -304,6 +304,8 @@ $robot->server->setCustomHandler(function(){
 
 - [ ] 命令行操作信息发送
 
+- [ ] 消息抽象成每个类
+
 - [x] 增加消息集合存储
 
 - [ ] 消息发送
@@ -322,6 +324,7 @@ $robot->server->setCustomHandler(function(){
   - [ ] 表情
   - [ ] 分享
   - [ ] 视频
+  - [ ] 小程序
   
 # 已知bug
 

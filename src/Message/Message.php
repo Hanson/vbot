@@ -75,6 +75,8 @@ class Message
 
     public $rawMsg;
 
+    private $mediaCount = -1;
+
     public function make($selector, $msg)
     {
         $this->rawMsg = $msg;
@@ -155,7 +157,6 @@ class Message
      */
     private function handleMessageByType()
     {
-        print_r($this->rawMsg);
         switch($this->rawMsg['MsgType']){
             case 1: //文本消息
                 if(Location::isLocation($this->rawMsg)){
@@ -215,8 +216,6 @@ class Message
                 $msgId = $this->parseMsgId($this->rawMsg['Content']);
                 $message = message()->get($msgId);
                 $nickname = $message['sender'] ? $message['sender']['NickName'] : account()->getAccount($message['username'])['NickName'];
-                print_r($message);
-                Console::log('nickname:'.$nickname);
                 $this->content = "{$nickname} 刚撤回了消息 \"{$message['content']}\"";
                 break;
             default:
@@ -334,13 +333,11 @@ class Message
         );
 
         if($result['BaseResponse']['Ret'] != 0){
-            Console::log('发送消息失败');
+            Console::log('发送图片失败');
             return false;
         }
 
         return true;
     }
-
-//    pri
 
 }
