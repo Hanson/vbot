@@ -18,6 +18,8 @@ class Http
 
     protected $client;
 
+    public $cookies;
+
     /**
      * @return Http
      */

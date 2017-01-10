@@ -10,6 +10,7 @@ require_once __DIR__ . './../vendor/autoload.php';
 
 use Hanson\Robot\Foundation\Robot;
 use Hanson\Robot\Message\Message;
+use Hanson\Robot\Message\Image;
 use Hanson\Robot\Support\Console;
 
 $robot = new Robot([
@@ -18,11 +19,8 @@ $robot = new Robot([
 
 $robot->server->setMessageHandler(function($message){
     /** @var $message Message */
-    // 发送撤回消息 （排除自己）
-    print_r(http()->getClient()->getConfig('cookies')->toArray());
-    if($message->type === 'Recall' && $message->rawMsg['FromUserName'] !== myself()->username){
-        Console::log($message->content);
-        Message::send($message->content, $message->username);
+    if($message->content === '测试图片'){
+        Image::send($message->username, realpath(__DIR__ . '/./../tmp/jpg/1483791274935140574833210401.jpg'));
     }
 
 });

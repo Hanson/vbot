@@ -13,7 +13,7 @@ namespace Hanson\Robot\Message;
  * Class UploadAble
  * @package Hanson\Robot\Message\
  *
- * @property string $mediaCount
+ * @property  string static $mediaCount
  */
 trait UploadAble
 {
@@ -21,17 +21,18 @@ trait UploadAble
     /**
      * @param $username
      * @param $file
+     * @return bool|mixed|string
      */
-    public function uploadMedia($username, $file)
+    public static function uploadMedia($username, $file)
     {
         $url = 'https://file.wx.qq.com/cgi-bin/mmwebwx-bin/webwxuploadmedia?f=json';
-        $this->mediaCount = ++$this->mediaCount;
+        static::$mediaCount = ++static::$mediaCount;
 
         $lastModifyDate = gmdate('D M d Y H:i:s TO', filemtime($file));
-        list($mime, $mediaType) = $this->getMediaType($file);
+        list($mime, $mediaType) = static::getMediaType($file);
 
-        http()->post($url, [
-            'id' => 'WU_FILE_' .$this->mediaCount,
+        $data = [
+            'id' => 'WU_FILE_' .static::$mediaCount,
             'name' => $file,
             'type' => $mime,
             'lastModifieDate' => $lastModifyDate,
@@ -39,28 +40,48 @@ trait UploadAble
             'mediatype' => $mediaType,
             'uploadmediarequest' => json_encode([
                 'BaseRequest' => server()->baseRequest,
-                'ClientMediaId' => (time() * 1000).mt_rand(10000,99999),
+                'ClientMediaId' => time(),
                 'TotalLen' => filesize($file),
                 'StartPos' => 0,
                 'DataLen' => filesize($file),
                 'MediaType' => 4,
-                'UploadType' => 2,
-                'FromUserName' => myself()->username,
-                'ToUserName' => $username,
-                'FileMd5' => md5_file($file)
-            ],JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES),
-            'webwx_data_ticket' => http()->getClient()->get,
-            'pass_ticket' => $pass_ticket,
-            'filename' => '@'.$file_name
-        ]);
+//                'UploadType' => 2,
+//                'FromUserName' => myself()->username,
+//                'ToUserName' => $username,
+//                'FileMd5' => md5_file($file)
+            ], JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES),
+            'webwx_data_ticket' => static::getTicket(),
+            'pass_ticket' => server()->passTicket,
+            'filename' => '@'.$file
+        ];
+
+        $result = http()->post($url, $data, true);
+
+        print_r($data);
+        print_r($result);
+
+        if($result['BaseResponse']['Ret'] == 0){
+            return $result;
+        }
+
+        return false;
     }
 
-    private function getMediaType($file)
+    private static function getMediaType($file)
     {
         $info = finfo_open(FILEINFO_MIME_TYPE);
         $mime =  finfo_file($info, $file);
         finfo_close($info);
 
         return [$mime, explode('/', $mime)[0] === 'image' ? 'pic' : 'doc'];
+    }
+
+    private static function getTicket()
+    {
+        $cookies = http()->getClient()->getConfig('cookies')->toArray();
+
+        $key = array_search('webwx_data_ticket', array_column($cookies, 'Name'));
+
+        return $cookies[$key]['Value'];
     }
 }

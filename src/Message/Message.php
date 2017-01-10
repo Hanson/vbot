@@ -75,7 +75,7 @@ class Message
 
     public $rawMsg;
 
-    private $mediaCount = -1;
+    static $mediaCount = -1;
 
     public function make($selector, $msg)
     {
@@ -231,7 +231,7 @@ class Message
      */
     private function handleGroupContent($content)
     {
-        if(!$content || $this->rawMsg['MsgType'] == 10002){
+        if(!$content && !str_contains($content, '<br/>')){
             return;
         }
         list($uid, $content) = explode('<br/>', $content, 2);
@@ -307,33 +307,6 @@ class Message
 
         if($result['BaseResponse']['Ret'] != 0){
             Console::log('发送消息失败');
-            return false;
-        }
-
-        return true;
-    }
-
-    public static function sendImg($username, $mediaId)
-    {
-        $url = sprintf(Server::BASE_URI . '/webwxsendmsgimg?fun=async&f=json&pass_ticket=%s' , server()->passTicket);
-        $clientMsgId = (time() * 1000) .substr(uniqid(), 0,5);
-        $data = [
-            'BaseRequest'=> server()->baseRequest,
-            'Msg'=> [
-                'Type'=> 3,
-                'MediaId'=> $mediaId,
-                'FromUserName'=> myself()->username,
-                'ToUserName'=> $username,
-                'LocalID'=> $clientMsgId,
-                'ClientMsgId'=> $clientMsgId
-            ]
-        ];
-        $result = http()->post($url,
-            json_encode($data, JSON_UNESCAPED_UNICODE), true
-        );
-
-        if($result['BaseResponse']['Ret'] != 0){
-            Console::log('发送图片失败');
             return false;
         }
 

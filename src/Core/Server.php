@@ -209,7 +209,7 @@ class Server
         $this->deviceId = 'e' . strval(random_int(100000000000000, 999999999999999));
 
         $this->baseRequest = [
-            'Uin' => $this->uin,
+            'Uin' => intval($this->uin),
             'Sid' => $this->sid,
             'Skey' => $this->skey,
             'DeviceID' => $this->deviceId
@@ -220,7 +220,7 @@ class Server
 
     protected function init($first = true)
     {
-        $url = sprintf(self::BASE_URI . '/webwxinit?r=%i&lang=en_US&pass_ticket=%s', time(), $this->passTicket);
+        $url = sprintf(self::BASE_URI . '/webwxinit?r=%i&lang=en_US&pass_ticket=%s&skey=%s', time(), $this->passTicket, $this->skey);
 
         $content = http()->json($url, [
             'BaseRequest' => $this->baseRequest
