@@ -18,6 +18,8 @@ namespace Hanson\Robot\Message;
 trait UploadAble
 {
 
+    static $file;
+
     /**
      * @param $username
      * @param $file
@@ -27,15 +29,15 @@ trait UploadAble
     {
         $url = 'https://file.wx.qq.com/cgi-bin/mmwebwx-bin/webwxuploadmedia?f=json';
         static::$mediaCount = ++static::$mediaCount;
+        static::$file = $file;
 
-        $lastModifyDate = gmdate('D M d Y H:i:s TO', filemtime($file));
         list($mime, $mediaType) = static::getMediaType($file);
 
         $data = [
             'id' => 'WU_FILE_' .static::$mediaCount,
-            'name' => $file,
+            'name' => basename($file),
             'type' => $mime,
-            'lastModifieDate' => $lastModifyDate,
+            'lastModifieDate' => date('D M m Y H:i:s').' GMT+0800 (CST)',
             'size' => filesize($file),
             'mediatype' => $mediaType,
             'uploadmediarequest' => json_encode([
@@ -51,11 +53,20 @@ trait UploadAble
 //                'FileMd5' => md5_file($file)
             ], JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES),
             'webwx_data_ticket' => static::getTicket(),
-            'pass_ticket' => server()->passTicket,
-            'filename' => '@'.$file
+            'pass_ticket' => urldecode(server()->passTicket),
+//            'filename' => "@{$file};filename=".basename($file),
+//            'filename' => file_get_contents($file),
+            'filename' => fopen($file, 'r'),
+//            'filename' => $file
+//            'filename' => curl_file_create($file, $mime, basename($file))
         ];
 
+        $data = static::dataToMultipart($data);
         $result = http()->post($url, $data, true);
+
+//        $result = http()->request($url, 'post', [
+//            'multipart' => $data
+//        ]);
 
         print_r($data);
         print_r($result);
@@ -84,4 +95,21 @@ trait UploadAble
 
         return $cookies[$key]['Value'];
     }
+
+    private function dataToMultipart($data)
+    {
+        $result = [];
+
+        foreach ($data as $key => $item) {
+            $field = [
+                'name' => $key,
+                'contents' => $item
+            ];
+            if($key === 'filename') $field['filename'] = basename(static::$file);
+            $result[] = $field;
+        }
+
+        return $result;
+    }
+
 }
