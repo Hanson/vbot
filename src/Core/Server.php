@@ -196,17 +196,18 @@ class Server
     {
         $content = http()->get($this->redirectUri);
 
-        $crawler = new Crawler($content);
-        $this->skey = $crawler->filter('error skey')->text();
-        $this->sid = $crawler->filter('error wxsid')->text();
-        $this->uin = $crawler->filter('error wxuin')->text();
-        $this->passTicket = $crawler->filter('error pass_ticket')->text();
+        $data = (array)simplexml_load_string($content, 'SimpleXMLElement', LIBXML_NOCDATA);
+
+        $this->skey = $data['skey'];
+        $this->sid = $data['wxsid'];
+        $this->uin = $data['wxuin'];
+        $this->passTicket = $data['pass_ticket'];
 
         if(in_array('', [$this->skey, $this->sid, $this->uin, $this->passTicket])){
             throw new \Exception('[ERROR] login fail!');
         }
 
-        $this->deviceId = 'e' . strval(random_int(100000000000000, 999999999999999));
+        $this->deviceId = 'e' .substr(mt_rand().mt_rand(), 1, 15);
 
         $this->baseRequest = [
             'Uin' => intval($this->uin),
@@ -220,7 +221,7 @@ class Server
 
     protected function init($first = true)
     {
-        $url = sprintf(self::BASE_URI . '/webwxinit?r=%i&lang=en_US&pass_ticket=%s&skey=%s', time(), $this->passTicket, $this->skey);
+        $url = sprintf(self::BASE_URI . '/webwxinit?r=%d', time());
 
         $content = http()->json($url, [
             'BaseRequest' => $this->baseRequest
@@ -234,8 +235,10 @@ class Server
         $this->initContactList($result['ContactList']);
 
         if($result['BaseResponse']['Ret'] != 0){
-//            Log::echo('init fail!');
-            throw new Exception('[ERROR] init fail!');
+//            print_r($this->baseRequest);
+
+            Console::log('[ERROR] init fail!');
+//            throw new Exception('[ERROR] init fail!');
         }
     }
 

@@ -54,7 +54,7 @@ trait UploadAble
                 'FileMd5' => md5_file($file)
             ], JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES),
             'webwx_data_ticket' => static::getTicket(),
-            'pass_ticket' => urldecode(server()->passTicket),
+            'pass_ticket' => (server()->passTicket),
 //            'filename' => "@{$file};filename=".basename($file),
 //            'filename' => file_get_contents($file),
             'filename' => fopen($file, 'r'),
@@ -63,13 +63,12 @@ trait UploadAble
         ];
 
 //        $data = static::dataToMultipart($data);
-        $result = http()->post($url, $data, true);
+//        $result = http()->post($url, $data, true);
 
-//        $result = http()->request($url, 'post', [
-//            'multipart' => $data
-//        ]);
-
-//        $result = json_decode($result, true);
+        $result = http()->request($url, 'post', [
+            'multipart' => $data
+        ]);
+        $result = json_decode($result, true);
 
         print_r($data);
         print_r($result);
@@ -110,7 +109,7 @@ trait UploadAble
             ];
             if($key === 'filename'){
                 $field['filename'] = basename(static::$file);
-                $field['Content-type'] = 'image/jpeg';
+//                $field['Content-type'] = 'application/octet-stream';
             }
             $result[] = $field;
         }

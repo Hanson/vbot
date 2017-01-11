@@ -20,7 +20,7 @@ $robot = new Robot([
 $robot->server->setMessageHandler(function($message){
     /** @var $message Message */
     if($message->content === '测试图片'){
-        Image::send($message->username, realpath(__DIR__ . '/./../tmp/jpg/5102437722783331610.jpg'));
+        Image::send($message->username, realpath(__DIR__ . '/./../tmp/jpg/9031924810002714257.jpg'));
     }
 
 });
