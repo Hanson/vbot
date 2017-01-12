@@ -111,8 +111,8 @@ class Server
         $content = http()->get('https://login.weixin.qq.com/jslogin', [
             'appid' => 'wx782c26e4c19acffb',
             'fun' => 'new',
-            'lang' => 'zh_CN',
-            '_' => time() * 1000 . random_int(1, 999)
+//            'lang' => 'zh_CN',
+//            '_' => time() * 1000 . random_int(1, 999)
         ]);
 
         preg_match('/window.QRLogin.code = (\d+); window.QRLogin.uuid = \"(\S+?)\"/', $content, $matches);
@@ -168,6 +168,7 @@ class Server
                 case '200':
                     preg_match('/window.redirect_uri="(\S+?)";/', $content, $matches);
                     $this->redirectUri = $matches[1] . '&fun=new';
+                    Console::log('登录URL:'.$this->redirectUri);
                     return;
                 case '408':
                     Console::log('[ERROR] login timeout. please try 1 second later.');
@@ -237,7 +238,7 @@ class Server
         if($result['BaseResponse']['Ret'] != 0){
 //            print_r($this->baseRequest);
 
-            Console::log('[ERROR] init fail!');
+            Console::log('init URL:'. $url);
 //            throw new Exception('[ERROR] init fail!');
         }
     }

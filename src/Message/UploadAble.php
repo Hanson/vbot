@@ -27,7 +27,7 @@ trait UploadAble
      */
     public static function uploadMedia($username, $file)
     {
-        $url = 'https://file.wx.qq.com/cgi-bin/mmwebwx-bin/webwxuploadmedia?f=json';
+        $url = 'https://file.wx2.qq.com/cgi-bin/mmwebwx-bin/webwxuploadmedia?f=json';
         static::$mediaCount = ++static::$mediaCount;
         static::$file = $file;
 
@@ -38,7 +38,7 @@ trait UploadAble
             'name' => basename($file),
             'type' => $mime,
 //            'lastModifieDate' => gmdate('D M d Y H:i:s', filemtime($file) ).' GMT+0800 (CST)',
-            'lastModifieDate' => date('D M d Y H:i:s',filemtime($file)).' GMT+0800 (CST)',
+            'lastModifieDate' => gmdate('D M d Y H:i:s TO', filemtime($file)).' (CST)',
             'size' => filesize($file),
             'mediatype' => $mediaType,
             'uploadmediarequest' => json_encode([
@@ -62,7 +62,7 @@ trait UploadAble
 //            'filename' => curl_file_create($file, $mime, basename($file))
         ];
 
-//        $data = static::dataToMultipart($data);
+        $data = static::dataToMultipart($data);
 //        $result = http()->post($url, $data, true);
 
         $result = http()->request($url, 'post', [

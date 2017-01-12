@@ -20,7 +20,8 @@ $robot = new Robot([
 $robot->server->setMessageHandler(function($message){
     /** @var $message Message */
     if($message->content === '测试图片'){
-        Image::send($message->username, realpath(__DIR__ . '/./../tmp/jpg/9031924810002714257.jpg'));
+        // https://wx2.qq.com/cgi-bin/mmwebwx-bin
+        Image::send($message->username, realpath(__DIR__ . '/./../tmp/jpg/1547651860337387181.jpg'));
     }
 
 });
