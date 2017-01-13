@@ -43,7 +43,7 @@ class Contact extends Collection
     {
         $contact = $this->get($id);
 
-        return $contact ?? null;
+        return $contact ?? [];
     }
 
     /**

@@ -7,6 +7,8 @@
  */
 
 namespace Hanson\Robot\Message;
+use Hanson\Robot\Core\Server;
+use Hanson\Robot\Support\Console;
 
 
 /**
@@ -71,15 +73,64 @@ trait UploadAble
         return false;
     }
 
+
+    public static function send($username, $file)
+    {
+        $response = static::uploadMedia($username, $file);
+
+        if(!$response){
+            Console::log("文件 {$file} 上传失败");
+            return false;
+        }
+
+        $mediaId = $response['MediaId'];
+
+        $url = sprintf(Server::BASE_URI . '/webwxsendappmsg?fun=async&f=json' , server()->passTicket);
+        $data = [
+            'BaseRequest'=> server()->baseRequest,
+            'Msg'=> [
+                'Type'=> 6,
+                'Content' => sprintf("<appmsg appid='wxeb7ec651dd0aefa9' sdkver=''><title>%s</title><des></des><action></action><type>6</type><content></content><url></url><lowurl></lowurl><appattach><totallen>%s</totallen><attachid>%s</attachid><fileext>%s</fileext></appattach><extinfo></extinfo></appmsg>", basename($file), filesize($file), $mediaId, end(explode('.', $file))),
+                'FromUserName'=> myself()->username,
+                'ToUserName'=> $username,
+                'LocalID'=> time() * 1e4,
+                'ClientMsgId'=> time() * 1e4
+            ]
+        ];
+        print_r($data);
+        $result = http()->json($url, $data, true);
+
+        if($result['BaseResponse']['Ret'] != 0){
+            Console::log('发送文件失败');
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 获取媒体类型
+     *
+     * @param $file
+     * @return array
+     */
     private static function getMediaType($file)
     {
         $info = finfo_open(FILEINFO_MIME_TYPE);
         $mime =  finfo_file($info, $file);
         finfo_close($info);
 
-        return [$mime, explode('/', $mime)[0] === 'image' ? 'pic' : 'doc'];
+        $fileExplode = explode('.', $file);
+        $fileExtension = end($fileExplode);
+
+        return [$mime, $fileExtension === 'jpg' ? 'pic' : $fileExtension === 'mp4' ? 'video' : 'doc'];
     }
 
+    /**
+     * 获取cookie的ticket
+     *
+     * @return mixed
+     */
     private static function getTicket()
     {
         $cookies = http()->getClient()->getConfig('cookies')->toArray();
@@ -89,6 +140,12 @@ trait UploadAble
         return $cookies[$key]['Value'];
     }
 
+    /**
+     * 把请求数组转为multipart模式
+     *
+     * @param $data
+     * @return array
+     */
     private static function dataToMultipart($data)
     {
         $result = [];

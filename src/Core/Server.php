@@ -239,8 +239,8 @@ class Server
         if($result['BaseResponse']['Ret'] != 0){
 //            print_r($this->baseRequest);
 
-            Console::log('init URL:'. $url);
-//            throw new Exception('[ERROR] init fail!');
+//            Console::log('init URL:'. $url);
+            throw new Exception('[ERROR] init fail!');
         }
     }
 

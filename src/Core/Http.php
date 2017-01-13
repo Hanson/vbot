@@ -9,6 +9,8 @@
 namespace Hanson\Robot\Core;
 
 use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\Cookie\CookieJar;
+use GuzzleHttp\Cookie\FileCookieJar;
 use Hanson\Robot\Support\Console;
 
 class Http
@@ -17,6 +19,13 @@ class Http
     static $instance;
 
     protected $client;
+
+    /**
+     * @var FileCookieJar
+     */
+    private $cookieJar;
+
+    private $cookieFile;
 
     /**
      * @return Http
@@ -68,17 +77,25 @@ class Http
     public function getClient()
     {
         if (!($this->client instanceof HttpClient)) {
-            $this->client = new HttpClient(['cookies' => true]);
+            $this->cookieFile = realpath(server()->config['tmp']) . '/cookie.txt';
+            $this->cookieJar = new FileCookieJar($this->cookieFile);
+            $this->client = new HttpClient(['cookies' => $this->cookieJar]);
         }
 
         return $this->client;
     }
 
+    /**
+     * @param $url
+     * @param string $method
+     * @param array $options
+     * @return string
+     */
     public function request($url, $method = 'GET', $options = [])
     {
         try{
             $response = $this->getClient()->request($method, $url, $options);
-
+            $this->cookieJar->save($this->cookieFile);
             return $response->getBody()->getContents();
         }catch (\Exception $e){
             Console::log('http链接失败：' . $e->getMessage());

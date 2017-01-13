@@ -189,15 +189,34 @@ class Message
                 break;
             case 43:
                 $this->type = 'VideoCall';
+                Console::log('video');
+                $url = Server::BASE_URI . sprintf('/webwxgetvideo?msgid=%s&skey=%s', $this->rawMsg['MsgId'], server()->skey);
+                $content = http()->request($url, 'get', [
+                    'headers' => [
+                        'Range' => 'bytes=0-'
+                    ]
+                ]);
+                FileManager::download($this->rawMsg['MsgId'].'.mp4', $content, 'mp4');
                 break;
             case 47: // 动画表情
-                $this->type = 'Animation';
+                $this->type = 'Emoticon';
+                $this->content = Server::BASE_URI . sprintf('/webwxgetmsgimg?MsgID=%s&skey=%s', $this->rawMsg['MsgId'], server()->skey);
+                $content = http()->get($this->content);
+                FileManager::download($this->rawMsg['MsgId'].'.gif', $content, 'gif');
                 break;
             case 49:
                 $this->type = 'Share';
                 break;
             case 62:
                 $this->type = 'Video';
+                Console::log('video');
+                $url = Server::BASE_URI . sprintf('/webwxgetvideo?msgid=%s&skey=%s', $this->rawMsg['MsgId'], server()->skey);
+                $content = http()->request($url, 'get', [
+                    'headers' => [
+                        'Range' => 'bytes=0-'
+                    ]
+                ]);
+                FileManager::download($this->rawMsg['MsgId'].'.mp4', $content, 'mp4');
                 break;
             case 51:
                 $this->type = 'Init';
@@ -215,8 +234,6 @@ class Message
             case 10002:
                 $this->type = 'Recall'; // 撤回
                 $this->msgId = $msgId = $this->parseMsgId($this->rawMsg['Content']);
-//                if($message['type'] === )
-
                 break;
             default:
                 $this->type = 'Unknown';

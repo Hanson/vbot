@@ -57,7 +57,7 @@ class Account
 
         $account = $account ? : static::$contact->get($username, null);
 
-        return $account ? : member()->get($username, null);
+        return $account ? : member()->get($username, []);
     }
 
 }

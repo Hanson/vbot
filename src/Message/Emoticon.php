@@ -12,7 +12,7 @@ namespace Hanson\Robot\Message;
 use Hanson\Robot\Core\Server;
 use Hanson\Robot\Support\Console;
 
-class Image extends Message
+class Emoticon extends Message
 {
 
     use UploadAble;
@@ -22,17 +22,18 @@ class Image extends Message
         $response = static::uploadMedia($username, $file);
 
         if(!$response){
-            Console::log("文件 {$file} 上传失败");
+            Console::log("表情 {$file} 上传失败");
             return false;
         }
 
         $mediaId = $response['MediaId'];
 
-        $url = sprintf(Server::BASE_URI . '/webwxsendmsgimg?fun=async&f=json&pass_ticket=%s' , server()->passTicket);
+        $url = sprintf(Server::BASE_URI . '/webwxsendemoticon?fun=sys&f=json&pass_ticket=%s' , server()->passTicket);
         $data = [
             'BaseRequest'=> server()->baseRequest,
             'Msg'=> [
-                'Type'=> 3,
+                'Type'=> 47,
+                "EmojiFlag"=> 2,
                 'MediaId'=> $mediaId,
                 'FromUserName'=> myself()->username,
                 'ToUserName'=> $username,
@@ -43,7 +44,7 @@ class Image extends Message
         $result = http()->json($url, $data, true);
 
         if($result['BaseResponse']['Ret'] != 0){
-            Console::log('发送图片失败');
+            Console::log('发送表情失败');
             return false;
         }
 
