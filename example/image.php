@@ -20,7 +20,12 @@ $robot = new Robot([
 $robot->server->setMessageHandler(function($message){
     /** @var $message Message */
     if($message->content === '测试图片'){
-        // https://wx2.qq.com/cgi-bin/mmwebwx-bin
+        // 自己发就发送给自己
+        Image::send($message->username, realpath(__DIR__ . '/./../tmp/jpg/1547651860337387181.jpg'));
+    }
+    if($message->type === 'Recall' && $message->rawMsg['FromUserName'] !== myself()->username){
+        Console::log($message->content);
+        Message::send($message->content, $message->username);
         Image::send($message->username, realpath(__DIR__ . '/./../tmp/jpg/1547651860337387181.jpg'));
     }
 

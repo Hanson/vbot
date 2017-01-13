@@ -37,7 +37,6 @@ trait UploadAble
             'id' => 'WU_FILE_' .static::$mediaCount,
             'name' => basename($file),
             'type' => $mime,
-//            'lastModifieDate' => gmdate('D M d Y H:i:s', filemtime($file) ).' GMT+0800 (CST)',
             'lastModifieDate' => gmdate('D M d Y H:i:s TO', filemtime($file)).' (CST)',
             'size' => filesize($file),
             'mediatype' => $mediaType,
@@ -55,23 +54,15 @@ trait UploadAble
             ], JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES),
             'webwx_data_ticket' => static::getTicket(),
             'pass_ticket' => (server()->passTicket),
-//            'filename' => "@{$file};filename=".basename($file),
-//            'filename' => file_get_contents($file),
             'filename' => fopen($file, 'r'),
-//            'filename' => $file
-//            'filename' => curl_file_create($file, $mime, basename($file))
         ];
 
         $data = static::dataToMultipart($data);
-//        $result = http()->post($url, $data, true);
 
         $result = http()->request($url, 'post', [
             'multipart' => $data
         ]);
         $result = json_decode($result, true);
-
-        print_r($data);
-        print_r($result);
 
         if($result['BaseResponse']['Ret'] == 0){
             return $result;
@@ -109,7 +100,6 @@ trait UploadAble
             ];
             if($key === 'filename'){
                 $field['filename'] = basename(static::$file);
-//                $field['Content-type'] = 'application/octet-stream';
             }
             $result[] = $field;
         }

@@ -29,7 +29,6 @@ class Image extends Message
         $mediaId = $response['MediaId'];
 
         $url = sprintf(Server::BASE_URI . '/webwxsendmsgimg?fun=async&f=json&pass_ticket=%s' , server()->passTicket);
-        $clientMsgId = (time() * 1000) .substr(uniqid(), 0,5);
         $data = [
             'BaseRequest'=> server()->baseRequest,
             'Msg'=> [
@@ -37,13 +36,13 @@ class Image extends Message
                 'MediaId'=> $mediaId,
                 'FromUserName'=> myself()->username,
                 'ToUserName'=> $username,
-                'LocalID'=> $clientMsgId,
-                'ClientMsgId'=> $clientMsgId
+                'LocalID'=> time() * 1e4,
+                'ClientMsgId'=> time() * 1e4
             ]
         ];
-        $result = http()->post($url,
-            json_encode($data, JSON_UNESCAPED_UNICODE), true
-        );
+        $result = http()->json($url, $data, true);
+
+        print_r($result);
 
         if($result['BaseResponse']['Ret'] != 0){
             Console::log('发送图片失败');

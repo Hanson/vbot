@@ -96,13 +96,14 @@ class Message
      */
     private function setFrom()
     {
-        $this->from = contact()->getContactByUsername($this->rawMsg['FromUserName']);
+        $this->from = $this->toObject(account()->getAccount($this->rawMsg['FromUserName']));
+//        $this->from = contact()->getContactByUsername($this->rawMsg['FromUserName']);
         $this->username = $this->rawMsg['FromUserName'];
     }
 
     private function setTo()
     {
-        $this->to = contact()->getContactByUsername($this->rawMsg['ToUserName']);
+        $this->to = $this->toObject(contact()->getContactByUsername($this->rawMsg['ToUserName']));
     }
 
     private function setFromType()
@@ -213,10 +214,9 @@ class Message
                 break;
             case 10002:
                 $this->type = 'Recall'; // 撤回
-                $msgId = $this->parseMsgId($this->rawMsg['Content']);
-                $message = message()->get($msgId);
-                $nickname = $message['sender'] ? $message['sender']['NickName'] : account()->getAccount($message['username'])['NickName'];
-                $this->content = "{$nickname} 刚撤回了消息 \"{$message['content']}\"";
+                $this->msgId = $msgId = $this->parseMsgId($this->rawMsg['Content']);
+//                if($message['type'] === )
+
                 break;
             default:
                 $this->type = 'Unknown';
@@ -231,7 +231,7 @@ class Message
      */
     private function handleGroupContent($content)
     {
-        if(!$content && !str_contains($content, '<br/>')){
+        if(!$content || !str_contains($content, '<br/>')){
             return;
         }
         list($uid, $content) = explode('<br/>', $content, 2);
@@ -311,6 +311,11 @@ class Message
         }
 
         return true;
+    }
+
+    private function toObject(Array $array)
+    {
+        return json_decode(json_encode($array));
     }
 
 }

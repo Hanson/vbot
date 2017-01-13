@@ -19,10 +19,16 @@ $robot = new Robot([
 $robot->server->setMessageHandler(function($message){
     /** @var $message Message */
     // 发送撤回消息 （排除自己）
-    print_r(http()->getClient()->getConfig('cookies')->toArray());
-    if($message->type === 'Recall' && $message->rawMsg['FromUserName'] !== myself()->username){
-        Console::log($message->content);
-        Message::send($message->content, $message->username);
+    if($message->type === 'Recall' && $message->rawMsg['FromUserName'] !== myself()->username ){
+//        Message::send($message->content, $message->username);
+        $message = message()->get($message->msgId);
+        $nickname = $message['sender'] ? $message['sender']['NickName'] : account()->getAccount($message['username'])['NickName'];
+        $content = "{$nickname} 刚撤回了消息 " . $message['type'] === 'Text' ? "\"{$message['content']}\"" : null;
+        if($message['type'] === 'Image'){
+            \Hanson\Robot\Message\Image::send($message->username, realpath(__DIR__ . "/./../tmp/jpg/{$message->msgId}.jpg"));
+        }else{
+            return $content;
+        }
     }
 
 });

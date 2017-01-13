@@ -111,8 +111,9 @@ class Server
         $content = http()->get('https://login.weixin.qq.com/jslogin', [
             'appid' => 'wx782c26e4c19acffb',
             'fun' => 'new',
-//            'lang' => 'zh_CN',
+            'lang' => 'zh_CN',
 //            '_' => time() * 1000 . random_int(1, 999)
+            '_' => time()
         ]);
 
         preg_match('/window.QRLogin.code = (\d+); window.QRLogin.uuid = \"(\S+?)\"/', $content, $matches);

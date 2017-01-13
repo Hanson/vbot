@@ -304,7 +304,7 @@ $robot->server->setCustomHandler(function(){
 
 - [ ] 命令行操作信息发送
 
-- [ ] 消息抽象成每个类
+- [ ] 抽象消息
 
 - [ ] 群操作
   - [ ] 创建群
@@ -326,6 +326,11 @@ $robot->server->setCustomHandler(function(){
   - [x] 发送文字
   - [ ] 发送图片
   - [ ] 发送表情
+  
+- [ ] 消息存储
+  - [x] 语音
+  - [x] 图片
+  - [ ] 视频
   
 - [ ] 消息处理
   - [x] 文字
