@@ -9,18 +9,46 @@
 namespace Hanson\Robot\Message;
 
 
-class Location
+class Location extends Message implements MessageInterface
 {
 
-    public static function isLocation($content)
+    /**
+     * @var string 位置链接
+     */
+    public $url;
+
+    public function __construct($msg)
     {
-        return str_contains('webwxgetpubliclinkimg', $content['Content']) && $content['Url'];
+        parent::__construct($msg);
+
+        $this->make();
     }
 
-    public static function getLocationText($content)
+    /**
+     * 判断是否位置消息
+     *
+     * @param $content
+     * @return bool
+     */
+    public static function isLocation($content)
     {
-        $result = explode('<br/>', $content);
+        return str_contains($content['Content'], 'webwxgetpubliclinkimg') && $content['Url'];
+    }
 
-        return current(array_slice($result, -2, 1));
+    /**
+     * 设置位置文字信息
+     */
+    private function setLocationText()
+    {
+        $result = explode('<br/>', $this->msg['Content']);
+
+        $this->content = substr(current($result), 0, -1);
+
+        $this->url = $this->msg['Url'];
+    }
+
+    public function make()
+    {
+        $this->setLocationText();
     }
 }

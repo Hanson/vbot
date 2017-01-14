@@ -53,9 +53,9 @@ class Group extends Collection
     {
         $groups = $this->filter(function($value, $key) use ($name, $blur){
            if(!$blur){
-               return $value['NickName'] === $name;
+               return $value->NickName === $name;
            }else{
-               return str_contains($value['NickName'], $name);
+               return str_contains($value->NickName, $name);
            }
         });
 

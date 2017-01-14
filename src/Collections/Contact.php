@@ -55,7 +55,7 @@ class Contact extends Collection
     public function getContactById($id)
     {
         $contact = $this->filter(function($item, $key) use ($id){
-            if($item['Alias'] === $id){
+            if($item->Alias === $id){
                 return true;
             }
         })->first();
@@ -72,7 +72,7 @@ class Contact extends Collection
     public function getUsernameById($id)
     {
         $contact = $this->search(function($item, $key) use ($id){
-            if($item['Alias'] === $id){
+            if($item->Alias === $id){
                 return true;
             }
         });

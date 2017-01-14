@@ -16,9 +16,12 @@ use Hanson\Robot\Collections\OfficialAccount;
 use Hanson\Robot\Collections\SpecialAccount;
 use Hanson\Robot\Support\FileManager;
 use Hanson\Robot\Support\Console;
+use Hanson\Robot\Support\ObjectAble;
 
 class Message
 {
+
+    use ObjectAble;
 
     /**
      * @var array 消息来源
@@ -74,36 +77,46 @@ class Message
     ];
 
     public $rawMsg;
+    public $msg;
 
     static $mediaCount = -1;
 
-    public function make($selector, $msg)
+    public function __construct($msg)
     {
-        $this->rawMsg = $msg;
-        $this->time = Carbon::now();
+        $this->msg = $msg;
 
         $this->setFrom();
         $this->setTo();
-        $this->setFromType();
-        $this->setType();
-        $this->rawMsg['selector'] = $selector;
-        $this->addMessageCollection();
-        return $this;
     }
+
+//    public function make($selector, $msg)
+//    {
+//        $this->rawMsg = $msg;
+//        $this->time = Carbon::now();
+//
+//        $this->setFrom();
+//        $this->setTo();
+//        $this->setFromType();
+//        $this->setType();
+//        $this->rawMsg['selector'] = $selector;
+//        $this->addMessageCollection();
+//        return $this;
+//    }
 
     /**
      * 设置消息发送者
      */
     private function setFrom()
     {
-        $this->from = $this->toObject(account()->getAccount($this->rawMsg['FromUserName']));
-//        $this->from = contact()->getContactByUsername($this->rawMsg['FromUserName']);
-        $this->username = $this->rawMsg['FromUserName'];
+        $from = account()->getAccount($this->msg['FromUserName']);
+        $this->from = $this->toObject($from);
     }
 
     private function setTo()
     {
-        $this->to = $this->toObject(contact()->getContactByUsername($this->rawMsg['ToUserName']));
+        $to = account()->getAccount($this->msg['ToUserName']);
+        print_r($to);
+        $this->to = $this->toObject($to);
     }
 
     private function setFromType()
@@ -298,11 +311,13 @@ class Message
      * @param $username string 目标username
      * @return bool
      */
-    public static function send($word, $username)
+    public static function send(string $word, $username)
     {
         if(!$word && !is_string($word)){
             return false;
         }
+
+        Console::log($word);
 
         $random = strval(time() * 1000) . '0' . strval(rand(100, 999));
 
@@ -330,9 +345,9 @@ class Message
         return true;
     }
 
-    private function toObject(Array $array)
+    public function __toString()
     {
-        return json_decode(json_encode($array));
+        return $this->content;
     }
 
 }

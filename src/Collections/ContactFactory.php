@@ -11,9 +11,11 @@ namespace Hanson\Robot\Collections;
 
 use Hanson\Robot\Core\Server;
 use Hanson\Robot\Support\Console;
+use Hanson\Robot\Support\ObjectAble;
 
 class ContactFactory
 {
+    use ObjectAble;
 
     const SPECIAL_USERS = ['newsapp', 'fmessage', 'filehelper', 'weibo', 'qqmail',
         'fmessage', 'tmessage', 'qmessage', 'qqsync', 'floatbottle',
@@ -49,13 +51,13 @@ class ContactFactory
     {
         foreach ($memberList as $contact) {
             if(($contact['VerifyFlag'] & 8) != 0){ #公众号
-                OfficialAccount::getInstance()->put($contact['UserName'], $contact);
+                OfficialAccount::getInstance()->put($contact['UserName'], $this->toObject($contact));
             }elseif (in_array($contact['UserName'], static::SPECIAL_USERS)){ # 特殊账户
-                SpecialAccount::getInstance()->put($contact['UserName'], $contact);
+                SpecialAccount::getInstance()->put($contact['UserName'], $this->toObject($contact));
             }elseif (strstr($contact['UserName'], '@@') !== false){ # 群聊
-                group()->put($contact['UserName'], $contact);
+                group()->put($contact['UserName'], $this->toObject($contact));
             }else{
-                contact()->put($contact['UserName'], $contact);
+                contact()->put($contact['UserName'], $this->toObject($contact));
             }
         }
 
@@ -101,9 +103,9 @@ class ContactFactory
             $groupAccount =  group()->get($group['UserName']);
             $groupAccount['MemberList'] = $group['MemberList'];
             $groupAccount['ChatRoomId'] = $group['EncryChatRoomId'];
-            group()->put($group['UserName'], $groupAccount);
+            group()->put($group['UserName'], $this->toObject($groupAccount));
             foreach ($group['MemberList'] as $member) {
-                member()->put($member['UserName'], $member);
+                member()->put($member['UserName'], $this->toObject($member));
             }
         }
 

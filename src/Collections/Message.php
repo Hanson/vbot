@@ -15,6 +15,9 @@ use Illuminate\Support\Collection;
 class Message extends Collection
 {
 
+    /**
+     * @var Message
+     */
     static $instance = null;
 
     /**

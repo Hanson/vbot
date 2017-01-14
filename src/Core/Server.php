@@ -15,11 +15,14 @@ use Hanson\Robot\Collections\Account;
 use Hanson\Robot\Collections\ContactFactory;
 use Hanson\Robot\Collections\Group;
 use Hanson\Robot\Support\Console;
+use Hanson\Robot\Support\ObjectAble;
 use QueryPath\Exception;
 use Symfony\Component\DomCrawler\Crawler;
 
 class Server
 {
+
+    use ObjectAble;
 
     static $instance;
 
@@ -49,9 +52,9 @@ class Server
 
     protected $debug = false;
 
-    const BASE_URI = 'https://wx2.qq.com/cgi-bin/mmwebwx-bin';
+    const BASE_URI = 'https://wx.qq.com/cgi-bin/mmwebwx-bin';
 
-    const BASE_HOST = 'wx2.qq.com';
+    const BASE_HOST = 'wx.qq.com';
 
     public function __construct($config = [])
     {
@@ -249,7 +252,7 @@ class Server
         if($contactList){
             foreach ($contactList as $contact) {
                 if(Group::isGroup($contact['UserName'])){
-                    group()->put($contact['UserName'], $contact);
+                    group()->put($contact['UserName'], $this->toObject($contact));
                 }
             }
         }

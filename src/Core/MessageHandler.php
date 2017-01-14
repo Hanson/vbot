@@ -15,18 +15,27 @@ use Hanson\Robot\Support\Console;
 
 class MessageHandler
 {
-    protected $server;
-
-    private $syncHost;
+    /**
+     * @var MessageHandler
+     */
+    static $instance = null;
 
     private $handler;
 
     private $customHandler;
 
-    static $instance = null;
+    private $sync;
+
+    private $messageFactory;
+
+    public function __construct()
+    {
+        $this->sync = new Sync();
+        $this->messageFactory = new MessageFactory();
+    }
 
     /**
-     * get a message handler single instance
+     * 设置单例模式
      *
      * @return MessageHandler
      */
@@ -70,12 +79,10 @@ class MessageHandler
     }
 
     /**
-     * listen the chat api
+     * 轮询消息API接口
      */
     public function listen()
     {
-        $this->preCheckSync();
-
         while (true){
 
             if($this->customHandler instanceof Closure){
@@ -83,152 +90,44 @@ class MessageHandler
             }
 
             $time = time();
-            list($retCode, $selector) = $this->checkSync();
+            list($retCode, $selector) = $this->sync->checkSync();
 
             if(in_array($retCode, ['1100', '1101'])){ # 微信客户端上登出或者其他设备登录
                 break;
             }elseif ($retCode == 0){
                 $this->handlerMessage($selector);
             }else{
-                $this->debugMessage($retCode, $selector, 10);
+                $this->sync->debugMessage($retCode, $selector, 10);
             }
 
-            $this->checkTime($time);
+            $this->sync->checkTime($time);
         }
     }
 
+    /**
+     * 处理消息
+     *
+     * @param $selector
+     */
     private function handlerMessage($selector)
     {
         if($selector === 0){
             return;
         }
 
-        $message = $this->sync();
+        $message = $this->sync->sync();
 
         if($message['AddMsgList']){
             foreach ($message['AddMsgList'] as $msg) {
-                $content = (new Message)->make($selector, $msg);
+//                $content = (new Message)->make($selector, $msg);
+                 $content = $this->messageFactory->make($selector, $msg);
                 if($this->handler instanceof Closure){
                     $reply = call_user_func_array($this->handler, [$content]);
-                    Message::send($reply, $content->username);
+                    if($reply){
+                        Message::send($reply, $content->from->UserName);
+                    }
                 }
             }
-        }
-    }
-
-    /**
-     * get a message code
-     *
-     * @return array
-     */
-    private function checkSync()
-    {
-        $url = 'https://' . $this->syncHost . '/cgi-bin/mmwebwx-bin/synccheck?' . http_build_query([
-                'r' => time(),
-                'sid' => server()->sid,
-                'uin' => server()->uin,
-                'skey' => server()->skey,
-                'deviceid' => server()->deviceId,
-                'synckey' => server()->syncKeyStr,
-                '_' => time()
-            ]);
-
-        try{
-            $content = http()->get($url);
-
-            preg_match('/window.synccheck=\{retcode:"(\d+)",selector:"(\d+)"\}/', $content, $matches);
-
-            return [$matches[1], $matches[2]];
-        }catch (\Exception $e){
-            return [-1, -1];
-        }
-    }
-
-    /**
-     * test a domain before sync
-     *
-     * @return bool
-     */
-    private function preCheckSync()
-    {
-        foreach (['webpush.', 'webpush2.'] as $host) {
-            $this->syncHost = $host . Server::BASE_HOST;
-            list($retCode,) = $this->checkSync();
-
-            if($retCode == 0){
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private function sync()
-    {
-        $url = sprintf(Server::BASE_URI . '/webwxsync?sid=%s&skey=%s&lang=en_US&pass_ticket=%s', server()->sid, server()->skey, server()->passTicket);
-
-        try{
-            $result = http()->json($url, [
-                'BaseRequest' => server()->baseRequest,
-                'SyncKey' => server()->syncKey,
-                'rr' => ~time()
-            ], true);
-
-            if($result['BaseResponse']['Ret'] == 0){
-                $this->generateSyncKey($result);
-            }
-
-            return $result;
-        }catch (\Exception $e){
-            return null;
-        }
-    }
-
-    /**
-     * generate a sync key
-     *
-     * @param $result
-     */
-    private function generateSyncKey($result)
-    {
-        server()->syncKey = $result['SyncKey'];
-
-        $syncKey = [];
-
-        foreach (server()->syncKey['List'] as $item) {
-            $syncKey[] = $item['Key'] . '_' . $item['Val'];
-        }
-
-        server()->syncKeyStr = implode('|', $syncKey);
-    }
-
-    /**
-     * check message time
-     *
-     * @param $time
-     */
-    private function checkTime($time)
-    {
-        $checkTime = time() - $time;
-
-        if($checkTime < 0.8){
-            sleep(1 - $checkTime);
-        }
-    }
-
-    /**
-     * debug while the sync
-     *
-     * @param $retCode
-     * @param $selector
-     * @param null $sleep
-     */
-    private function debugMessage($retCode, $selector, $sleep = null)
-    {
-        Console::log('[DEBUG] retcode:' . $retCode . ' selector:' . $selector);
-
-        if($sleep){
-            sleep($sleep);
         }
     }
 

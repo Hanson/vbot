@@ -345,9 +345,9 @@ $robot->server->setCustomHandler(function(){
   - [x] 语音
   - [x] 位置
   - [x] 撤回
+  - [x] 表情
   - [ ] 好友验证
   - [ ] 名片
-  - [ ] 表情
   - [ ] 分享
   - [ ] 视频
   - [ ] 小程序

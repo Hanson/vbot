@@ -26,22 +26,22 @@ $robot->server->setMessageHandler(function($message) use ($path){
     // 发送撤回消息 （排除自己）
     if($message->type === 'Recall' && $message->rawMsg['FromUserName'] !== myself()->username ){
         $msg = message()->get($message->msgId);
-        print_r($msg);
-        print_r($message->rawMsg);
-        $nickname = $msg['sender'] ? $msg['sender']['NickName'] : account()->getAccount($msg['username'])['NickName'];
-        if($msg['type'] === 'Image'){
-            Text::send($message->username, "{$nickname} 撤回了一张照片");
-            Image::send($message->username, realpath($path . "jpg/{$message->msgId}.jpg"));
-        }elseif($msg['type'] === 'Emoticon'){
-            Text::send($message->username, "{$nickname} 撤回了一个表情");
-            Emoticon::send($message->username, realpath($path . "gif/{$message->msgId}.gif"));
-        }elseif($msg['type'] === 'Video' || $msg['type'] === 'VideoCall'){
-            Text::send($message->username, "{$nickname} 撤回了一个视频");
-            Video::send($message->username, realpath($path . "mp4/{$message->msgId}.mp4"));
-        }elseif($msg['type'] === 'Voice'){
-            Text::send($message->username, "{$nickname} 撤回了一条语音");
-        }else{
-            Text::send($message->username, "{$nickname} 撤回了一条信息 \"{$msg['content']}\"");
+        if($msg){
+            $nickname = $msg['sender'] ? $msg['sender']['NickName'] : account()->getAccount($msg['username'])['NickName'];
+            if($msg['type'] === 'Image'){
+                Text::send($message->username, "{$nickname} 撤回了一张照片");
+                Image::send($message->username, realpath($path . "jpg/{$message->msgId}.jpg"));
+            }elseif($msg['type'] === 'Emoticon'){
+                Text::send($message->username, "{$nickname} 撤回了一个表情");
+                Emoticon::send($message->username, realpath($path . "gif/{$message->msgId}.gif"));
+            }elseif($msg['type'] === 'Video' || $msg['type'] === 'VideoCall'){
+                Text::send($message->username, "{$nickname} 撤回了一个视频");
+                Video::send($message->username, realpath($path . "mp4/{$message->msgId}.mp4"));
+            }elseif($msg['type'] === 'Voice'){
+                Text::send($message->username, "{$nickname} 撤回了一条语音");
+            }else{
+                Text::send($message->username, "{$nickname} 撤回了一条信息 \"{$msg['content']}\"");
+            }
         }
     }
 

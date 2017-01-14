@@ -53,7 +53,9 @@ class Account
      */
     public function getAccount($username)
     {
-        $account = static::$group->get($username, null);
+        $account = $username === myself()->username ? myself() : null;
+
+        $account = $account ? : static::$group->get($username, null);
 
         $account = $account ? : static::$contact->get($username, null);
 
