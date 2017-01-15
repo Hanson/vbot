@@ -11,11 +11,9 @@ namespace Hanson\Robot\Collections;
 
 use Hanson\Robot\Core\Server;
 use Hanson\Robot\Support\Console;
-use Hanson\Robot\Support\ObjectAble;
 
 class ContactFactory
 {
-    use ObjectAble;
 
     const SPECIAL_USERS = ['newsapp', 'fmessage', 'filehelper', 'weibo', 'qqmail',
         'fmessage', 'tmessage', 'qmessage', 'qqsync', 'floatbottle',
@@ -33,7 +31,7 @@ class ContactFactory
 
     public function getContacts()
     {
-        $url = sprintf(Server::BASE_URI . '/webwxgetcontact?pass_ticket=%s&skey=%s&r=%s', server()->passTicket, server()->skey, time());
+        $url = sprintf(server()->baseUri . '/webwxgetcontact?pass_ticket=%s&skey=%s&r=%s', server()->passTicket, server()->skey, time());
 
         $content = http()->json($url, [
             'BaseRequest' => server()->baseRequest
@@ -50,14 +48,14 @@ class ContactFactory
     protected function makeContactList($memberList)
     {
         foreach ($memberList as $contact) {
-            if(($contact['VerifyFlag'] & 8) != 0){ #公众号
-                OfficialAccount::getInstance()->put($contact['UserName'], $this->toObject($contact));
+            if(official()->isOfficial($contact['VerifyFlag'])){ #公众号
+                Official::getInstance()->put($contact['UserName'], $contact);
             }elseif (in_array($contact['UserName'], static::SPECIAL_USERS)){ # 特殊账户
-                SpecialAccount::getInstance()->put($contact['UserName'], $this->toObject($contact));
+                SpecialAccount::getInstance()->put($contact['UserName'], $contact);
             }elseif (strstr($contact['UserName'], '@@') !== false){ # 群聊
-                group()->put($contact['UserName'], $this->toObject($contact));
+                group()->put($contact['UserName'], $contact);
             }else{
-                contact()->put($contact['UserName'], $this->toObject($contact));
+                contact()->put($contact['UserName'], $contact);
             }
         }
 
@@ -66,7 +64,7 @@ class ContactFactory
             file_put_contents(server()->config['tmp'] . 'contact.json', json_encode(contact()->all()));
             file_put_contents(server()->config['tmp'] . 'member.json', json_encode(member()->all()));
             file_put_contents(server()->config['tmp'] . 'group.json', json_encode(group()->all()));
-            file_put_contents(server()->config['tmp'] . 'OfficialAccount.json', json_encode(OfficialAccount::getInstance()->all()));
+            file_put_contents(server()->config['tmp'] . 'OfficialAccount.json', json_encode(Official::getInstance()->all()));
             file_put_contents(server()->config['tmp'] . 'SpecialAccount.json', json_encode(SpecialAccount::getInstance()->all()));
         }
     }
@@ -76,7 +74,7 @@ class ContactFactory
      */
     public function getBatchGroupMembers()
     {
-        $url = sprintf(Server::BASE_URI . '/webwxbatchgetcontact?type=ex&r=%s&pass_ticket=%s', time(), server()->passTicket);
+        $url = sprintf(server()->baseUri . '/webwxbatchgetcontact?type=ex&r=%s&pass_ticket=%s', time(), server()->passTicket);
 
         $list = [];
         group()->each(function($item, $key) use (&$list){
@@ -103,9 +101,9 @@ class ContactFactory
             $groupAccount =  group()->get($group['UserName']);
             $groupAccount['MemberList'] = $group['MemberList'];
             $groupAccount['ChatRoomId'] = $group['EncryChatRoomId'];
-            group()->put($group['UserName'], $this->toObject($groupAccount));
+            group()->put($group['UserName'], $groupAccount);
             foreach ($group['MemberList'] as $member) {
-                member()->put($member['UserName'], $this->toObject($member));
+                member()->put($member['UserName'], $member);
             }
         }
 

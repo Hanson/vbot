@@ -20,7 +20,7 @@ $robot->server->setMessageHandler(function($message){
     if($message->type === 'Text'){
         /** @var $message Message */
         $contact = contact()->getUsernameById('hanson1994');
-        Message::send($message->content, $contact);
+        Text::send($message->content, $contact);
     }
 });
 $robot->server->setCustomerHandler(function(){

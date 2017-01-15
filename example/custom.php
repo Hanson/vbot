@@ -9,7 +9,7 @@
 require_once __DIR__ . './../vendor/autoload.php';
 
 use Hanson\Robot\Foundation\Robot;
-use Hanson\Robot\Message\Message;
+use Hanson\Robot\Message\Text;
 
 $robot = new Robot([
     'tmp' => __DIR__ . '/./../tmp/',
@@ -18,14 +18,13 @@ $robot = new Robot([
 $flag = false;
 
 $robot->server->setCustomerHandler(function() use (&$flag){
-    /** @var $message Message */
 
     if(!$flag){
-        Message::send('custom', contact()->getUsernameById('L907159127'));
+        Text::send('custom', contact()->getUsernameById('L907159127'));
         $flag = true;
     }
 
-    Message::send('测试' . \Carbon\Carbon::now()->toDateTimeString(), contact()->getUsernameById('L907159127'));
+    Text::send('测试' . \Carbon\Carbon::now()->toDateTimeString(), contact()->getUsernameById('L907159127'));
 
 });
 

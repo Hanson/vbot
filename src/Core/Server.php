@@ -22,8 +22,6 @@ use Symfony\Component\DomCrawler\Crawler;
 class Server
 {
 
-    use ObjectAble;
-
     static $instance;
 
     protected $uuid;
@@ -52,9 +50,13 @@ class Server
 
     protected $debug = false;
 
-    const BASE_URI = 'https://wx.qq.com/cgi-bin/mmwebwx-bin';
+    public $baseUri = 'https://wx2.qq.com/cgi-bin/mmwebwx-bin';
 
-    const BASE_HOST = 'wx.qq.com';
+    public $fileUri;
+
+    public $pushUri;
+
+    const BASE_HOST = 'wx2.qq.com';
 
     public function __construct($config = [])
     {
@@ -173,6 +175,26 @@ class Server
                     preg_match('/window.redirect_uri="(\S+?)";/', $content, $matches);
                     $this->redirectUri = $matches[1] . '&fun=new';
                     Console::log('登录URL:'.$this->redirectUri);
+                    $domainList = [
+                        'wx2.qq.com' => ['file.wx2.qq.com', 'webpush.wx2.qq.com'],
+                        'wx8.qq.com' => ['file.wx8.qq.com', 'webpush.wx8.qq.com'],
+                        'qq.com' => ['file.wx.qq.com', 'webpush.wx.qq.com'],
+                        'web2.wechat.com' => ['file.web2.wechat.com', 'webpushweb2.wechat.com'],
+                        'wechat.com' => ['file.web.wechat.com', 'webpushweb.web.wechat.com'],
+                    ];
+                    $url = 'https://%s/cgi-bin/mmwebwx-bin';
+                    foreach ($domainList as $domain => $list) {
+                        if(str_contains($this->redirectUri, $domain)){
+                            $this->fileUri = sprintf($url, $list[0]);
+                            $this->pushUri = sprintf($url, $list[1]);
+                            $this->baseUri = sprintf($url, $domain);
+                            break;
+                        }else{
+//                            $this->fileUri = $this->pushUri = $
+                            throw new \Exception('I can\'t believe it will be here');
+                        }
+                    }
+                    Console::log('url is:'. $this->baseUri);
                     return;
                 case '408':
                     Console::log('[ERROR] login timeout. please try 1 second later.');
@@ -226,7 +248,7 @@ class Server
 
     protected function init($first = true)
     {
-        $url = sprintf(self::BASE_URI . '/webwxinit?r=%d', time());
+        $url = sprintf($this->baseUri . '/webwxinit?r=%d', time());
 
         $content = http()->json($url, [
             'BaseRequest' => $this->baseRequest
@@ -242,7 +264,7 @@ class Server
         if($result['BaseResponse']['Ret'] != 0){
 //            print_r($this->baseRequest);
 
-//            Console::log('init URL:'. $url);
+            Console::log('init URL:'. $url);
             throw new Exception('[ERROR] init fail!');
         }
     }
@@ -252,7 +274,7 @@ class Server
         if($contactList){
             foreach ($contactList as $contact) {
                 if(Group::isGroup($contact['UserName'])){
-                    group()->put($contact['UserName'], $this->toObject($contact));
+                    group()->put($contact['UserName'], $contact);
                 }
             }
         }
@@ -268,7 +290,7 @@ class Server
      */
     protected function statusNotify()
     {
-        $url = sprintf(self::BASE_URI . '/webwxstatusnotify?lang=zh_CN&pass_ticket=%s', $this->passTicket);
+        $url = sprintf($this->baseUri . '/webwxstatusnotify?lang=zh_CN&pass_ticket=%s', $this->passTicket);
 
         http()->json($url, [
             'BaseRequest' => $this->baseRequest,

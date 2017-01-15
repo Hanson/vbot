@@ -85,7 +85,7 @@ trait UploadAble
 
         $mediaId = $response['MediaId'];
 
-        $url = sprintf(Server::BASE_URI . '/webwxsendappmsg?fun=async&f=json' , server()->passTicket);
+        $url = sprintf(server()->baseUri . '/webwxsendappmsg?fun=async&f=json' , server()->passTicket);
         $data = [
             'BaseRequest'=> server()->baseRequest,
             'Msg'=> [
@@ -97,7 +97,6 @@ trait UploadAble
                 'ClientMsgId'=> time() * 1e4
             ]
         ];
-        print_r($data);
         $result = http()->json($url, $data, true);
 
         if($result['BaseResponse']['Ret'] != 0){

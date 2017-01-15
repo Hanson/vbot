@@ -6,14 +6,21 @@
  * Time: 18:33
  */
 
-namespace Hanson\Robot\Message;
+namespace Hanson\Robot\Message\Entity;
 
 
-use Hanson\Robot\Core\Server;
+use Hanson\Robot\Message\MessageInterface;
 use Hanson\Robot\Support\Console;
 
-class Text extends Message
+class Text extends Message implements MessageInterface
 {
+
+    public function __construct($msg)
+    {
+        parent::__construct($msg);
+
+        $this->make();
+    }
 
     /**
      * 发送消息
@@ -22,9 +29,9 @@ class Text extends Message
      * @param $username string 目标username
      * @return bool
      */
-    public static function send($username, $word)
+    public static function send($username, string $word)
     {
-        if(!$word && !is_string($word)){
+        if(!$word){
             return false;
         }
 
@@ -42,8 +49,8 @@ class Text extends Message
             ],
             'Scene' => 0
         ];
-        $result = http()->post(Server::BASE_URI . '/webwxsendmsg?pass_ticket=' . server()->passTicket,
-            json_encode($data, JSON_UNESCAPED_UNICODE), true
+        $result = http()->post(server()->baseUri . '/webwxsendmsg?pass_ticket=' . server()->passTicket,
+            json_encode($data, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES), true
         );
 
         if($result['BaseResponse']['Ret'] != 0){
@@ -52,5 +59,10 @@ class Text extends Message
         }
 
         return true;
+    }
+
+    public function make()
+    {
+        $this->content = $this->msg['Content'];
     }
 }

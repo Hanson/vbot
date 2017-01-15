@@ -49,19 +49,15 @@ class Group extends Collection
      * @param bool $onlyUsername
      * @return static
      */
-    public function getGroupsByNickname($name, $blur = false, $onlyUsername = false)
+    public function getGroupsByNickname($name, $blur = false)
     {
         $groups = $this->filter(function($value, $key) use ($name, $blur){
            if(!$blur){
-               return $value->NickName === $name;
+               return $value['NickName'] === $name;
            }else{
-               return str_contains($value->NickName, $name);
+               return str_contains($value['NickName'], $name);
            }
         });
-
-        if($onlyUsername){
-            $groups = $groups->only(['UserName']);
-        }
 
         return $groups;
     }

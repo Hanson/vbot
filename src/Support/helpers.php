@@ -14,6 +14,7 @@ use Hanson\Robot\Collections\Member;
 use Hanson\Robot\Collections\Contact;
 use Hanson\Robot\Collections\Message;
 use Hanson\Robot\Collections\Group;
+use Hanson\Robot\Collections\Official;
 
 if (! function_exists('server')) {
     /**
@@ -102,5 +103,16 @@ if (! function_exists('message')) {
     function message()
     {
         return Message::getInstance();
+    }
+}
+if (! function_exists('official')) {
+    /**
+     * Get the available container instance.
+     *
+     * @return Official
+     */
+    function official()
+    {
+        return Official::getInstance();
     }
 }

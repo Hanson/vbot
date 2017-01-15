@@ -44,7 +44,7 @@ class Sync
 
     public function sync()
     {
-        $url = sprintf(Server::BASE_URI . '/webwxsync?sid=%s&skey=%s&lang=en_US&pass_ticket=%s', server()->sid, server()->skey, server()->passTicket);
+        $url = sprintf(server()->baseUri . '/webwxsync?sid=%s&skey=%s&lang=en_US&pass_ticket=%s', server()->sid, server()->skey, server()->passTicket);
 
         try{
             $result = http()->json($url, [
@@ -74,8 +74,10 @@ class Sync
 
         $syncKey = [];
 
-        foreach (server()->syncKey['List'] as $item) {
-            $syncKey[] = $item['Key'] . '_' . $item['Val'];
+        if(is_array(server()->syncKey['List'])){
+            foreach (server()->syncKey['List'] as $item) {
+                $syncKey[] = $item['Key'] . '_' . $item['Val'];
+            }
         }
 
         server()->syncKeyStr = implode('|', $syncKey);

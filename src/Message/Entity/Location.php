@@ -6,8 +6,10 @@
  * Time: 21:13
  */
 
-namespace Hanson\Robot\Message;
+namespace Hanson\Robot\Message\Entity;
 
+
+use Hanson\Robot\Message\MessageInterface;
 
 class Location extends Message implements MessageInterface
 {
@@ -40,9 +42,7 @@ class Location extends Message implements MessageInterface
      */
     private function setLocationText()
     {
-        $result = explode('<br/>', $this->msg['Content']);
-
-        $this->content = substr(current($result), 0, -1);
+        $this->content = current(explode(":\n", $this->msg['Content']));
 
         $this->url = $this->msg['Url'];
     }

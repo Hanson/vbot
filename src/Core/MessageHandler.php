@@ -10,7 +10,11 @@ namespace Hanson\Robot\Core;
 
 use Closure;
 use Hanson\Robot\Collections\Account;
-use Hanson\Robot\Message\Message;
+use Hanson\Robot\Message\Entity\Emoticon;
+use Hanson\Robot\Message\Entity\Image;
+use Hanson\Robot\Message\Entity\Message;
+use Hanson\Robot\Message\Entity\Text;
+use Hanson\Robot\Message\Entity\Video;
 use Hanson\Robot\Support\Console;
 
 class MessageHandler
@@ -120,15 +124,36 @@ class MessageHandler
         if($message['AddMsgList']){
             foreach ($message['AddMsgList'] as $msg) {
 //                $content = (new Message)->make($selector, $msg);
-                 $content = $this->messageFactory->make($selector, $msg);
+                $content = $this->messageFactory->make($selector, $msg);
+                if($content){
+                    $this->addToMessageCollection($content);
+                }
                 if($this->handler instanceof Closure){
                     $reply = call_user_func_array($this->handler, [$content]);
                     if($reply){
-                        Message::send($reply, $content->from->UserName);
+                        if($reply instanceof Image){
+                            Image::sendByMsgId($content->from['UserName'], $reply->msg['MsgId']);
+                        }elseif($reply instanceof Video){
+                            Video::sendByMsgId($content->from['UserName'], $reply->msg['MsgId']);
+                        }elseif($reply instanceof Emoticon){
+                            Emoticon::sendByMsgId($content->from['UserName'], $reply->msg['MsgId']);
+                        }else{
+                            Text::send($content->from['UserName'], $reply);
+                        }
                     }
                 }
             }
         }
+    }
+
+    /**
+     * @param $message Message
+     */
+    private function addToMessageCollection($message)
+    {
+        message()->put($message->msg['MsgId'], $message);
+
+        file_put_contents(server()->config['tmp'].'/message.json', json_encode(message()->all()));
     }
 
 }

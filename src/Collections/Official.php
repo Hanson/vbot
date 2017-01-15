@@ -11,31 +11,31 @@ namespace Hanson\Robot\Collections;
 
 use Illuminate\Support\Collection;
 
-class OfficialAccount extends Collection
+class Official extends Collection
 {
 
     /**
-     * @var OfficialAccount
+     * @var Official
      */
     static $instance = null;
 
     /**
      * create a single instance
      *
-     * @return OfficialAccount
+     * @return Official
      */
     public static function getInstance()
     {
         if(static::$instance === null){
-            static::$instance = new OfficialAccount();
+            static::$instance = new Official();
         }
 
         return static::$instance;
     }
 
-    public function isPublic($id)
+    public function isOfficial($verifyFlag)
     {
-        return static::$instance->get($id, false);
+        return ($verifyFlag & 8) != 0;
     }
 
 }

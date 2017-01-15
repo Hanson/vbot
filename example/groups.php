@@ -22,7 +22,7 @@ $robot->server->setCustomerHandler(function(){
 
     $groups = group()->getGroupsByNickname('stackoverflow', true);
     foreach ($groups as $group) {
-        Message::send('测试' . \Carbon\Carbon::now()->toDateTimeString(), $group['UserName']);
+        Text::send('测试' . \Carbon\Carbon::now()->toDateTimeString(), $group['UserName']);
     }
 
 });

@@ -18,7 +18,7 @@ $robot = new Robot([
 $robot->server->setMessageHandler(function($message){
     /** @var $message Message */
     if($message->type === 'Text'){
-        Message::send($message->fromType, $message->username);
+        Text::send($message->fromType, $message->username);
     }
 });
 $robot->server->run();

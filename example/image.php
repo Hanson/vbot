@@ -25,7 +25,7 @@ $robot->server->setMessageHandler(function($message){
     }
     if($message->type === 'Recall' && $message->rawMsg['FromUserName'] !== myself()->username){
         Console::log($message->content);
-        Message::send($message->content, $message->username);
+        Text::send($message->content, $message->username);
         Image::send($message->username, realpath(__DIR__ . '/./../tmp/jpg/1547651860337387181.jpg'));
     }
 
