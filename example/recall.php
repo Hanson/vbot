@@ -8,12 +8,12 @@
 
 require_once __DIR__ . './../vendor/autoload.php';
 
-use Hanson\Robot\Foundation\Robot;
-use Hanson\Robot\Message\Message;
-use Hanson\Robot\Message\Image;
-use Hanson\Robot\Message\Text;
-use Hanson\Robot\Message\Emoticon;
-use Hanson\Robot\Message\Video;
+use Hanson\Vbot\Foundation\Robot;
+use Hanson\Vbot\Message\Message;
+use Hanson\Vbot\Message\Image;
+use Hanson\Vbot\Message\Entity\Text;
+use Hanson\Vbot\Message\Emoticon;
+use Hanson\Vbot\Message\Video;
 
 $path = __DIR__ . '/./../tmp/';
 $robot = new Robot([

@@ -6,7 +6,7 @@
  * Time: 16:12
  */
 
-namespace Hanson\Robot;
+namespace Hanson\Vbot;
 
 
 use Endroid\QrCode\QrCode;

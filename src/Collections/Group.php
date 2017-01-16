@@ -6,10 +6,10 @@
  * Time: 20:56
  */
 
-namespace Hanson\Robot\Collections;
+namespace Hanson\Vbot\Collections;
 
 
-use Hanson\Robot\Support\Console;
+use Hanson\Vbot\Support\Console;
 use Illuminate\Support\Collection;
 
 class Group extends Collection

@@ -6,17 +6,16 @@
  * Time: 21:10
  */
 
-namespace Hanson\Robot\Core;
+namespace Hanson\Vbot\Core;
 
 
 use Endroid\QrCode\QrCode;
 use GuzzleHttp\Client;
-use Hanson\Robot\Collections\Account;
-use Hanson\Robot\Collections\ContactFactory;
-use Hanson\Robot\Collections\Group;
-use Hanson\Robot\Support\Console;
-use Hanson\Robot\Support\ObjectAble;
-use QueryPath\Exception;
+use Hanson\Vbot\Collections\Account;
+use Hanson\Vbot\Collections\ContactFactory;
+use Hanson\Vbot\Collections\Group;
+use Hanson\Vbot\Support\Console;
+use Hanson\Vbot\Support\ObjectAble;
 use Symfony\Component\DomCrawler\Crawler;
 
 class Server
@@ -56,7 +55,7 @@ class Server
 
     public $pushUri;
 
-    const BASE_HOST = 'wx2.qq.com';
+    public $domain = 'wx2.qq.com';
 
     public function __construct($config = [])
     {
@@ -177,8 +176,9 @@ class Server
                     Console::log('登录URL:'.$this->redirectUri);
                     $domainList = [
                         'wx2.qq.com' => ['file.wx2.qq.com', 'webpush.wx2.qq.com'],
+                        'wx.qq.com' => ['file.wx.qq.com', 'webpush.wx.qq.com'],
                         'wx8.qq.com' => ['file.wx8.qq.com', 'webpush.wx8.qq.com'],
-                        'qq.com' => ['file.wx.qq.com', 'webpush.wx.qq.com'],
+//                        'qq.com' => ['file.wx.qq.com', 'webpush.wx.qq.com'],
                         'web2.wechat.com' => ['file.web2.wechat.com', 'webpushweb2.wechat.com'],
                         'wechat.com' => ['file.web.wechat.com', 'webpushweb.web.wechat.com'],
                     ];
@@ -188,10 +188,8 @@ class Server
                             $this->fileUri = sprintf($url, $list[0]);
                             $this->pushUri = sprintf($url, $list[1]);
                             $this->baseUri = sprintf($url, $domain);
+                            $this->domain = $domain;
                             break;
-                        }else{
-//                            $this->fileUri = $this->pushUri = $
-                            throw new \Exception('I can\'t believe it will be here');
                         }
                     }
                     Console::log('url is:'. $this->baseUri);
@@ -265,7 +263,7 @@ class Server
 //            print_r($this->baseRequest);
 
             Console::log('init URL:'. $url);
-            throw new Exception('[ERROR] init fail!');
+            throw new \Exception('[ERROR] init fail!');
         }
     }
 

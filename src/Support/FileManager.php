@@ -6,7 +6,7 @@
  * Time: 22:21
  */
 
-namespace Hanson\Robot\Support;
+namespace Hanson\Vbot\Support;
 
 
 class FileManager

@@ -6,15 +6,15 @@
  * Time: 0:10
  */
 
-use Hanson\Robot\Core\Server;
-use Hanson\Robot\Core\Myself;
-use Hanson\Robot\Core\Http;
-use Hanson\Robot\Collections\Account;
-use Hanson\Robot\Collections\Member;
-use Hanson\Robot\Collections\Contact;
-use Hanson\Robot\Collections\Message;
-use Hanson\Robot\Collections\Group;
-use Hanson\Robot\Collections\Official;
+use Hanson\Vbot\Core\Server;
+use Hanson\Vbot\Core\Myself;
+use Hanson\Vbot\Core\Http;
+use Hanson\Vbot\Collections\Account;
+use Hanson\Vbot\Collections\Member;
+use Hanson\Vbot\Collections\Contact;
+use Hanson\Vbot\Collections\Message;
+use Hanson\Vbot\Collections\Group;
+use Hanson\Vbot\Collections\Official;
 
 if (! function_exists('server')) {
     /**

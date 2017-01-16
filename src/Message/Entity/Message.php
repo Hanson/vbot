@@ -6,17 +6,17 @@
  * Time: 0:12
  */
 
-namespace Hanson\Robot\Message\Entity;
+namespace Hanson\Vbot\Message\Entity;
 
 
 use Carbon\Carbon;
-use Hanson\Robot\Core\Server;
-use Hanson\Robot\Collections\Contact;
-use Hanson\Robot\Collections\Official;
-use Hanson\Robot\Collections\SpecialAccount;
-use Hanson\Robot\Support\FileManager;
-use Hanson\Robot\Support\Console;
-use Hanson\Robot\Support\ObjectAble;
+use Hanson\Vbot\Core\Server;
+use Hanson\Vbot\Collections\Contact;
+use Hanson\Vbot\Collections\Official;
+use Hanson\Vbot\Collections\SpecialAccount;
+use Hanson\Vbot\Support\FileManager;
+use Hanson\Vbot\Support\Console;
+use Hanson\Vbot\Support\ObjectAble;
 
 class Message
 {
@@ -50,19 +50,6 @@ class Message
      * @var string 消息发送者类型
      */
     public $fromType;
-
-    public $isAt = false;
-
-    const USER_TYPE = [
-        0 => 'Init',
-        1 => 'Self',
-        2 => 'FileHelper',
-        3 => 'Group',
-        4 => 'Contact',
-        5 => 'Public',
-        6 => 'Special',
-        99 => 'UnKnown',
-    ];
 
     public $msg;
 
@@ -134,28 +121,11 @@ class Message
 
         $this->sender = account()->getAccount($uid);
         $this->msg['Content'] = $this->formatContent($content);
-        $this->isAt = str_contains($this->msg['Content'], '@'.myself()->nickname);
     }
 
     protected function formatContent($content)
     {
         return str_replace('<br/>', "\n", $content);
-    }
-
-    /**
-     * 存储消息到 Message 集合
-     */
-    public function addMessageCollection()
-    {
-        message()->put($this->msg['MsgId'], [
-            'content' => $this->content,
-            'username' => $this->username,
-            'sender' => $this->sender,
-            'msg_type' => $this->msg['MsgType'],
-            'type' => $this->type,
-            'created_at' => $this->msg['CreateTime'],
-            'from_type' => $this->fromType
-        ]);
     }
 
     public function __toString()

@@ -8,21 +8,21 @@
 
 require_once __DIR__ . './../vendor/autoload.php';
 
-use Hanson\Robot\Foundation\Robot;
-use Hanson\Robot\Message\Entity\Message;
-use Hanson\Robot\Message\Entity\Image;
-use Hanson\Robot\Message\Entity\Text;
-use Hanson\Robot\Message\Entity\Emoticon;
-use Hanson\Robot\Message\Entity\Location;
-use Hanson\Robot\Message\Entity\Video;
-use Hanson\Robot\Message\Entity\Voice;
-use Hanson\Robot\Message\Entity\Recall;
-use Hanson\Robot\Message\Entity\RedPacket;
-use Hanson\Robot\Message\Entity\Transfer;
-use Hanson\Robot\Message\Entity\Recommend;
-use Hanson\Robot\Message\Entity\Share;
-use Hanson\Robot\Message\Entity\Touch;
-use Hanson\Robot\Message\Entity\RequestFriend;
+use Hanson\Vbot\Foundation\Robot;
+use Hanson\Vbot\Message\Entity\Message;
+use Hanson\Vbot\Message\Entity\Image;
+use Hanson\Vbot\Message\Entity\Text;
+use Hanson\Vbot\Message\Entity\Emoticon;
+use Hanson\Vbot\Message\Entity\Location;
+use Hanson\Vbot\Message\Entity\Video;
+use Hanson\Vbot\Message\Entity\Voice;
+use Hanson\Vbot\Message\Entity\Recall;
+use Hanson\Vbot\Message\Entity\RedPacket;
+use Hanson\Vbot\Message\Entity\Transfer;
+use Hanson\Vbot\Message\Entity\Recommend;
+use Hanson\Vbot\Message\Entity\Share;
+use Hanson\Vbot\Message\Entity\Touch;
+use Hanson\Vbot\Message\Entity\RequestFriend;
 
 $path = __DIR__ . '/./../tmp/';
 $robot = new Robot([
@@ -41,6 +41,7 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
     // 文字信息
     if ($message instanceof Text) {
         // 联系人自动回复
+        print_r($message);
         if ($message->fromType === 'Contact') {
 
             return http()->post('http://www.tuling123.com/openapi/api', [
@@ -148,8 +149,11 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
 
     // 手机点击聊天事件
     if($message instanceof Touch){
+        print_r($message);
         Text::send($message->to['UserName'], "我点击了此群");
     }
+
+    return false;
 
 });
 

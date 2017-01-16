@@ -6,10 +6,10 @@
  * Time: 21:13
  */
 
-namespace Hanson\Robot\Message\Entity;
+namespace Hanson\Vbot\Message\Entity;
 
 
-use Hanson\Robot\Message\MessageInterface;
+use Hanson\Vbot\Message\MessageInterface;
 
 class Location extends Message implements MessageInterface
 {

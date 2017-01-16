@@ -6,11 +6,11 @@
  * Time: 20:41
  */
 
-namespace Hanson\Robot\Collections;
+namespace Hanson\Vbot\Collections;
 
 
-use Hanson\Robot\Core\Server;
-use Hanson\Robot\Support\Console;
+use Hanson\Vbot\Core\Server;
+use Hanson\Vbot\Support\Console;
 
 class ContactFactory
 {

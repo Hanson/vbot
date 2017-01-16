@@ -6,7 +6,7 @@
  * Time: 20:56
  */
 
-namespace Hanson\Robot\Collections;
+namespace Hanson\Vbot\Collections;
 
 
 use Illuminate\Support\Collection;

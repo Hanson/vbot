@@ -6,7 +6,7 @@
  * Time: 2:53
  */
 
-namespace Hanson\Robot\Message;
+namespace Hanson\Vbot\Message;
 
 
 interface MediaInterface

@@ -6,13 +6,13 @@
  * Time: 3:20
  */
 
-namespace Hanson\Robot\Message;
+namespace Hanson\Vbot\Message;
 
 
 /**
  * Class MediaTrait
  * @property string $folder
- * @package Hanson\Robot\Message
+ * @package Hanson\Vbot\Message
  */
 trait MediaTrait
 {

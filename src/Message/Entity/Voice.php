@@ -6,14 +6,14 @@
  * Time: 22:08
  */
 
-namespace Hanson\Robot\Message\Entity;
+namespace Hanson\Vbot\Message\Entity;
 
 
-use Hanson\Robot\Message\MediaInterface;
-use Hanson\Robot\Message\MediaTrait;
-use Hanson\Robot\Message\MessageInterface;
-use Hanson\Robot\Message\UploadAble;
-use Hanson\Robot\Support\FileManager;
+use Hanson\Vbot\Message\MediaInterface;
+use Hanson\Vbot\Message\MediaTrait;
+use Hanson\Vbot\Message\MessageInterface;
+use Hanson\Vbot\Message\UploadAble;
+use Hanson\Vbot\Support\FileManager;
 
 class Voice extends Message implements MessageInterface, MediaInterface
 {

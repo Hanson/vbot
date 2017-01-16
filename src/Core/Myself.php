@@ -6,7 +6,7 @@
  * Time: 21:54
  */
 
-namespace Hanson\Robot\Core;
+namespace Hanson\Vbot\Core;
 
 
 class Myself

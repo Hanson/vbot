@@ -6,14 +6,16 @@
  * Time: 18:33
  */
 
-namespace Hanson\Robot\Message\Entity;
+namespace Hanson\Vbot\Message\Entity;
 
 
-use Hanson\Robot\Message\MessageInterface;
-use Hanson\Robot\Support\Console;
+use Hanson\Vbot\Message\MessageInterface;
+use Hanson\Vbot\Support\Console;
 
 class Text extends Message implements MessageInterface
 {
+
+    public $isAt;
 
     public function __construct($msg)
     {
@@ -64,5 +66,7 @@ class Text extends Message implements MessageInterface
     public function make()
     {
         $this->content = $this->msg['Content'];
+
+        $this->isAt = str_contains($this->content, '@'.myself()->nickname);
     }
 }

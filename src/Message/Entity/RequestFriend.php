@@ -6,9 +6,9 @@
  * Time: 12:29
  */
 
-namespace Hanson\Robot\Message\Entity;
+namespace Hanson\Vbot\Message\Entity;
 
-use Hanson\Robot\Message\MessageInterface;
+use Hanson\Vbot\Message\MessageInterface;
 
 class RequestFriend extends Message implements MessageInterface
 {

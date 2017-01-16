@@ -6,10 +6,10 @@
  * Time: 11:21
  */
 
-namespace Hanson\Robot\Core;
+namespace Hanson\Vbot\Core;
 
 
-use Hanson\Robot\Support\Console;
+use Hanson\Vbot\Support\Console;
 
 class Sync
 {
@@ -21,7 +21,7 @@ class Sync
      */
     public function checkSync()
     {
-        $url = 'https://webpush.' . Server::BASE_HOST . '/cgi-bin/mmwebwx-bin/synccheck?' . http_build_query([
+        $url = 'https://webpush.' . server()->domain . '/cgi-bin/mmwebwx-bin/synccheck?' . http_build_query([
                 'r' => time(),
                 'sid' => server()->sid,
                 'uin' => server()->uin,

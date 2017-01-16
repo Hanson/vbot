@@ -6,16 +6,16 @@
  * Time: 23:08
  */
 
-namespace Hanson\Robot\Core;
+namespace Hanson\Vbot\Core;
 
 use Closure;
-use Hanson\Robot\Collections\Account;
-use Hanson\Robot\Message\Entity\Emoticon;
-use Hanson\Robot\Message\Entity\Image;
-use Hanson\Robot\Message\Entity\Message;
-use Hanson\Robot\Message\Entity\Text;
-use Hanson\Robot\Message\Entity\Video;
-use Hanson\Robot\Support\Console;
+use Hanson\Vbot\Collections\Account;
+use Hanson\Vbot\Message\Entity\Emoticon;
+use Hanson\Vbot\Message\Entity\Image;
+use Hanson\Vbot\Message\Entity\Message;
+use Hanson\Vbot\Message\Entity\Text;
+use Hanson\Vbot\Message\Entity\Video;
+use Hanson\Vbot\Support\Console;
 
 class MessageHandler
 {
@@ -88,7 +88,6 @@ class MessageHandler
     public function listen()
     {
         while (true){
-
             if($this->customHandler instanceof Closure){
                 call_user_func_array($this->customHandler, []);
             }
@@ -123,7 +122,6 @@ class MessageHandler
 
         if($message['AddMsgList']){
             foreach ($message['AddMsgList'] as $msg) {
-//                $content = (new Message)->make($selector, $msg);
                 $content = $this->messageFactory->make($selector, $msg);
                 if($content){
                     $this->addToMessageCollection($content);

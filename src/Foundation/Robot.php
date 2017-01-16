@@ -6,17 +6,17 @@
  * Time: 21:22
  */
 
-namespace Hanson\Robot\Foundation;
+namespace Hanson\Vbot\Foundation;
 
 
-use Hanson\Robot\Core\Http;
-use Hanson\Robot\Core\Server;
+use Hanson\Vbot\Core\Http;
+use Hanson\Vbot\Core\Server;
 use Illuminate\Support\Collection;
 use Pimple\Container;
 
 /**
  * Class Robot
- * @package Hanson\Robot\Foundation
+ * @package Hanson\Vbot\Foundation
  * @property Server $server
  */
 class Robot extends Container

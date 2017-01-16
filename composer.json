@@ -23,7 +23,7 @@
             "src/Support/helpers.php"
         ],
         "psr-4": {
-            "Hanson\\Robot\\": "src/"
+            "Hanson\\Vbot\\": "src/"
         }
     },
     "require-dev": {

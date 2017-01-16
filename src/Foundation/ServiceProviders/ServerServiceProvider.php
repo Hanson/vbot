@@ -1,9 +1,9 @@
 <?php
 
-namespace Hanson\Robot\Foundation\ServiceProviders;
+namespace Hanson\Vbot\Foundation\ServiceProviders;
 
 
-use Hanson\Robot\Core\Server;
+use Hanson\Vbot\Core\Server;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 

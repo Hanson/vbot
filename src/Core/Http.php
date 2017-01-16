@@ -6,12 +6,12 @@
  * Time: 21:13
  */
 
-namespace Hanson\Robot\Core;
+namespace Hanson\Vbot\Core;
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Cookie\FileCookieJar;
-use Hanson\Robot\Support\Console;
+use Hanson\Vbot\Support\Console;
 
 class Http
 {

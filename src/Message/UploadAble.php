@@ -6,14 +6,14 @@
  * Time: 16:18
  */
 
-namespace Hanson\Robot\Message;
-use Hanson\Robot\Core\Server;
-use Hanson\Robot\Support\Console;
+namespace Hanson\Vbot\Message;
+use Hanson\Vbot\Core\Server;
+use Hanson\Vbot\Support\Console;
 
 
 /**
  * Class UploadAble
- * @package Hanson\Robot\Message\
+ * @package Hanson\Vbot\Message\
  *
  * @property  string static $mediaCount
  */

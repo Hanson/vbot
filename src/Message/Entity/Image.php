@@ -6,15 +6,15 @@
  * Time: 16:51
  */
 
-namespace Hanson\Robot\Message\Entity;
+namespace Hanson\Vbot\Message\Entity;
 
 
-use Hanson\Robot\Support\Console;
-use Hanson\Robot\Support\FileManager;
-use Hanson\Robot\Message\MediaInterface;
-use Hanson\Robot\Message\MediaTrait;
-use Hanson\Robot\Message\MessageInterface;
-use Hanson\Robot\Message\UploadAble;
+use Hanson\Vbot\Support\Console;
+use Hanson\Vbot\Support\FileManager;
+use Hanson\Vbot\Message\MediaInterface;
+use Hanson\Vbot\Message\MediaTrait;
+use Hanson\Vbot\Message\MessageInterface;
+use Hanson\Vbot\Message\UploadAble;
 
 class Image extends Message implements MessageInterface, MediaInterface
 {

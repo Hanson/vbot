@@ -6,10 +6,10 @@
  * Time: 15:48
  */
 
-namespace Hanson\Robot\Message\Entity;
+namespace Hanson\Vbot\Message\Entity;
 
-use Hanson\Robot\Message\MediaTrait;
-use Hanson\Robot\Message\MessageInterface;
+use Hanson\Vbot\Message\MediaTrait;
+use Hanson\Vbot\Message\MessageInterface;
 
 class Recall extends Message implements MessageInterface
 {

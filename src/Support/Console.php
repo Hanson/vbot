@@ -6,7 +6,7 @@
  * Time: 22:51
  */
 
-namespace Hanson\Robot\Support;
+namespace Hanson\Vbot\Support;
 
 
 class Console

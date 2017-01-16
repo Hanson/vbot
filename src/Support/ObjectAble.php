@@ -6,7 +6,7 @@
  * Time: 17:23
  */
 
-namespace Hanson\Robot\Support;
+namespace Hanson\Vbot\Support;
 
 
 trait ObjectAble

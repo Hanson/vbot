@@ -6,34 +6,30 @@
  * Time: 11:54
  */
 
-namespace Hanson\Robot\Core;
+namespace Hanson\Vbot\Core;
 
 
-use Hanson\Robot\Message\Entity\Emoticon;
-use Hanson\Robot\Message\Entity\Image;
-use Hanson\Robot\Message\Entity\Location;
-use Hanson\Robot\Message\Entity\Recall;
-use Hanson\Robot\Message\Entity\Recommend;
-use Hanson\Robot\Message\Entity\RedPacket;
-use Hanson\Robot\Message\Entity\RequestFriend;
-use Hanson\Robot\Message\Entity\Share;
-use Hanson\Robot\Message\Entity\Text;
-use Hanson\Robot\Message\Entity\Touch;
-use Hanson\Robot\Message\Entity\Transfer;
-use Hanson\Robot\Message\Entity\Video;
-use Hanson\Robot\Message\Entity\Voice;
-use Hanson\Robot\Support\Console;
+use Hanson\Vbot\Message\Entity\Emoticon;
+use Hanson\Vbot\Message\Entity\Image;
+use Hanson\Vbot\Message\Entity\Location;
+use Hanson\Vbot\Message\Entity\Recall;
+use Hanson\Vbot\Message\Entity\Recommend;
+use Hanson\Vbot\Message\Entity\RedPacket;
+use Hanson\Vbot\Message\Entity\RequestFriend;
+use Hanson\Vbot\Message\Entity\Share;
+use Hanson\Vbot\Message\Entity\Text;
+use Hanson\Vbot\Message\Entity\Touch;
+use Hanson\Vbot\Message\Entity\Transfer;
+use Hanson\Vbot\Message\Entity\Video;
+use Hanson\Vbot\Message\Entity\Voice;
+use Hanson\Vbot\Support\Console;
 
 class MessageFactory
 {
 
-    public $msg;
-
     public function make($selector, $msg)
     {
-        $this->msg = $msg;
-        
-        return $this->handleMessageByType();
+        return $this->handleMessageByType($msg);
     }
 
 
@@ -41,55 +37,55 @@ class MessageFactory
      * 处理消息类型
      *
      */
-    private function handleMessageByType()
+    private function handleMessageByType($msg)
     {
-        Console::log($this->msg['MsgType']);
-        switch($this->msg['MsgType']){
+        Console::log($msg['MsgType']);
+        switch($msg['MsgType']){
             case 1: //文本消息
-                if(Location::isLocation($this->msg)){
-                    return new Location($this->msg);
+                if(Location::isLocation($msg)){
+                    return new Location($msg);
                 }else{
-                    return new Text($this->msg);
+                    return new Text($msg);
                 }
             case 3: // 图片消息
-                return new Image($this->msg);
+                return new Image($msg);
             case 34: // 语音消息
-                return new Voice($this->msg);
+                return new Voice($msg);
             case 43: // 视频
-                return new Video($this->msg);
+                return new Video($msg);
             case 47: // 动画表情
-                return new Emoticon($this->msg);
+                return new Emoticon($msg);
             case 10002:
-                return new Recall($this->msg);
+                return new Recall($msg);
             case 10000:
-                if($this->msg['Status'] == 4){
-                    return new RedPacket($this->msg);
+                if($msg['Status'] == 4){
+                    return new RedPacket($msg);
                 }else{
                 }
                 break;
             case 49:
-                if($this->msg['Status'] == 3 && $this->msg['FileName'] === '微信转账'){
-                    return new Transfer($this->msg);
+                if($msg['Status'] == 3 && $msg['FileName'] === '微信转账'){
+                    return new Transfer($msg);
                 }else{
-                    return new Share($this->msg);
+                    return new Share($msg);
                 }
             case 37: // 好友验证
-                return new RequestFriend($this->msg);
+                return new RequestFriend($msg);
             case 42: //共享名片
-                return new Recommend($this->msg);
+                return new Recommend($msg);
             case 62:
-                $this->type = 'Video';
+                //Video
                 break;
             case 51:
-                if($this->msg['ToUserName'] === $this->msg['StatusNotifyUserName']){
-                    return new Touch($this->msg);
+                if($msg['ToUserName'] === $msg['StatusNotifyUserName']){
+                    return new Touch($msg);
                 }
                 break;
             case 53:
-                $this->type = 'VideoCall';
+                //VideoCall
                 break;
             default:
-                $this->type = 'Unknown';
+                //Unknown
                 break;
         }
     }

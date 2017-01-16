@@ -6,7 +6,7 @@
  * Time: 16:03
  */
 
-namespace Hanson\Robot\Message;
+namespace Hanson\Vbot\Message;
 
 
 interface MessageInterface
