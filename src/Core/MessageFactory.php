@@ -58,9 +58,10 @@ class MessageFactory
             case 10002:
                 return new Recall($msg);
             case 10000:
-                if($msg['Status'] == 4){
+                if(in_array($msg['Content'], ['利是', '红包', 'Red Packet'])){
                     return new RedPacket($msg);
-                }else{
+                }else if(in_array($msg['Content'], ['好友', 'friend'])){
+
                 }
                 break;
             case 49:

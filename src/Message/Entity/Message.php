@@ -32,11 +32,6 @@ class Message
     public $sender;
 
     /**
-     * @var array 消息接收者
-     */
-    public $to;
-
-    /**
      * @var string 经过处理的内容
      */
     public $content;
@@ -77,11 +72,6 @@ class Message
     private function setFrom()
     {
         $this->from = account()->getAccount($this->msg['FromUserName']);
-    }
-
-    private function setTo()
-    {
-        $this->to = account()->getAccount($this->msg['ToUserName']);
     }
 
     private function setFromType()

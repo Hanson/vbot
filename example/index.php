@@ -32,6 +32,7 @@ $robot = new Robot([
 
 $robot->server->setMessageHandler(function ($message) use ($path) {
     /** @var $message Message */
+    print_r($message);
 
     // 位置信息 返回位置文字
     if ($message instanceof Location) {
@@ -41,7 +42,6 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
     // 文字信息
     if ($message instanceof Text) {
         // 联系人自动回复
-        print_r($message);
         if ($message->fromType === 'Contact') {
 
             return http()->post('http://www.tuling123.com/openapi/api', [
@@ -149,7 +149,6 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
 
     // 手机点击聊天事件
     if($message instanceof Touch){
-        print_r($message);
         Text::send($message->to['UserName'], "我点击了此群");
     }
 
