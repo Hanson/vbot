@@ -20,20 +20,6 @@ class RequestFriend extends Message implements MessageInterface
 
     public $avatar;
 
-    /**
-     * 国内为省，国外为国
-     *
-     * @var string
-     */
-    public $province;
-
-    /**
-     * 城市
-     *
-     * @var string
-     */
-    public $city;
-
     const ADD = 2;
     const VIA = 3;
 
@@ -52,11 +38,9 @@ class RequestFriend extends Message implements MessageInterface
 
     private function parseContent()
     {
-        $isMatch = preg_match('/province="(.+?)"\scity="(.+?)".+bigheadimgurl="(.+?)"/', $this->msg['Content'], $matches);
+        $isMatch = preg_match('/bigheadimgurl="(.+?)"/', $this->msg['Content'], $matches);
 
-        if($isMatch){
-            $this->province = $matches[1];
-            $this->city = $matches[2];
+        if ($isMatch) {
             $this->avatar = $matches[3];
         }
     }
@@ -70,12 +54,12 @@ class RequestFriend extends Message implements MessageInterface
      */
     public function verifyUser($code, $ticket = null)
     {
-        $url = sprintf(server()->baseUri.'/webwxverifyuser?lang=zh_CN&r=%s&pass_ticket=%s' ,time()*1000, server()->passTicket);
+        $url = sprintf(server()->baseUri . '/webwxverifyuser?lang=zh_CN&r=%s&pass_ticket=%s', time() * 1000, server()->passTicket);
         $data = [
             'BaseRequest' => server()->baseRequest,
             'Opcode' => $code,
             'VerifyUserListSize' => 1,
-            'VerifyUserList' => [$ticket ? : $this->verifyTicket()],
+            'VerifyUserList' => [$ticket ?: $this->verifyTicket()],
             'VerifyContent' => '',
             'SceneListCount' => 1,
             'SceneList' => [33],

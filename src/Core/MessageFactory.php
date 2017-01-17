@@ -35,10 +35,12 @@ class MessageFactory
 
     /**
      * 处理消息类型
-     *
+     * @param $msg
+     * @return Touch
      */
     private function handleMessageByType($msg)
     {
+        print_r($msg);
         switch($msg['MsgType']){
             case 1: //文本消息
                 if(Location::isLocation($msg)){
@@ -57,10 +59,14 @@ class MessageFactory
             case 10002:
                 return new Recall($msg);
             case 10000:
-                if(in_array($msg['Content'], ['利是', '红包', 'Red Packet'])){
+                if(str_contains($msg['Content'], '利是') || str_contains($msg['Content'], '红包') || str_contains($msg['Content'], 'Red Packet')){
                     return new RedPacket($msg);
-                }else if(in_array($msg['Content'], ['好友', 'friend'])){
-
+                }
+//                else if(str_contains($msg['Content'], '好友') || str_contains($msg['Content'], 'friend')){
+//                    print_r($msg);
+//                }
+                else{
+                    print_r($msg);
                 }
                 break;
             case 49:

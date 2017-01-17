@@ -34,9 +34,9 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
     /** @var $message Message */
     print_r($message);
 
-    if($message){
-        print_r($message->msg);
-    }
+//    if($message){
+//        print_r($message->msg);
+//    }
 
     // 位置信息 返回位置文字
 //    if ($message instanceof Location) {
@@ -126,20 +126,20 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
 //        }
 //    }
 //
-//    // 请求添加信息
-//    if($message instanceof RequestFriend){
-//        /** @var $message RequestFriend */
-//        $groupUsername = group()->getGroupsByNickname('芬芬', true)->first()['UserName'];
-//
-//        Text::send($groupUsername, "{$message->province}{$message->city} 的 {$message->info['NickName']} 请求添加好友 \"{$message->info['Content']}\"");
-//
-//        if($message->info['Content'] === '上山打老虎'){
-//            Text::send($groupUsername, '暗号正确');
-//            $message->verifyUser($message::VIA);
-//        }else{
-//            Text::send($groupUsername, '暗号错误');
-//        }
-//    }
+    // 请求添加信息
+    if($message instanceof RequestFriend){
+        /** @var $message RequestFriend */
+        $groupUsername = group()->getGroupsByNickname('芬芬', true)->first()['UserName'];
+
+        Text::send($groupUsername, "{$message->province}{$message->city} 的 {$message->info['NickName']} 请求添加好友 \"{$message->info['Content']}\"");
+
+        if($message->info['Content'] === '上山打老虎'){
+            Text::send($groupUsername, '暗号正确');
+            $message->verifyUser($message::VIA);
+        }else{
+            Text::send($groupUsername, '暗号错误');
+        }
+    }
 //
 //    // 分享信息
 //    if($message instanceof Share){

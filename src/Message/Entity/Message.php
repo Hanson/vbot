@@ -55,7 +55,6 @@ class Message
         $this->msg = $msg;
 
         $this->setFrom();
-        $this->setTo();
         $this->setFromType();
 
         $this->msg['Content'] = html_entity_decode($this->formatContent($this->msg['Content']));
