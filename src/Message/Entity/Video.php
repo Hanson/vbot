@@ -33,28 +33,28 @@ class Video extends Message implements MessageInterface, MediaInterface
     {
         $response = static::uploadMedia($username, $file);
 
-        if(!$response){
+        if (!$response) {
             Console::log("视频 {$file} 上传失败");
             return false;
         }
 
         $mediaId = $response['MediaId'];
 
-        $url = sprintf(server()->baseUri . '/webwxsendvideomsg?fun=async&f=json&pass_ticket=%s' , server()->passTicket);
+        $url = sprintf(server()->baseUri . '/webwxsendvideomsg?fun=async&f=json&pass_ticket=%s', server()->passTicket);
         $data = [
-            'BaseRequest'=> server()->baseRequest,
-            'Msg'=> [
-                'Type'=> 43,
-                'MediaId'=> $mediaId,
-                'FromUserName'=> myself()->username,
-                'ToUserName'=> $username,
-                'LocalID'=> time() * 1e4,
-                'ClientMsgId'=> time() * 1e4
+            'BaseRequest' => server()->baseRequest,
+            'Msg' => [
+                'Type' => 43,
+                'MediaId' => $mediaId,
+                'FromUserName' => myself()->username,
+                'ToUserName' => $username,
+                'LocalID' => time() * 1e4,
+                'ClientMsgId' => time() * 1e4
             ]
         ];
         $result = http()->json($url, $data, true);
 
-        if($result['BaseResponse']['Ret'] != 0){
+        if ($result['BaseResponse']['Ret'] != 0) {
             Console::log('发送视频失败');
             return false;
         }
@@ -89,7 +89,7 @@ class Video extends Message implements MessageInterface, MediaInterface
                 'Range' => 'bytes=0-'
             ]
         ]);
-        FileManager::download($this->msg['MsgId'].'.mp4', $content, static::$folder);
+        FileManager::download($this->msg['MsgId'] . '.mp4', $content, static::$folder);
     }
 
     public function make()

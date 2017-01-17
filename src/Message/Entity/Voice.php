@@ -29,17 +29,6 @@ class Voice extends Message implements MessageInterface, MediaInterface
     }
 
     /**
-     * 根据MsgID发送文件
-     *
-     * @param $username
-     * @param $msgId
-     * @return mixed
-     */
-    public static function sendByMsgId($username, $msgId)
-    {
-    }
-
-    /**
      * 下载文件
      *
      * @return mixed

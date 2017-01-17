@@ -34,29 +34,29 @@ class Emoticon extends Message implements MediaInterface, MessageInterface
     {
         $response = static::uploadMedia($username, $file);
 
-        if(!$response){
+        if (!$response) {
             Console::log("表情 {$file} 上传失败");
             return false;
         }
 
         $mediaId = $response['MediaId'];
 
-        $url = sprintf(server()->baseUri . '/webwxsendemoticon?fun=sys&f=json&pass_ticket=%s' , server()->passTicket);
+        $url = sprintf(server()->baseUri . '/webwxsendemoticon?fun=sys&f=json&pass_ticket=%s', server()->passTicket);
         $data = [
-            'BaseRequest'=> server()->baseRequest,
-            'Msg'=> [
-                'Type'=> 47,
-                "EmojiFlag"=> 2,
-                'MediaId'=> $mediaId,
-                'FromUserName'=> myself()->username,
-                'ToUserName'=> $username,
-                'LocalID'=> time() * 1e4,
-                'ClientMsgId'=> time() * 1e4
+            'BaseRequest' => server()->baseRequest,
+            'Msg' => [
+                'Type' => 47,
+                "EmojiFlag" => 2,
+                'MediaId' => $mediaId,
+                'FromUserName' => myself()->username,
+                'ToUserName' => $username,
+                'LocalID' => time() * 1e4,
+                'ClientMsgId' => time() * 1e4
             ]
         ];
         $result = http()->json($url, $data, true);
 
-        if($result['BaseResponse']['Ret'] != 0){
+        if ($result['BaseResponse']['Ret'] != 0) {
             Console::log('发送表情失败');
             return false;
         }
@@ -87,7 +87,7 @@ class Emoticon extends Message implements MediaInterface, MessageInterface
     {
         $url = server()->baseUri . sprintf('/webwxgetmsgimg?MsgID=%s&skey=%s', $this->msg['MsgId'], server()->skey);
         $content = http()->get($url);
-        FileManager::download($this->msg['MsgId'].'.gif', $content, static::$folder);
+        FileManager::download($this->msg['MsgId'] . '.gif', $content, static::$folder);
     }
 
     public function make()

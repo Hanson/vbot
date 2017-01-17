@@ -125,8 +125,6 @@ class MessageHandler
                 $content = $this->messageFactory->make($selector, $msg);
                 if($content){
                     $this->addToMessageCollection($content);
-                }
-                if($this->handler instanceof Closure){
                     $reply = call_user_func_array($this->handler, [$content]);
                     if($reply){
                         if($reply instanceof Image){

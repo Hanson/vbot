@@ -39,7 +39,6 @@ class MessageFactory
      */
     private function handleMessageByType($msg)
     {
-        Console::log($msg['MsgType']);
         switch($msg['MsgType']){
             case 1: //文本消息
                 if(Location::isLocation($msg)){

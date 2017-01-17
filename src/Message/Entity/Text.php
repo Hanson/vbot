@@ -33,7 +33,7 @@ class Text extends Message implements MessageInterface
      */
     public static function send($username, string $word)
     {
-        if(!$word){
+        if (!$word) {
             return false;
         }
 
@@ -52,10 +52,10 @@ class Text extends Message implements MessageInterface
             'Scene' => 0
         ];
         $result = http()->post(server()->baseUri . '/webwxsendmsg?pass_ticket=' . server()->passTicket,
-            json_encode($data, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES), true
+            json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), true
         );
 
-        if($result['BaseResponse']['Ret'] != 0){
+        if ($result['BaseResponse']['Ret'] != 0) {
             Console::log('发送消息失败');
             return false;
         }
@@ -67,6 +67,6 @@ class Text extends Message implements MessageInterface
     {
         $this->content = $this->msg['Content'];
 
-        $this->isAt = str_contains($this->content, '@'.myself()->nickname);
+        $this->isAt = str_contains($this->content, '@' . myself()->nickname);
     }
 }

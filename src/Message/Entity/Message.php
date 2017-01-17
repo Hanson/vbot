@@ -78,12 +78,8 @@ class Message
     {
         if ($this->msg['MsgType'] == 51) {
             $this->fromType = 'System';
-        } elseif ($this->msg['MsgType'] == 37) {
-            $this->fromType = 'FriendRequest';
         } elseif ($this->msg['FromUserName'] === myself()->username) {
             $this->fromType = 'Self';
-        } elseif ($this->msg['ToUserName'] === 'filehelper') {
-            $this->fromType = 'FileHelper';
         } elseif (substr($this->msg['FromUserName'], 0, 2) === '@@') { # group
             $this->fromType = 'Group';
         } elseif (contact()->getContactByUsername($this->msg['FromUserName'])) {

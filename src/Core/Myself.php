@@ -9,6 +9,8 @@
 namespace Hanson\Vbot\Core;
 
 
+use Hanson\Vbot\Collections\Contact;
+
 class Myself
 {
 
@@ -33,6 +35,7 @@ class Myself
 
     public function init($user)
     {
+        contact()->put($user['UserName'], $user);
         $this->nickname = $user['NickName'];
         $this->username = $user['UserName'];
         $this->sex = $user['Sex'];
