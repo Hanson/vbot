@@ -9,7 +9,8 @@
 require_once __DIR__ . './../vendor/autoload.php';
 
 use Hanson\Vbot\Foundation\Vbot;
-use Hanson\Vbot\Message\Message;
+use Hanson\Vbot\Message\Entity\Message;
+use Hanson\Vbot\Message\Entity\RedPacket;
 use Hanson\Vbot\Support\Console;
 
 $robot = new Vbot([
@@ -18,12 +19,8 @@ $robot = new Vbot([
 
 $robot->server->setMessageHandler(function($message){
     /** @var $message Message */
-    if($message->type === 'RedPacket'){
-        if($message->fromType == 'Group'){
-            $nickname = group()->get($message->username)['NickName'];
-        }else{
-            $nickname = contact()->get($message->username)['NickName'];
-        }
+    if($message instanceof RedPacket){
+        $nickname = account()->getAccount($message->from['UserName'])['NickName'];
         Console::log("收到来自 {$nickname} 的红包");
     }
 

@@ -9,20 +9,19 @@
 require_once __DIR__ . './../vendor/autoload.php';
 
 use Hanson\Vbot\Foundation\Vbot;
-use Hanson\Vbot\Message\Message;
+use Hanson\Vbot\Message\Entity\Text;
 
 $robot = new Vbot([
     'tmp' => __DIR__ . '/./../tmp/',
     'debug' => true
 ]);
 
-$robot->server->setMessageHandler(function($message){
-    if($message->type === 'Text'){
-        /** @var $message Message */
-        $contact = contact()->getUsernameById('hanson1994');
-        Text::send($message->content, $contact);
+$robot->server->setMessageHandler(function ($message) {
+    if ($message->type === 'Text') {
+        /** @var $message Text */
+        $contact = contact()->getUsernameById('hanson');
+        Text::send($contact, $message);
     }
 });
-$robot->server->setCustomerHandler(function(){
-});
+
 $robot->server->run();
