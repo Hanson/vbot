@@ -61,18 +61,7 @@ $robot->server->run();
 
 # 特别感谢
 
-
 感谢以上两位作者曾对本人耐心解答
-
-## 参考项目
-
-[lbbniu/WebWechat](https://github.com/lbbniu/WebWechat)
-
-[littlecodersh/ItChat](https://github.com/littlecodersh/ItChat) 
-
-感谢楼上两位作者曾对本人耐心解答
-
-[liuwons/wxBot](https://github.com/liuwons/wxBot) 参考了整个微信的登录流程与消息处理
 
 # to do list
 
@@ -118,7 +107,23 @@ $robot->server->run();
   - [ ] 取消聊天会话指定
   
 - [ ] 命令行操作信息发送
+
+## 参考项目
+
+[lbbniu/WebWechat](https://github.com/lbbniu/WebWechat)
+
+[littlecodersh/ItChat](https://github.com/littlecodersh/ItChat) 
+
+感谢楼上两位作者曾对本人耐心解答
+
+[liuwons/wxBot](https://github.com/liuwons/wxBot) 参考了整个微信的登录流程与消息处理
   
-# 待修复bug
+## 待修复bug
 
 * 30% 的几率初始化失败（暂时无解，如清楚问题欢迎PR）
+
+## 问题和建议
+
+有问题或者建议都可以提issue
+
+或者加入我新建的QQ群：492548647

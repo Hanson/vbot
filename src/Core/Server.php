@@ -137,7 +137,7 @@ class Server
 
         $qrCode = new QrCode($url);
 
-        $file = $this->config['tmp'] . 'login_qr_code.png';
+        $file = $this->config['tmp'] . 'qr.png';
 
         $qrCode->save($file);
 
@@ -258,10 +258,7 @@ class Server
         $this->initContactList($result['ContactList']);
 
         if($result['BaseResponse']['Ret'] != 0){
-//            print_r($this->baseRequest);
-
-            Console::log('init URL:'. $url);
-            throw new \Exception('[ERROR] 初始化失败');
+            throw new \Exception('[ERROR] 初始化失败，链接：' . $url);
         }
     }
 

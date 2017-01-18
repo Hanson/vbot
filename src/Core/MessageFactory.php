@@ -40,7 +40,6 @@ class MessageFactory
      */
     private function handleMessageByType($msg)
     {
-        print_r($msg);
         switch($msg['MsgType']){
             case 1: //文本消息
                 if(Location::isLocation($msg)){
@@ -62,12 +61,9 @@ class MessageFactory
                 if(str_contains($msg['Content'], '利是') || str_contains($msg['Content'], '红包') || str_contains($msg['Content'], 'Red Packet')){
                     return new RedPacket($msg);
                 }
-//                else if(str_contains($msg['Content'], '好友') || str_contains($msg['Content'], 'friend')){
-//                    print_r($msg);
-//                }
-//                else{
-//                    print_r($msg);
-//                }
+                else if(str_contains($msg['Content'], '添加') || str_contains($msg['Content'], 'have added')){
+                    # 添加好友
+                }
                 break;
             case 49:
                 if($msg['Status'] == 3 && $msg['FileName'] === '微信转账'){
