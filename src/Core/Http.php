@@ -21,13 +21,6 @@ class Http
     protected $client;
 
     /**
-     * @var FileCookieJar
-     */
-    private $cookieJar;
-
-    private $cookieFile;
-
-    /**
      * @return Http
      */
     public static function getInstance()
@@ -77,9 +70,6 @@ class Http
     public function getClient()
     {
         if (!($this->client instanceof HttpClient)) {
-//            $this->cookieFile = realpath(server()->config['tmp']) . '/cookie.txt';
-//            $this->cookieJar = new FileCookieJar($this->cookieFile);
-//            $this->client = new HttpClient(['cookies' => $this->cookieJar]);
             $this->client = new HttpClient(['cookies' => true]);
         }
 
@@ -96,7 +86,6 @@ class Http
     {
         try{
             $response = $this->getClient()->request($method, $url, $options);
-//            $this->cookieJar->save($this->cookieFile);
             return $response->getBody()->getContents();
         }catch (\Exception $e){
             Console::log('http链接失败：' . $e->getMessage());
