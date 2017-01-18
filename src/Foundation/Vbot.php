@@ -19,7 +19,7 @@ use Pimple\Container;
  * @package Hanson\Vbot\Foundation
  * @property Server $server
  */
-class Robot extends Container
+class Vbot extends Container
 {
 
     /**

@@ -51,7 +51,7 @@ class ContactFactory
             if(official()->isOfficial($contact['VerifyFlag'])){ #公众号
                 Official::getInstance()->put($contact['UserName'], $contact);
             }elseif (in_array($contact['UserName'], static::SPECIAL_USERS)){ # 特殊账户
-                SpecialAccount::getInstance()->put($contact['UserName'], $contact);
+                Special::getInstance()->put($contact['UserName'], $contact);
             }elseif (strstr($contact['UserName'], '@@') !== false){ # 群聊
                 group()->put($contact['UserName'], $contact);
             }else{
@@ -64,8 +64,8 @@ class ContactFactory
             file_put_contents(server()->config['tmp'] . 'contact.json', json_encode(contact()->all()));
             file_put_contents(server()->config['tmp'] . 'member.json', json_encode(member()->all()));
             file_put_contents(server()->config['tmp'] . 'group.json', json_encode(group()->all()));
-            file_put_contents(server()->config['tmp'] . 'OfficialAccount.json', json_encode(Official::getInstance()->all()));
-            file_put_contents(server()->config['tmp'] . 'SpecialAccount.json', json_encode(SpecialAccount::getInstance()->all()));
+            file_put_contents(server()->config['tmp'] . 'official.json', json_encode(Official::getInstance()->all()));
+            file_put_contents(server()->config['tmp'] . 'special.json', json_encode(Special::getInstance()->all()));
         }
     }
 

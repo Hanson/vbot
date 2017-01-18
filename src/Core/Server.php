@@ -15,7 +15,6 @@ use Hanson\Vbot\Collections\Account;
 use Hanson\Vbot\Collections\ContactFactory;
 use Hanson\Vbot\Collections\Group;
 use Hanson\Vbot\Support\Console;
-use Hanson\Vbot\Support\ObjectAble;
 use Symfony\Component\DomCrawler\Crawler;
 
 class Server
@@ -84,12 +83,12 @@ class Server
     {
         $this->prepare();
         $this->init();
-        Console::log('[INFO] init success!');
+        Console::log('[INFO] 初始化成功');
 
         $this->statusNotify();
-        Console::log('[INFO] begin to init contacts');
+        Console::log('[INFO] 开始初始化联系人');
         $this->initContact();
-        Console::log('[INFO] init contacts success!');
+        Console::log('[INFO] 初始化联系人成功');
 
         MessageHandler::getInstance()->listen();
     }
@@ -98,11 +97,11 @@ class Server
     {
         $this->getUuid();
         $this->generateQrCode();
-        Console::log('[INFO] please scan qrcode to login');
+        Console::log('[INFO] 请扫描二维码登录');
 
         $this->waitForLogin();
         $this->login();
-        Console::log('[INFO] login success!');
+        Console::log('[INFO] 登录成功');
     }
 
     /**
@@ -123,7 +122,7 @@ class Server
         preg_match('/window.QRLogin.code = (\d+); window.QRLogin.uuid = \"(\S+?)\"/', $content, $matches);
 
         if(!$matches){
-            throw new \Exception('fail to get uuid');
+            throw new \Exception('[ERROR] 获取UUID失败');
         }
 
         $this->uuid = $matches[2];
@@ -167,7 +166,7 @@ class Server
             $code = $matches[1];
             switch($code){
                 case '201':
-                    Console::log('[INFO] please confirm to login');
+                    Console::log('[INFO] 请点击确认登录微信');
                     $tip = 0;
                     break;
                 case '200':
@@ -178,7 +177,6 @@ class Server
                         'wx2.qq.com' => ['file.wx2.qq.com', 'webpush.wx2.qq.com'],
                         'wx.qq.com' => ['file.wx.qq.com', 'webpush.wx.qq.com'],
                         'wx8.qq.com' => ['file.wx8.qq.com', 'webpush.wx8.qq.com'],
-//                        'qq.com' => ['file.wx.qq.com', 'webpush.wx.qq.com'],
                         'web2.wechat.com' => ['file.web2.wechat.com', 'webpushweb2.wechat.com'],
                         'wechat.com' => ['file.web.wechat.com', 'webpushweb.web.wechat.com'],
                     ];
@@ -195,13 +193,13 @@ class Server
                     Console::log('url is:'. $this->baseUri);
                     return;
                 case '408':
-                    Console::log('[ERROR] login timeout. please try 1 second later.');
+                    Console::log('[ERROR] 登录超时，请重试');
                     $tip = 1;
                     $retryTime -= 1;
                     sleep(1);
                     break;
                 default:
-                    Console::log("[ERROR] login fail. exception code：$code . please try 1 second later.");
+                    Console::log("[ERROR] 登录失败，错误码：$code 。请重试");
                     $tip = 1;
                     $retryTime -= 1;
                     sleep(1);
@@ -209,7 +207,7 @@ class Server
             }
         }
 
-        throw new \Exception('[ERROR] login fail!');
+        die('[ERROR] 登录超时，退出应用');
     }
 
     /**
@@ -229,7 +227,7 @@ class Server
         $this->passTicket = $data['pass_ticket'];
 
         if(in_array('', [$this->skey, $this->sid, $this->uin, $this->passTicket])){
-            throw new \Exception('[ERROR] login fail!');
+            throw new \Exception('[ERROR] 登录失败');
         }
 
         $this->deviceId = 'e' .substr(mt_rand().mt_rand(), 1, 15);
@@ -263,7 +261,7 @@ class Server
 //            print_r($this->baseRequest);
 
             Console::log('init URL:'. $url);
-            throw new \Exception('[ERROR] init fail!');
+            throw new \Exception('[ERROR] 初始化失败');
         }
     }
 

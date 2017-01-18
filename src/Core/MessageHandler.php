@@ -125,16 +125,18 @@ class MessageHandler
                 $content = $this->messageFactory->make($selector, $msg);
                 if($content){
                     $this->addToMessageCollection($content);
-                    $reply = call_user_func_array($this->handler, [$content]);
-                    if($reply){
-                        if($reply instanceof Image){
-                            Image::sendByMsgId($content->from['UserName'], $reply->msg['MsgId']);
-                        }elseif($reply instanceof Video){
-                            Video::sendByMsgId($content->from['UserName'], $reply->msg['MsgId']);
-                        }elseif($reply instanceof Emoticon){
-                            Emoticon::sendByMsgId($content->from['UserName'], $reply->msg['MsgId']);
-                        }else{
-                            Text::send($content->from['UserName'], $reply);
+                    if($this->handler){
+                        $reply = call_user_func_array($this->handler, [$content]);
+                        if($reply){
+                            if($reply instanceof Image){
+                                Image::sendByMsgId($content->from['UserName'], $reply->msg['MsgId']);
+                            }elseif($reply instanceof Video){
+                                Video::sendByMsgId($content->from['UserName'], $reply->msg['MsgId']);
+                            }elseif($reply instanceof Emoticon){
+                                Emoticon::sendByMsgId($content->from['UserName'], $reply->msg['MsgId']);
+                            }else{
+                                Text::send($content->from['UserName'], $reply);
+                            }
                         }
                     }
                 }

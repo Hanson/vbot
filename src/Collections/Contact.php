@@ -34,19 +34,6 @@ class Contact extends Collection
     }
 
     /**
-     * 根据username获取联系人
-     *
-     * @param $id
-     * @return array
-     */
-    public function getContactByUsername($id)
-    {
-        $contact = $this->get($id);
-
-        return $contact ?? [];
-    }
-
-    /**
      * 根据微信号获取联系人
      *
      * @param $id
@@ -54,13 +41,11 @@ class Contact extends Collection
      */
     public function getContactById($id)
     {
-        $contact = $this->filter(function($item, $key) use ($id){
+        return $this->filter(function($item, $key) use ($id){
             if($item['Alias'] === $id){
                 return true;
             }
         })->first();
-
-        return $contact;
     }
 
     /**
@@ -71,13 +56,11 @@ class Contact extends Collection
      */
     public function getUsernameById($id)
     {
-        $contact = $this->search(function($item, $key) use ($id){
+        return $this->search(function($item, $key) use ($id){
             if($item['Alias'] === $id){
                 return true;
             }
         });
-
-        return $contact;
     }
 
 }

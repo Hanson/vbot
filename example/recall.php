@@ -8,7 +8,7 @@
 
 require_once __DIR__ . './../vendor/autoload.php';
 
-use Hanson\Vbot\Foundation\Robot;
+use Hanson\Vbot\Foundation\Vbot;
 use Hanson\Vbot\Message\Message;
 use Hanson\Vbot\Message\Image;
 use Hanson\Vbot\Message\Entity\Text;
@@ -16,7 +16,7 @@ use Hanson\Vbot\Message\Emoticon;
 use Hanson\Vbot\Message\Video;
 
 $path = __DIR__ . '/./../tmp/';
-$robot = new Robot([
+$robot = new Vbot([
     'tmp' => $path,
     'debug' => true
 ]);

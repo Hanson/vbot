@@ -8,7 +8,7 @@
 
 require_once __DIR__ . './../vendor/autoload.php';
 
-use Hanson\Vbot\Foundation\Robot;
+use Hanson\Vbot\Foundation\Vbot;
 use Hanson\Vbot\Message\Entity\Message;
 use Hanson\Vbot\Message\Entity\Image;
 use Hanson\Vbot\Message\Entity\Text;
@@ -25,7 +25,7 @@ use Hanson\Vbot\Message\Entity\Touch;
 use Hanson\Vbot\Message\Entity\RequestFriend;
 
 $path = __DIR__ . '/./../tmp/';
-$robot = new Robot([
+$robot = new Vbot([
     'tmp' => $path,
     'debug' => true
 ]);
@@ -45,22 +45,22 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
 //    }
 
     // 文字信息
-//    if ($message instanceof Text) {
-//        // 联系人自动回复
-//        if ($message->fromType === 'Contact') {
-//
-//            return http()->post('http://www.tuling123.com/openapi/api', [
-//                'key' => '1dce02aef026258eff69635a06b0ab7d',
-//                'info' => $message->content
-//            ], true)['text'];
-//            // 群组@我回复
-//        } elseif ($message->fromType === 'Group' && $message->isAt) {
-//            return http()->post('http://www.tuling123.com/openapi/api', [
-//                'key' => '1dce02aef026258eff69635a06b0ab7d',
-//                'info' => $message->content
-//            ], true)['text'];
-//        }
-//    }
+    if ($message instanceof Text) {
+        // 联系人自动回复
+        if ($message->fromType === 'Contact') {
+
+            return http()->post('http://www.tuling123.com/openapi/api', [
+                'key' => '1dce02aef026258eff69635a06b0ab7d',
+                'info' => $message->content
+            ], true)['text'];
+            // 群组@我回复
+        } elseif ($message->fromType === 'Group' && $message->isAt) {
+            return http()->post('http://www.tuling123.com/openapi/api', [
+                'key' => '1dce02aef026258eff69635a06b0ab7d',
+                'info' => $message->content
+            ], true)['text'];
+        }
+    }
 
     // 图片信息 返回接收到的图片
 //    if ($message instanceof Image) {
@@ -151,11 +151,11 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
 //        return $reply;
 //    }
 //
-//    // 手机点击聊天事件
-//    if($message instanceof Touch){
-//        print_r($message);
-//        Text::send($message->to['UserName'], "我点击了此群");
-//    }
+    // 手机点击聊天事件
+    if($message instanceof Touch){
+        print_r($message);
+        Text::send($message->to['UserName'], "我点击了此群");
+    }
 
     return false;
 

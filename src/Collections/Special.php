@@ -11,7 +11,7 @@ namespace Hanson\Vbot\Collections;
 
 use Illuminate\Support\Collection;
 
-class SpecialAccount extends Collection
+class Special extends Collection
 {
 
     static $instance = null;
@@ -19,12 +19,12 @@ class SpecialAccount extends Collection
     /**
      * create a single instance
      *
-     * @return SpecialAccount
+     * @return Special
      */
     public static function getInstance()
     {
         if(static::$instance === null){
-            static::$instance = new SpecialAccount();
+            static::$instance = new Special();
         }
 
         return static::$instance;

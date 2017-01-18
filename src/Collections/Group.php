@@ -46,7 +46,6 @@ class Group extends Collection
      *
      * @param $name
      * @param bool $blur
-     * @param bool $onlyUsername
      * @return static
      */
     public function getGroupsByNickname($name, $blur = false)

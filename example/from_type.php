@@ -8,10 +8,10 @@
 
 require_once __DIR__ . './../vendor/autoload.php';
 
-use Hanson\Vbot\Foundation\Robot;
+use Hanson\Vbot\Foundation\Vbot;
 use Hanson\Vbot\Message\Message;
 
-$robot = new Robot([
+$robot = new Vbot([
     'tmp' => __DIR__ . '/./../tmp/',
 ]);
 

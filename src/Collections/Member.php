@@ -33,17 +33,4 @@ class Member extends Collection
         return static::$instance;
     }
 
-    /**
-     * 根据username获取群成员
-     *
-     * @param $id
-     * @return array
-     */
-    public function getMemberByUsername($id)
-    {
-        $member = $this->get($id);
-
-        return $member ?? null;
-    }
-
 }

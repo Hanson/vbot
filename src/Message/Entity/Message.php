@@ -13,10 +13,9 @@ use Carbon\Carbon;
 use Hanson\Vbot\Core\Server;
 use Hanson\Vbot\Collections\Contact;
 use Hanson\Vbot\Collections\Official;
-use Hanson\Vbot\Collections\SpecialAccount;
+use Hanson\Vbot\Collections\Special;
 use Hanson\Vbot\Support\FileManager;
 use Hanson\Vbot\Support\Console;
-use Hanson\Vbot\Support\ObjectAble;
 
 class Message
 {
@@ -81,11 +80,11 @@ class Message
             $this->fromType = 'Self';
         } elseif (substr($this->msg['FromUserName'], 0, 2) === '@@') { # group
             $this->fromType = 'Group';
-        } elseif (contact()->getContactByUsername($this->msg['FromUserName'])) {
+        } elseif (contact()->get($this->msg['FromUserName'])) {
             $this->fromType = 'Contact';
         } elseif (Official::getInstance()->get($this->msg['FromUserName'])) {
             $this->fromType = 'Official';
-        } elseif (SpecialAccount::getInstance()->get($this->msg['FromUserName'], false)) {
+        } elseif (Special::getInstance()->get($this->msg['FromUserName'], false)) {
             $this->fromType = 'Special';
         } else {
             $this->fromType = 'Unknown';

@@ -9,20 +9,8 @@
 namespace Hanson\Vbot\Collections;
 
 
-use Illuminate\Support\Collection;
-
 class Account
 {
-
-    /**
-     * @var Group
-     */
-    static $group;
-
-    /**
-     * @var Contact
-     */
-    static $contact;
 
     /**
      * @var Account
@@ -36,10 +24,8 @@ class Account
      */
     public static function getInstance()
     {
-        if(static::$instance === null){
+        if (static::$instance === null) {
             static::$instance = new Account();
-            static::$group = group();
-            static::$contact = contact();
         }
 
         return static::$instance;
@@ -53,11 +39,11 @@ class Account
      */
     public function getAccount($username)
     {
-        $account = static::$group->get($username, null);
+        $account = group()->get($username, null);
 
-        $account = $account ? : static::$contact->get($username, null);
+        $account = $account ?: contact()->get($username, null);
 
-        return $account ? : member()->get($username, []);
+        return $account ?: member()->get($username, []);
     }
 
 }

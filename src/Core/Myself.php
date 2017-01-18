@@ -9,8 +9,6 @@
 namespace Hanson\Vbot\Core;
 
 
-use Hanson\Vbot\Collections\Contact;
-
 class Myself
 {
 
@@ -26,7 +24,7 @@ class Myself
 
     public static function getInstance()
     {
-        if(!static::$instance){
+        if (!static::$instance) {
             static::$instance = new Myself();
         }
 
@@ -39,7 +37,7 @@ class Myself
         $this->nickname = $user['NickName'];
         $this->username = $user['UserName'];
         $this->sex = $user['Sex'];
-        $this->uin= $user['Uin'];
+        $this->uin = $user['Uin'];
     }
 
 }

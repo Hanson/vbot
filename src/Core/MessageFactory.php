@@ -12,6 +12,7 @@ namespace Hanson\Vbot\Core;
 use Hanson\Vbot\Message\Entity\Emoticon;
 use Hanson\Vbot\Message\Entity\Image;
 use Hanson\Vbot\Message\Entity\Location;
+use Hanson\Vbot\Message\Entity\Message;
 use Hanson\Vbot\Message\Entity\Recall;
 use Hanson\Vbot\Message\Entity\Recommend;
 use Hanson\Vbot\Message\Entity\RedPacket;
@@ -22,7 +23,6 @@ use Hanson\Vbot\Message\Entity\Touch;
 use Hanson\Vbot\Message\Entity\Transfer;
 use Hanson\Vbot\Message\Entity\Video;
 use Hanson\Vbot\Message\Entity\Voice;
-use Hanson\Vbot\Support\Console;
 
 class MessageFactory
 {
@@ -36,7 +36,7 @@ class MessageFactory
     /**
      * 处理消息类型
      * @param $msg
-     * @return Touch
+     * @return Message
      */
     private function handleMessageByType($msg)
     {
@@ -65,9 +65,9 @@ class MessageFactory
 //                else if(str_contains($msg['Content'], '好友') || str_contains($msg['Content'], 'friend')){
 //                    print_r($msg);
 //                }
-                else{
-                    print_r($msg);
-                }
+//                else{
+//                    print_r($msg);
+//                }
                 break;
             case 49:
                 if($msg['Status'] == 3 && $msg['FileName'] === '微信转账'){
