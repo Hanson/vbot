@@ -36,22 +36,33 @@ require_once __DIR__ . './../vendor/autoload.php';
 
 use Hanson\Vbot\Foundation\Vbot;
 use Hanson\Robot\Message\Message;
+use Hanson\Robot\Message\Text;
 
 $robot = new Vbot([
     'tmp' => '/path/to/tmp/', # 用于生成登录二维码以及文件保存
     'debug' => true # 用于是否输出用户组的json
 ]);
 
+// 图灵自动回复
+function reply($str){
+    return http()->post('http://www.tuling123.com/openapi/api', [
+        'key' => '1dce02aef026258eff69635a06b0ab7d',
+        'info' => $str
+    ], true)['text'];
+
+}
+
 $robot->server->setMessageHandler(function($message){
-    if($message->type === 'Text'){
-        $url = 'http://www.tuling123.com/openapi/api';
-
-        $result = http()->post($url, [
-            'key' => 'your tuling api key',
-            'info' => $message->content
-        ], true);
-
-        return $result['text'];
+    // 文字信息
+    if ($message instanceof Text) {
+        /** @var $message Text */
+        // 联系人自动回复
+        if ($message->fromType === 'Contact') {
+            return reply($message->content);
+            // 群组@我回复
+        } elseif ($message->fromType === 'Group' && $message->isAt) {
+            return reply($message->content);
+        }
     }
 });
 
