@@ -30,6 +30,15 @@ $robot = new Vbot([
     'debug' => true
 ]);
 
+// 图灵自动回复
+function reply($str){
+    return http()->post('http://www.tuling123.com/openapi/api', [
+        'key' => '1dce02aef026258eff69635a06b0ab7d',
+        'info' => $str
+    ], true)['text'];
+
+}
+
 $robot->server->setMessageHandler(function ($message) use ($path) {
     /** @var $message Message */
 
@@ -45,17 +54,10 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
         /** @var $message Text */
         // 联系人自动回复
         if ($message->fromType === 'Contact') {
-
-            return http()->post('http://www.tuling123.com/openapi/api', [
-                'key' => '1dce02aef026258eff69635a06b0ab7d',
-                'info' => $message->content
-            ], true)['text'];
+            return reply($message->content);
             // 群组@我回复
         } elseif ($message->fromType === 'Group' && $message->isAt) {
-            return http()->post('http://www.tuling123.com/openapi/api', [
-                'key' => '1dce02aef026258eff69635a06b0ab7d',
-                'info' => $message->content
-            ], true)['text'];
+            return reply($message->content);
         }
     }
 
