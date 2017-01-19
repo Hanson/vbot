@@ -7,9 +7,17 @@
 
 ## 安装
 
+1、composer
+
 ```
 composer require hanson/robot
 ```
+
+2、直接下载[release](https://github.com/HanSon/vbot/files/716645/vbot.zip)
+
+然后执行``` php example/index.php ``` 即可
+
+*PS:警告！执行前请先查看`index.php`的代码，注释掉你认为不需要的代码，避免对其他人好友造成困扰*
 
 # 文档
 
