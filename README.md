@@ -10,7 +10,7 @@
 1、composer
 
 ```
-composer require hanson/robot
+composer require hanson/vbot
 ```
 
 2、直接下载[release](https://github.com/HanSon/vbot/files/716645/vbot.zip)
