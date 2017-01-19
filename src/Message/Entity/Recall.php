@@ -49,10 +49,13 @@ class Recall extends Message implements MessageInterface
         $msgId = $this->parseMsgId($this->msg['Content']);
 
         /** @var Message $message */
-        $this->origin = $message = message()->get($msgId);
-        $this->nickname = $message->sender ? $message->sender['NickName'] : account()->getAccount($message->msg['FromUserName'])['NickName'];
+        $this->origin = $message = message()->get($msgId, null);
 
-        $this->setContent();
+        if(!$message){
+            $this->nickname = $message->sender ? $message->sender['NickName'] : account()->getAccount($message->msg['FromUserName'])['NickName'];
+            $this->setContent();
+        }
+
     }
 
     private function setContent()
