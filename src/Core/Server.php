@@ -137,6 +137,10 @@ class Server
 
         $qrCode = new QrCode($url);
 
+        if(!is_dir(realpath($this->config['tmp']))){
+            mkdir($this->config['tmp'], 0700, true);
+        }
+
         $file = $this->config['tmp'] . 'qr.png';
 
         $qrCode->save($file);
