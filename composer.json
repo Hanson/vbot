@@ -24,8 +24,5 @@
         "psr-4": {
             "Hanson\\Vbot\\": "src/"
         }
-    },
-    "require-dev": {
-        "phpstan/phpstan": "^0.4.2"
     }
 }
