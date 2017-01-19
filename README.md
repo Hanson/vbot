@@ -43,8 +43,8 @@ composer require hanson/vbot
 require_once __DIR__ . './../vendor/autoload.php';
 
 use Hanson\Vbot\Foundation\Vbot;
-use Hanson\Robot\Message\Message;
-use Hanson\Robot\Message\Text;
+use Hanson\Vbot\Message\Entity\Message;
+use Hanson\Vbot\Message\Entity\Text;
 
 $robot = new Vbot([
     'tmp' => '/path/to/tmp/', # 用于生成登录二维码以及文件保存
