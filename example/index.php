@@ -159,4 +159,12 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
 
 });
 
+$robot->server->setExitHandler(function(){
+    \Hanson\Vbot\Support\Console::log('其他设备登录');
+});
+
+$robot->server->setExceptionHandler(function(){
+    \Hanson\Vbot\Support\Console::log('异常退出');
+});
+
 $robot->server->run();

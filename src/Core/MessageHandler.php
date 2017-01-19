@@ -28,6 +28,10 @@ class MessageHandler
 
     private $customHandler;
 
+    private $exitHandler;
+
+    private $exceptionHandler;
+
     private $sync;
 
     private $messageFactory;
@@ -76,10 +80,40 @@ class MessageHandler
     public function setCustomHandler(Closure $closure)
     {
         if(!$closure instanceof Closure){
-            throw new \Exception('message handler must be a closure!');
+            throw new \Exception('custom handler must be a closure!');
         }
 
         $this->customHandler = $closure;
+    }
+
+    /**
+     * 退出处理器
+     *
+     * @param Closure $closure
+     * @throws \Exception
+     */
+    public function setExitHandler(Closure $closure)
+    {
+        if(!$closure instanceof Closure){
+            throw new \Exception('exit handler must be a closure!');
+        }
+
+        $this->exitHandler = $closure;
+    }
+
+    /**
+     * 异常处理器
+     *
+     * @param Closure $closure
+     * @throws \Exception
+     */
+    public function setExceptionHandler(Closure $closure)
+    {
+        if(!$closure instanceof Closure){
+            throw new \Exception('exit handler must be a closure!');
+        }
+
+        $this->exceptionHandler = $closure;
     }
 
     /**
@@ -96,15 +130,24 @@ class MessageHandler
             list($retCode, $selector) = $this->sync->checkSync();
 
             if(in_array($retCode, ['1100', '1101'])){ # 微信客户端上登出或者其他设备登录
+                if($this->exitHandler){
+                    Console::log('[INFO] 微信客户端正常退出');
+                    call_user_func_array($this->exitHandler, []);
+                }
                 break;
             }elseif ($retCode == 0){
                 $this->handlerMessage($selector);
             }else{
-                $this->sync->debugMessage($retCode, $selector, 10);
+                if($this->exceptionHandler){
+                    Console::log('[INFO] 微信客户端异常退出');
+                    call_user_func_array($this->exitHandler, []);
+                }
+                break;
             }
 
             $this->sync->checkTime($time);
         }
+        Console::log('[INFO] 程序结束');
     }
 
     /**

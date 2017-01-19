@@ -317,20 +317,22 @@ class Server
 
     public function setMessageHandler(\Closure $closure)
     {
-        if(!is_callable($closure)){
-            throw new \Exception('[ERROR] message handler must be a closure!');
-        }
-
         MessageHandler::getInstance()->setMessageHandler($closure);
     }
 
     public function setCustomerHandler(\Closure $closure)
     {
-        if(!is_callable($closure)){
-            throw new \Exception('[ERROR] message handler must be a closure!');
-        }
-
         MessageHandler::getInstance()->setCustomHandler($closure);
+    }
+
+    public function setExitHandler(\Closure $closure)
+    {
+        MessageHandler::getInstance()->setExitHandler($closure);
+    }
+
+    public function setExceptionHandler(\Closure $closure)
+    {
+        MessageHandler::getInstance()->setExceptionHandler($closure);
     }
 
     public function debug($debug = true)
