@@ -9,12 +9,66 @@
 namespace Hanson\Vbot\Support;
 
 
+use PHPQRCode\QRcode;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\OutputInterface;
+
 class Console
 {
 
+    /**
+     * 输出字符串
+     *
+     * @param $str
+     */
     public static function log($str)
     {
         echo $str . PHP_EOL;
     }
 
+    /**
+     * 初始化二维码style
+     *
+     * @param OutputInterface $output
+     */
+    private static function initQrcodeStyle(OutputInterface $output) {
+        $style = new OutputFormatterStyle('black', 'black', array('bold'));
+        $output->getFormatter()->setStyle('blackc', $style);
+        $style = new OutputFormatterStyle('white', 'white', array('bold'));
+        $output->getFormatter()->setStyle('whitec', $style);
+    }
+
+
+    /**
+     * 控制台显示二维码
+     *
+     * @param $text
+     */
+    public static function showQrCode($text)
+    {
+        $output = new ConsoleOutput();
+        static::initQrcodeStyle($output);
+
+        if(System::isWin()){
+            $pxMap = ['<whitec>mm</whitec>', '<blackc>  </blackc>'];
+            system('cls');
+        }else{
+            $pxMap = ['<whitec>  </whitec>', '<blackc>  </blackc>'];
+            system('clear');
+        }
+
+        $text   = QRcode::text($text);
+
+        $length = strlen($text[0]);
+
+        foreach ($text as $line) {
+            $output->write($pxMap[0]);
+            for ($i = 0; $i < $length; $i++) {
+                $type = substr($line, $i, 1);
+                $output->write($pxMap[$type]);
+            }
+            $output->writeln($pxMap[0]);
+        }
+    }
 }

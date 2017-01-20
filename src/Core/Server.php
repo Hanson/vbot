@@ -10,12 +10,9 @@ namespace Hanson\Vbot\Core;
 
 
 use Endroid\QrCode\QrCode;
-use GuzzleHttp\Client;
-use Hanson\Vbot\Collections\Account;
 use Hanson\Vbot\Collections\ContactFactory;
 use Hanson\Vbot\Collections\Group;
 use Hanson\Vbot\Support\Console;
-use Symfony\Component\DomCrawler\Crawler;
 
 class Server
 {
@@ -60,7 +57,7 @@ class Server
     {
         $this->config = $config;
 
-        $this->config['debug'] = $this->config['debug'] ?? false;
+        $this->config['debug'] = isset($this->config['debug']) ? $this->config['debug'] : false;
     }
 
     /**
@@ -97,6 +94,7 @@ class Server
     {
         $this->getUuid();
         $this->generateQrCode();
+        Console::showQrCode('https://login.weixin.qq.com/l/' . $this->uuid);
         Console::log('[INFO] 请扫描二维码登录');
 
         $this->waitForLogin();
@@ -144,10 +142,6 @@ class Server
         $file = $this->config['tmp'] . 'qr.png';
 
         $qrCode->save($file);
-
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            system($file);
-        }
     }
 
     /**
@@ -253,7 +247,7 @@ class Server
         $content = http()->json($url, [
             'BaseRequest' => $this->baseRequest
         ]);
-        
+
         $result = json_decode($content, true);
         $this->generateSyncKey($result, $first);
 
@@ -333,12 +327,5 @@ class Server
     public function setExceptionHandler(\Closure $closure)
     {
         MessageHandler::getInstance()->setExceptionHandler($closure);
-    }
-
-    public function debug($debug = true)
-    {
-        $this->debug = $debug;
-
-        return $this;
     }
 }

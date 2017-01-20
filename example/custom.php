@@ -18,9 +18,11 @@ $robot = new Vbot([
 $flag = false;
 
 $robot->server->setCustomerHandler(function() use (&$flag){
-
-    $contact = contact()->getUsernameById('matts8023');
-
+    // RemarkName,代表的改用户在你通讯录的名字
+    $contact = contact()->getUsernameByRemarkName('hanson');
+    if ($contact === false){
+        dd("找不到你要的联系人，请确认联系人姓名");
+    }
     if(!$flag){
         Text::send($contact, '来轰炸吧');
         $flag = true;
