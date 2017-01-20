@@ -57,7 +57,7 @@ class Server
     {
         $this->config = $config;
 
-        $this->config['debug'] = $this->config['debug'] ?? false;
+        $this->config['debug'] = isset($this->config['debug']) ? $this->config['debug'] : false;
     }
 
     /**
@@ -142,10 +142,6 @@ class Server
         $file = $this->config['tmp'] . 'qr.png';
 
         $qrCode->save($file);
-
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            system($file);
-        }
     }
 
     /**
@@ -331,12 +327,5 @@ class Server
     public function setExceptionHandler(\Closure $closure)
     {
         MessageHandler::getInstance()->setExceptionHandler($closure);
-    }
-
-    public function debug($debug = true)
-    {
-        $this->debug = $debug;
-
-        return $this;
     }
 }

@@ -19,7 +19,8 @@
         "php": ">=7.0.0",
         "symfony/var-dumper": "^3.2",
         "aferrandini/phpqrcode": "^1.0",
-        "symfony/process": "^3.2"
+        "symfony/process": "^3.2",
+        "symfony/console": "^3.2"
     },
     "minimum-stability": "dev",
     "autoload": {
