@@ -17,7 +17,9 @@
         "illuminate/support": "^5.3",
         "nesbot/carbon": "^1.21",
         "php": ">=7.0.0",
-        "symfony/var-dumper": "^3.2"
+        "symfony/var-dumper": "^3.2",
+        "aferrandini/phpqrcode": "^1.0",
+        "symfony/process": "^3.2"
     },
     "minimum-stability": "dev",
     "autoload": {

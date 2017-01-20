@@ -62,5 +62,20 @@ class Contact extends Collection
             }
         });
     }
+    /**
+     * 根据通讯录中的名字获取通讯对象
+     *
+     * @param $id
+     * @return mixed
+     */
+    public function getUsernameByNickRemarkName($id)
+    {
+        return $this->search(function($item, $key) use ($id){
+            if($item['RemarkName'] === $id){
+                return true;
+            }
+        });
+    }
+
 
 }
