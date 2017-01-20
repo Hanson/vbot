@@ -17,7 +17,7 @@ namespace Hanson\Vbot\Message;
 trait MediaTrait
 {
 
-    public function getPath($folder)
+    public static function getPath($folder)
     {
         $path = server()->config['tmp'] . $folder;
 
