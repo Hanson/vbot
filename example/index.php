@@ -79,7 +79,7 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
     // 语音消息
     if($message instanceof Voice){
         /** @var $message Voice */
-        return '收到一条语音并下载在' . $message->getPath($message::$folder) . "/{$message->msg['MsgId']}.mp3";
+        return '收到一条语音并下载在' . $message::getPath($message::$folder) . "/{$message->msg['MsgId']}.mp3";
     }
 
     // 撤回信息
