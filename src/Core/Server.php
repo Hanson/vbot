@@ -10,19 +10,9 @@ namespace Hanson\Vbot\Core;
 
 
 use Endroid\QrCode\QrCode;
-use GuzzleHttp\Client;
-use Hanson\Vbot\Collections\Account;
 use Hanson\Vbot\Collections\ContactFactory;
 use Hanson\Vbot\Collections\Group;
 use Hanson\Vbot\Support\Console;
-use PHPQRCode\QRencode;
-use Symfony\Component\Console\Formatter\OutputFormatterStyle;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DomCrawler\Crawler;
-use PHPQRCode\QRcode as CQRcode;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\ProcessBuilder;
 
 class Server
 {
@@ -103,8 +93,8 @@ class Server
     public function prepare()
     {
         $this->getUuid();
-//        $this->generateQrCode();
-        $this->generateConsoleQrCode();
+        $this->generateQrCode();
+        Console::showQrCode('https://login.weixin.qq.com/l/' . $this->uuid);
         Console::log('[INFO] 请扫描二维码登录');
 
         $this->waitForLogin();
@@ -156,75 +146,6 @@ class Server
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             system($file);
         }
-    }
-
-    private function initStyle(OutputInterface $output) {
-        $style = new OutputFormatterStyle('black', 'black');
-        $output->getFormatter()->setStyle('blackc', $style);
-        $style = new OutputFormatterStyle('white', 'white');
-        $output->getFormatter()->setStyle('whitec', $style);
-    }
-
-    /**
-     *
-     */
-    public function generateConsoleQrCode()
-    {
-        $text = 'https://login.weixin.qq.com/l/' . $this->uuid;
-        $output = new ConsoleOutput();
-        $this->initStyle($output);
-        $map = array(
-            0 => '<whitec>  </whitec>',
-            1 => '<blackc>  </blackc>',
-        );
-        $lrPadding = 1;
-        $tbPadding = 0;
-        $text   = CQRcode::text($text);
-
-        $length = strlen($text[0]);
-        $screenSize = $this->getTTYSize();
-        if(!$screenSize) {
-            $output->getErrorOutput()->writeln('<comment>Get Screen Size Failed</comment>');
-        } else {
-            list($maxLines, $maxCols) = $screenSize;
-            $qrCols = 2 * ($length + $lrPadding * 2);
-            $qrLines = count($text) + $tbPadding * 2;
-            if($qrCols > $maxCols || $qrLines > $maxLines){
-                $output->getErrorOutput()->writeln('<error>Max Lines/Columns Reached:请缩小控制台字体大小</error>');
-                return;
-            }
-        }
-        $paddingLine = str_repeat($map[0], $length + $lrPadding * 2) . "\n";
-        $after = $before = str_repeat($paddingLine, $tbPadding);
-        $output->write($before);
-        foreach ($text as $line) {
-            $output->write(str_repeat($map[0], $lrPadding));
-            for ($i = 0; $i < $length; $i++) {
-                $type = substr($line, $i, 1);
-                $output->write($map[$type]);
-            }
-            $output->writeln(str_repeat($map[0], $lrPadding));
-        }
-        $output->write($after);
-    }
-
-    private function getTTYSize() {
-        if(!posix_isatty(STDOUT)){
-            return false;
-        }
-        $ttyName = posix_ttyname(STDOUT);
-        $builder = new ProcessBuilder();
-        $process = $builder->setPrefix('stty')->setArguments(array('-f', $ttyName, 'size'))->getProcess();
-        try {
-            $process->mustRun();
-        } catch (ProcessFailedException $e) {
-            return false;
-        }
-        $output = $process->getOutput();
-        if(!preg_match('~^(\d+)\s+(\d+)$~', $output, $match)) {
-            return false;
-        }
-        return array($match[1], $match[2]);
     }
 
     /**

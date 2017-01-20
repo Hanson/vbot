@@ -68,7 +68,7 @@ class Contact extends Collection
      * @param $id
      * @return mixed
      */
-    public function getUsernameByNickRemarkName($id)
+    public function getUsernameByRemarkName( $id)
     {
         return $this->search(function($item, $key) use ($id){
             if($item['RemarkName'] === $id){
