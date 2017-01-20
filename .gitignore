@@ -1,3 +1,4 @@
 /vendor/
 .idea
 /tmp/
+composer.lock
