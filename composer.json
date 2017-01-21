@@ -18,7 +18,7 @@
         "nesbot/carbon": "^1.21",
         "php": ">=7.0.0",
         "aferrandini/phpqrcode": "^1.0",
-        "symfony/console": "^3.2"
+        "symfony/console": "3.*"
     },
     "minimum-stability": "dev",
     "autoload": {
