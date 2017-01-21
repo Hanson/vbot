@@ -21,7 +21,8 @@ $robot->server->setCustomerHandler(function() use (&$flag){
     // RemarkName,代表的改用户在你通讯录的名字
     $contact = contact()->getUsernameByRemarkName('hanson');
     if ($contact === false){
-        dd("找不到你要的联系人，请确认联系人姓名");
+        echo("找不到你要的联系人，请确认联系人姓名");
+        return;
     }
     if(!$flag){
         Text::send($contact, '来轰炸吧');
