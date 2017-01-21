@@ -42,5 +42,6 @@ class Voice extends Message implements MessageInterface, MediaInterface
 
     public function make()
     {
+        $this->download();
     }
 }
