@@ -66,14 +66,10 @@ class MessageFactory
                 }
                 break;
             case 49:
-                preg_match('/type&gt;(\d+)&lt;\/type/', $msg['Content'], $matches);
                 if($msg['Status'] == 3 && $msg['FileName'] === '微信转账'){
                     return new Transfer($msg);
-                }elseif($matches[1] === 5){
+                }else{
                     return new Share($msg);
-                }elseif($matches[1] === 33){
-                    print_r('xcx');
-//                    return new Share($msg);
                 }
             case 37: // 好友验证
                 return new RequestFriend($msg);
