@@ -130,16 +130,16 @@ class MessageHandler
             list($retCode, $selector) = $this->sync->checkSync();
 
             if(in_array($retCode, ['1100', '1101'])){ # 微信客户端上登出或者其他设备登录
+                Console::log('[INFO] 微信客户端正常退出');
                 if($this->exitHandler){
-                    Console::log('[INFO] 微信客户端正常退出');
                     call_user_func_array($this->exitHandler, []);
                 }
                 break;
             }elseif ($retCode == 0){
                 $this->handlerMessage($selector);
             }else{
+                Console::log('[INFO] 微信客户端异常退出');
                 if($this->exceptionHandler){
-                    Console::log('[INFO] 微信客户端异常退出');
                     call_user_func_array($this->exitHandler, []);
                 }
                 break;
