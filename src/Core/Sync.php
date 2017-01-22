@@ -32,7 +32,7 @@ class Sync
             ]);
 
         try{
-            $content = http()->get($url);
+            $content = http()->get($url, [], ['connect_timeout' => 60]);
 
             preg_match('/window.synccheck=\{retcode:"(\d+)",selector:"(\d+)"\}/', $content, $matches);
 
