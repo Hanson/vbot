@@ -21,13 +21,6 @@ class Share extends Message implements MessageInterface
 
     public $app;
 
-    /**
-     * 转账金额 单位 元
-     *
-     * @var string
-     */
-    public $fee;
-
     public function __construct($msg)
     {
         parent::__construct($msg);

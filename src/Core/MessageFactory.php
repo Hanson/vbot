@@ -18,6 +18,7 @@ use Hanson\Vbot\Message\Entity\Recommend;
 use Hanson\Vbot\Message\Entity\RedPacket;
 use Hanson\Vbot\Message\Entity\RequestFriend;
 use Hanson\Vbot\Message\Entity\Share;
+use Hanson\Vbot\Message\Entity\ShareFactory;
 use Hanson\Vbot\Message\Entity\Text;
 use Hanson\Vbot\Message\Entity\Touch;
 use Hanson\Vbot\Message\Entity\Transfer;
@@ -69,7 +70,7 @@ class MessageFactory
                 if($msg['Status'] == 3 && $msg['FileName'] === '微信转账'){
                     return new Transfer($msg);
                 }else{
-                    return new Share($msg);
+                    return (new ShareFactory())->make($msg);
                 }
             case 37: // 好友验证
                 return new RequestFriend($msg);

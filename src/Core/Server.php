@@ -170,7 +170,6 @@ class Server
                 case '200':
                     preg_match('/window.redirect_uri="(\S+?)";/', $content, $matches);
                     $this->redirectUri = $matches[1] . '&fun=new';
-                    Console::log('登录URL:'.$this->redirectUri);
                     $domainList = [
                         'wx2.qq.com' => ['file.wx2.qq.com', 'webpush.wx2.qq.com'],
                         'wx.qq.com' => ['file.wx.qq.com', 'webpush.wx.qq.com'],
@@ -188,7 +187,6 @@ class Server
                             break;
                         }
                     }
-                    Console::log('url is:'. $this->baseUri);
                     return;
                 case '408':
                     Console::log('[ERROR] 登录超时，请重试');
