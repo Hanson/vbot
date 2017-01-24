@@ -32,11 +32,15 @@ class Http
         return static::$instance;
     }
 
-    public function get($url, array $query = [])
+    public function get($url, array $query = [], array $options = [])
     {
-        $query = $query ? ['query' => $query] : [];
+        if($query){
+            $options['query'] = $query;
+        }
 
-        return $this->request($url, 'GET', $query);
+        $options['connect_timeout'] = 60;
+
+        return $this->request($url, 'GET', $options);
     }
 
     public function post($url, $query = [], $array = false)
