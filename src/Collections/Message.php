@@ -9,7 +9,6 @@
 namespace Hanson\Vbot\Collections;
 
 
-use Hanson\Vbot\Support\Console;
 use Illuminate\Support\Collection;
 
 class Message extends Collection

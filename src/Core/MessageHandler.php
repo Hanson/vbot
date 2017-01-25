@@ -9,7 +9,6 @@
 namespace Hanson\Vbot\Core;
 
 use Closure;
-use Hanson\Vbot\Collections\Account;
 use Hanson\Vbot\Message\Entity\Emoticon;
 use Hanson\Vbot\Message\Entity\Image;
 use Hanson\Vbot\Message\Entity\Message;
@@ -130,7 +129,7 @@ class MessageHandler
             list($retCode, $selector) = $this->sync->checkSync();
 
             if(in_array($retCode, ['1100', '1101'])){ # 微信客户端上登出或者其他设备登录
-                Console::log('[INFO] 微信客户端正常退出');
+                Console::log('微信客户端正常退出');
                 if($this->exitHandler){
                     call_user_func_array($this->exitHandler, []);
                 }
@@ -138,7 +137,7 @@ class MessageHandler
             }elseif ($retCode == 0){
                 $this->handlerMessage($selector);
             }else{
-                Console::log('[INFO] 微信客户端异常退出');
+                Console::log('微信客户端异常退出');
                 if($this->exceptionHandler){
                     call_user_func_array($this->exitHandler, []);
                 }
@@ -147,7 +146,7 @@ class MessageHandler
 
             $this->sync->checkTime($time);
         }
-        Console::log('[INFO] 程序结束');
+        Console::log('程序结束');
     }
 
     /**
@@ -165,7 +164,7 @@ class MessageHandler
 
         if($message['AddMsgList']){
             foreach ($message['AddMsgList'] as $msg) {
-                $content = $this->messageFactory->make($selector, $msg);
+                $content = $this->messageFactory->make($msg);
                 if($content){
                     $this->addToMessageCollection($content);
                     if($this->handler){

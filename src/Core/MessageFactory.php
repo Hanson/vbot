@@ -17,7 +17,6 @@ use Hanson\Vbot\Message\Entity\Recall;
 use Hanson\Vbot\Message\Entity\Recommend;
 use Hanson\Vbot\Message\Entity\RedPacket;
 use Hanson\Vbot\Message\Entity\RequestFriend;
-use Hanson\Vbot\Message\Entity\Share;
 use Hanson\Vbot\Message\Entity\ShareFactory;
 use Hanson\Vbot\Message\Entity\Text;
 use Hanson\Vbot\Message\Entity\Touch;
@@ -28,7 +27,7 @@ use Hanson\Vbot\Message\Entity\Voice;
 class MessageFactory
 {
 
-    public function make($selector, $msg)
+    public function make($msg)
     {
         return $this->handleMessageByType($msg);
     }
@@ -91,5 +90,6 @@ class MessageFactory
                 //Unknown
                 break;
         }
+        return null;
     }
 }

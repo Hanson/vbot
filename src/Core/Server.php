@@ -80,12 +80,12 @@ class Server
     {
         $this->prepare();
         $this->init();
-        Console::log('[INFO] 初始化成功');
+        Console::log('初始化成功');
 
         $this->statusNotify();
-        Console::log('[INFO] 开始初始化联系人');
+        Console::log('开始初始化联系人');
         $this->initContact();
-        Console::log('[INFO] 初始化联系人成功');
+        Console::log('初始化联系人成功');
 
         MessageHandler::getInstance()->listen();
     }
@@ -95,11 +95,11 @@ class Server
         $this->getUuid();
         $this->generateQrCode();
         Console::showQrCode('https://login.weixin.qq.com/l/' . $this->uuid);
-        Console::log('[INFO] 请扫描二维码登录');
+        Console::log('请扫描二维码登录');
 
         $this->waitForLogin();
         $this->login();
-        Console::log('[INFO] 登录成功');
+        Console::log('登录成功');
     }
 
     /**
@@ -120,7 +120,8 @@ class Server
         preg_match('/window.QRLogin.code = (\d+); window.QRLogin.uuid = \"(\S+?)\"/', $content, $matches);
 
         if(!$matches){
-            throw new \Exception('[ERROR] 获取UUID失败');
+            Console::log('获取UUID失败', Console::ERROR);
+            exit;
         }
 
         $this->uuid = $matches[2];
@@ -164,7 +165,7 @@ class Server
             $code = $matches[1];
             switch($code){
                 case '201':
-                    Console::log('[INFO] 请点击确认登录微信');
+                    Console::log('请点击确认登录微信');
                     $tip = 0;
                     break;
                 case '200':
@@ -189,13 +190,13 @@ class Server
                     }
                     return;
                 case '408':
-                    Console::log('[ERROR] 登录超时，请重试');
+                    Console::log('登录超时，请重试', Console::ERROR);
                     $tip = 1;
                     $retryTime -= 1;
                     sleep(1);
                     break;
                 default:
-                    Console::log("[ERROR] 登录失败，错误码：$code 。请重试");
+                    Console::log("登录失败，错误码：$code 。请重试", Console::ERROR);
                     $tip = 1;
                     $retryTime -= 1;
                     sleep(1);
@@ -203,7 +204,8 @@ class Server
             }
         }
 
-        die('[ERROR] 登录超时，退出应用');
+        Console::log('登录超时，退出应用', Console::ERROR);
+        exit;
     }
 
     /**
@@ -223,7 +225,8 @@ class Server
         $this->passTicket = $data['pass_ticket'];
 
         if(in_array('', [$this->skey, $this->sid, $this->uin, $this->passTicket])){
-            throw new \Exception('[ERROR] 登录失败');
+            Console::log('登录失败', Console::ERROR);
+            exit;
         }
 
         $this->deviceId = 'e' .substr(mt_rand().mt_rand(), 1, 15);
@@ -254,7 +257,8 @@ class Server
         $this->initContactList($result['ContactList']);
 
         if($result['BaseResponse']['Ret'] != 0){
-            throw new \Exception('[ERROR] 初始化失败，链接：' . $url);
+            Console::log('初始化失败，链接：' . $url, Console::ERROR);
+            exit;
         }
     }
 

@@ -9,6 +9,7 @@
 namespace Hanson\Vbot\Support;
 
 
+use Carbon\Carbon;
 use PHPQRCode\QRcode;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -17,14 +18,19 @@ use Symfony\Component\Console\Output\OutputInterface;
 class Console
 {
 
+    const INFO = 'INFO';
+    const WARNING = 'WARNING';
+    const ERROR = 'ERROR';
+
     /**
      * 输出字符串
      *
      * @param $str
+     * @param string $level
      */
-    public static function log($str)
+    public static function log($str, $level = 'INFO')
     {
-        echo $str . PHP_EOL;
+        echo '[' . Carbon::now()->toDateTimeString() . ']' . "[{$level}] " . $str . PHP_EOL;
     }
 
     /**
