@@ -33,6 +33,10 @@ class ShareFactory
 
     private function parse($xml)
     {
+        if(starts_with($xml, '@')){
+            $xml = preg_replace('/(@\S+:\\n)/', '', $xml);
+        }
+
         $array = (array)simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA);
 
         $this->xml = $info = (array)$array['appmsg'];
