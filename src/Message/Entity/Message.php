@@ -14,6 +14,7 @@ use Hanson\Vbot\Core\Server;
 use Hanson\Vbot\Collections\Contact;
 use Hanson\Vbot\Collections\Official;
 use Hanson\Vbot\Collections\Special;
+use Hanson\Vbot\Support\Content;
 use Hanson\Vbot\Support\FileManager;
 use Hanson\Vbot\Support\Console;
 
@@ -56,7 +57,7 @@ class Message
         $this->setFrom();
         $this->setFromType();
 
-        $this->msg['Content'] = html_entity_decode($this->formatContent($this->msg['Content']));
+        $this->msg['Content'] = Content::formatContent($this->msg['Content']);
         if($this->fromType === 'Group'){
             $this->handleGroupContent($this->msg['Content']);
         }
@@ -104,12 +105,7 @@ class Message
         list($uid, $content) = explode(":\n", $content, 2);
 
         $this->sender = account()->getAccount($uid);
-        $this->msg['Content'] = $this->formatContent($content);
-    }
-
-    protected function formatContent($content)
-    {
-        return str_replace('<br/>', "\n", $content);
+        $this->msg['Content'] = Content::replaceBr($content);
     }
 
     public function __toString()

@@ -33,9 +33,7 @@ class ContactFactory
     {
         $url = sprintf(server()->baseUri . '/webwxgetcontact?pass_ticket=%s&skey=%s&r=%s', server()->passTicket, server()->skey, time());
 
-        $content = http()->json($url, [
-            'BaseRequest' => server()->baseRequest
-        ], true);
+        $content = http()->json($url, [], true);
 
         $this->makeContactList($content['MemberList']);
     }

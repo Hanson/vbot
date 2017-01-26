@@ -9,8 +9,6 @@
 namespace Hanson\Vbot\Core;
 
 use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Cookie\CookieJar;
-use GuzzleHttp\Cookie\FileCookieJar;
 use Hanson\Vbot\Support\Console;
 
 class Http
@@ -32,11 +30,15 @@ class Http
         return static::$instance;
     }
 
-    public function get($url, array $query = [])
+    public function get($url, array $query = [], array $options = [])
     {
-        $query = $query ? ['query' => $query] : [];
+        if($query){
+            $options['query'] = $query;
+        }
 
-        return $this->request($url, 'GET', $query);
+        $options['connect_timeout'] = 60;
+
+        return $this->request($url, 'GET', $options);
     }
 
     public function post($url, $query = [], $array = false)
@@ -88,10 +90,11 @@ class Http
             $response = $this->getClient()->request($method, $url, $options);
             return $response->getBody()->getContents();
         }catch (\Exception $e){
-            Console::log('http链接失败：' . $e->getMessage());
-            Console::log('错误URL：' . $url);
+            Console::log('http链接失败：' . $e->getMessage(), Console::ERROR);
+            Console::log('错误URL：' . $url, Console::ERROR);
         }
 
+        return null;
     }
 
 
