@@ -193,7 +193,9 @@ class MessageHandler
     {
         message()->put($message->msg['MsgId'], $message);
 
-        file_put_contents(server()->config['tmp'].'/message.json', json_encode(message()->all()));
+        $file = fopen(server()->config['tmp'].'/message.json', 'a');
+        fwrite($file, json_encode($message) . PHP_EOL);
+        fclose($file);
     }
 
 }
