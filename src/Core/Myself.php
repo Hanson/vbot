@@ -22,6 +22,8 @@ class Myself
 
     public $sex;
 
+    public $alias;
+
     public static function getInstance()
     {
         if (!static::$instance) {

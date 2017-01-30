@@ -21,4 +21,9 @@ class System
     {
         return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
     }
+
+    public static function getPath()
+    {
+        return server()->config['tmp'] . '/' . myself()->alias . '/';
+    }
 }
