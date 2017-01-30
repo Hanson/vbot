@@ -8,7 +8,6 @@
 
 namespace Hanson\Vbot\Message\Entity;
 
-use Hanson\Vbot\Message\MessageInterface;
 use Hanson\Vbot\Support\Content;
 
 class ShareFactory
@@ -26,6 +25,8 @@ class ShareFactory
 
         if($this->type == 6){
             return new File($msg);
+        }else if(official()->get($msg['FromUserName'])){
+            return new Official($msg);
         }else{
             return new Share($msg);
         }

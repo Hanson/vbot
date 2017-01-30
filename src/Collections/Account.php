@@ -43,6 +43,8 @@ class Account
 
         $account = $account ?: contact()->get($username, null);
 
+        $account = $account ?: official()->get($username, null);
+
         return $account ?: member()->get($username, []);
     }
 
