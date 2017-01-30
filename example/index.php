@@ -63,23 +63,23 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
 
     // 图片信息 返回接收到的图片
     if ($message instanceof Image) {
-        return $message;
+//        return $message;
     }
 
     // 视频信息 返回接收到的视频
     if ($message instanceof Video) {
-        return $message;
+//        return $message;
     }
 
     // 表情信息 返回接收到的表情
     if ($message instanceof Emoticon) {
-        return $message;
+//        return $message;
     }
 
     // 语音消息
     if($message instanceof Voice){
         /** @var $message Voice */
-        return '收到一条语音并下载在' . $message::getPath($message::$folder) . "/{$message->msg['MsgId']}.mp3";
+//        return '收到一条语音并下载在' . $message::getPath($message::$folder) . "/{$message->msg['MsgId']}.mp3";
     }
 
     // 撤回信息
@@ -152,7 +152,7 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
 
     // 手机点击聊天事件
     if($message instanceof Touch){
-        Text::send($message->msg['ToUserName'], "我点击了此聊天");
+//        Text::send($message->msg['ToUserName'], "我点击了此聊天");
     }
 
     return false;

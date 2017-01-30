@@ -15,6 +15,7 @@ use Hanson\Vbot\Message\Entity\Message;
 use Hanson\Vbot\Message\Entity\Text;
 use Hanson\Vbot\Message\Entity\Video;
 use Hanson\Vbot\Support\Console;
+use Hanson\Vbot\Support\System;
 
 class MessageHandler
 {
@@ -193,7 +194,7 @@ class MessageHandler
     {
         message()->put($message->msg['MsgId'], $message);
 
-        $file = fopen(server()->config['tmp'].'/message.json', 'a');
+        $file = fopen(System::getPath() .'message.json', 'a');
         fwrite($file, json_encode($message) . PHP_EOL);
         fclose($file);
     }

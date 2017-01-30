@@ -14,7 +14,7 @@ class FileManager
 
     public static function download($name, $data, $path = '')
     {
-        $path = server()->config['tmp'] . myself()->nickname . '/' . $path;
+        $path = System::getPath() . $path;
         if(!is_dir(realpath($path))){
             mkdir($path, 0700, true);
         }

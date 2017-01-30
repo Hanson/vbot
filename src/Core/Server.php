@@ -13,6 +13,8 @@ use Endroid\QrCode\QrCode;
 use Hanson\Vbot\Collections\ContactFactory;
 use Hanson\Vbot\Collections\Group;
 use Hanson\Vbot\Support\Console;
+use Hanson\Vbot\Support\FileManager;
+use Hanson\Vbot\Support\System;
 
 class Server
 {
@@ -140,7 +142,9 @@ class Server
             mkdir($this->config['tmp'], 0700, true);
         }
 
-        $file = $this->config['tmp'] . 'qr.png';
+        $file = System::getPath() . 'qr.png';
+
+        FileManager::download('qr.png', file_get_contents($url));
 
         $qrCode->save($file);
     }
