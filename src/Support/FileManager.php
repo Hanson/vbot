@@ -12,9 +12,9 @@ namespace Hanson\Vbot\Support;
 class FileManager
 {
 
-    public static function download($name, $data, $path)
+    public static function download($name, $data, $path = '')
     {
-        $path = server()->config['tmp'] . $path;
+        $path = server()->config['tmp'] . myself()->nickname . '/' . $path;
         if(!is_dir(realpath($path))){
             mkdir($path, 0700, true);
         }

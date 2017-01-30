@@ -9,8 +9,7 @@
 namespace Hanson\Vbot\Collections;
 
 
-use Hanson\Vbot\Core\Server;
-use Hanson\Vbot\Support\Console;
+use Hanson\Vbot\Support\FileManager;
 
 class ContactFactory
 {
@@ -59,11 +58,11 @@ class ContactFactory
 
         $this->getBatchGroupMembers();
         if(server()->config['debug']){
-            file_put_contents(server()->config['tmp'] . 'contact.json', json_encode(contact()->all()));
-            file_put_contents(server()->config['tmp'] . 'member.json', json_encode(member()->all()));
-            file_put_contents(server()->config['tmp'] . 'group.json', json_encode(group()->all()));
-            file_put_contents(server()->config['tmp'] . 'official.json', json_encode(Official::getInstance()->all()));
-            file_put_contents(server()->config['tmp'] . 'special.json', json_encode(Special::getInstance()->all()));
+            FileManager::download('contact.json', json_encode(contact()->all()));
+            FileManager::download('member.json', json_encode(member()->all()));
+            FileManager::download('group.json', json_encode(group()->all()));
+            FileManager::download('official.json', json_encode(official()->all()));
+            FileManager::download('special.json', json_encode(Special::getInstance()->all()));
         }
     }
 
