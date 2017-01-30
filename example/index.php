@@ -21,6 +21,7 @@ use Hanson\Vbot\Message\Entity\RedPacket;
 use Hanson\Vbot\Message\Entity\Transfer;
 use Hanson\Vbot\Message\Entity\Recommend;
 use Hanson\Vbot\Message\Entity\Share;
+use Hanson\Vbot\Message\Entity\Official;
 use Hanson\Vbot\Message\Entity\Touch;
 use Hanson\Vbot\Message\Entity\RequestFriend;
 
@@ -146,6 +147,16 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
         $reply = "收到分享\n标题：{$message->title}\n描述：{$message->description}\n链接：{$message->url}";
         if($message->app){
             $reply .= "\n来源APP：{$message->app}";
+        }
+        return $reply;
+    }
+
+    // 公众号推送信息
+    if($message instanceof Official){
+        /** @var $message Official */
+        $reply = "收到公众号推送\n标题：{$message->title}\n描述：{$message->description}\n链接：{$message->url}";
+        if($message->app){
+            $reply .= "\n来源公众号名称：{$message->app}";
         }
         return $reply;
     }

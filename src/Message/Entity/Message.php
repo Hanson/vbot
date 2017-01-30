@@ -83,7 +83,7 @@ class Message
             $this->fromType = 'Group';
         } elseif (contact()->get($this->msg['FromUserName'])) {
             $this->fromType = 'Contact';
-        } elseif (Official::getInstance()->get($this->msg['FromUserName'])) {
+        } elseif (official()->get($this->msg['FromUserName'])) {
             $this->fromType = 'Official';
         } elseif (Special::getInstance()->get($this->msg['FromUserName'], false)) {
             $this->fromType = 'Special';
