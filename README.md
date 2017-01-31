@@ -37,6 +37,8 @@ PS:运行后二维码将保存于设置的缓存目录，命名为qr.png，控�
 
 [自定义处理器](https://github.com/HanSon/vbot/blob/master/example/custom.php)
 
+[一键拜年](https://github.com/HanSon/vbot/blob/master/example/bainian.php)
+
 
 ## 基本使用
 
