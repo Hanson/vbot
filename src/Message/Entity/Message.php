@@ -79,6 +79,7 @@ class Message
             $this->fromType = 'System';
         } elseif ($this->msg['FromUserName'] === myself()->username) {
             $this->fromType = 'Self';
+            $this->from = account()->getAccount($this->msg['ToUserName']);
         } elseif (substr($this->msg['FromUserName'], 0, 2) === '@@') { # group
             $this->fromType = 'Group';
         } elseif (contact()->get($this->msg['FromUserName'])) {

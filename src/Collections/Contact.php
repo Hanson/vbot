@@ -63,7 +63,7 @@ class Contact extends Collection
         });
     }
     /**
-     * 根据通讯录中的名字获取通讯对象
+     * 根据通讯录中的备注获取通讯对象
      *
      * @param $id
      * @return mixed
@@ -77,5 +77,47 @@ class Contact extends Collection
         });
     }
 
+    /**
+     * 根据通讯录中的昵称获取通讯对象
+     *
+     * @param $nickname
+     * @return mixed
+     */
+    public function getUsernameByNickname($nickname)
+    {
+        return $this->search(function($item, $key) use ($nickname){
+            if($item['NickName'] === $nickname){
+                return true;
+            }
+        });
+    }
+
+    public function setRemarkName($username, $remarkName)
+    {
+        $url = sprintf('%s/webwxoplog?lang=zh_CN&pass_ticket=%s', server()->baseUri, server()->passTicket);
+
+        $result = http()->post($url, json_encode([
+            'UserName' => $username,
+            'CmdId' => 2,
+            'RemarkName' => $remarkName,
+            'BaseRequest' => server()->baseRequest
+        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), true);
+
+        return $result['BaseResponse']['Ret'] == 0;
+    }
+
+    public function setStick($username, $isStick = true)
+    {
+        $url = sprintf('%s/webwxoplog?lang=zh_CN&pass_ticket=%s', server()->baseUri, server()->passTicket);
+
+        $result = http()->json($url, [
+            'UserName' => $username,
+            'CmdId' => 3,
+            'OP' => (int) $isStick,
+            'BaseRequest' => server()->baseRequest
+        ], true);
+
+        return $result['BaseResponse']['Ret'] == 0;
+    }
 
 }

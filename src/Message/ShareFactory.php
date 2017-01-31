@@ -6,8 +6,12 @@
  * Time: 12:29
  */
 
-namespace Hanson\Vbot\Message\Entity;
+namespace Hanson\Vbot\Message;
 
+use Hanson\Vbot\Message\Entity\File;
+use Hanson\Vbot\Message\Entity\Mina;
+use Hanson\Vbot\Message\Entity\Official;
+use Hanson\Vbot\Message\Entity\Share;
 use Hanson\Vbot\Support\Content;
 
 class ShareFactory
@@ -27,6 +31,8 @@ class ShareFactory
             return new File($msg);
         }else if(official()->get($msg['FromUserName'])){
             return new Official($msg);
+        }else if($this->type == 33){
+            return new Mina($msg);
         }else{
             return new Share($msg);
         }

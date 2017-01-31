@@ -17,12 +17,12 @@ use Hanson\Vbot\Message\Entity\Recall;
 use Hanson\Vbot\Message\Entity\Recommend;
 use Hanson\Vbot\Message\Entity\RedPacket;
 use Hanson\Vbot\Message\Entity\RequestFriend;
-use Hanson\Vbot\Message\Entity\ShareFactory;
 use Hanson\Vbot\Message\Entity\Text;
 use Hanson\Vbot\Message\Entity\Touch;
 use Hanson\Vbot\Message\Entity\Transfer;
 use Hanson\Vbot\Message\Entity\Video;
 use Hanson\Vbot\Message\Entity\Voice;
+use Hanson\Vbot\Message\ShareFactory;
 
 class MessageFactory
 {
