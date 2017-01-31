@@ -23,6 +23,7 @@ use Hanson\Vbot\Message\Entity\Recommend;
 use Hanson\Vbot\Message\Entity\Share;
 use Hanson\Vbot\Message\Entity\Official;
 use Hanson\Vbot\Message\Entity\Touch;
+use Hanson\Vbot\Message\Entity\Mina;
 use Hanson\Vbot\Message\Entity\RequestFriend;
 
 $path = __DIR__ . '/./../tmp/';
@@ -151,13 +152,17 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
         return $reply;
     }
 
+    // 分享小程序信息
+    if($message instanceof Mina){
+        /** @var $message Mina */
+        $reply = "收到小程序\n小程序名词：{$message->title}\n链接：{$message->url}";
+        return $reply;
+    }
+
     // 公众号推送信息
     if($message instanceof Official){
         /** @var $message Official */
-        $reply = "收到公众号推送\n标题：{$message->title}\n描述：{$message->description}\n链接：{$message->url}";
-        if($message->app){
-            $reply .= "\n来源公众号名称：{$message->app}";
-        }
+        $reply = "收到公众号推送\n标题：{$message->title}\n描述：{$message->description}\n链接：{$message->url}\n来源公众号名称：{$message->app}";
         return $reply;
     }
 

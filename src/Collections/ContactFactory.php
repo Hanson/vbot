@@ -58,7 +58,7 @@ class ContactFactory
 
         $this->getBatchGroupMembers();
 
-        myself()->alias = contact()->get(myself()->username)['Alias'] ? : myself()->username;
+        myself()->alias = contact()->get(myself()->username)['Alias'] ?? myself()->nickname ? : myself()->username;
 
         if(server()->config['debug']){
             FileManager::download('contact.json', json_encode(contact()->all()));
