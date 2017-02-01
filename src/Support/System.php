@@ -24,6 +24,12 @@ class System
 
     public static function getPath()
     {
-        return server()->config['tmp'] . '/' . myself()->alias . '/';
+        $path = server()->config['tmp'] . '/' . myself()->alias . '/';
+
+        if(!is_dir(realpath($path))){
+            mkdir($path, 0700, true);
+        }
+
+        return $path;
     }
 }
