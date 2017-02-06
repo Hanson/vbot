@@ -31,13 +31,14 @@ class Sync
                 '_' => time()
             ]);
 
-        try{
-            $content = http()->get($url);
+        $content = http()->get($url);
 
+        try{
             preg_match('/window.synccheck=\{retcode:"(\d+)",selector:"(\d+)"\}/', $content, $matches);
 
             return [$matches[1], $matches[2]];
         }catch (\Exception $e){
+            Console::log('Sync check return:' . $content);
             return [-1, -1];
         }
     }
