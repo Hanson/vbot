@@ -12,6 +12,7 @@ namespace Hanson\Vbot\Core;
 use Endroid\QrCode\QrCode;
 use Hanson\Vbot\Collections\ContactFactory;
 use Hanson\Vbot\Collections\Group;
+use Hanson\Vbot\Collections\Special;
 use Hanson\Vbot\Support\Console;
 use Hanson\Vbot\Support\FileManager;
 use Hanson\Vbot\Support\System;
@@ -87,7 +88,7 @@ class Server
         $this->statusNotify();
         Console::log('开始初始化联系人');
         $this->initContact();
-        Console::log('初始化联系人成功');
+        Console::log(sprintf("初始化联系人成功\n群数量： %d\n联系人数量： %d\n公众号数量： %d\n特殊号数量： %d", group()->count(), contact()->count(), official()->count(), Special::getInstance()->count()));
 
         MessageHandler::getInstance()->listen();
     }

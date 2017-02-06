@@ -89,7 +89,11 @@ class Video extends Message implements MessageInterface, MediaInterface
                 'Range' => 'bytes=0-'
             ]
         ]);
-        FileManager::download($this->msg['MsgId'] . '.mp4', $content, static::$folder);
+        if(strlen($content) === 0){
+            Console::log('下载视频失败', Console::ERROR);
+        }else{
+            FileManager::download($this->msg['MsgId'] . '.mp4', $content, static::$folder);
+        }
     }
 
     public function make()
