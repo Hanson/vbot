@@ -66,7 +66,7 @@ class ContactFactory
             }
         }
 
-        myself()->alias = contact()->get(myself()->username)['Alias'] ?? myself()->nickname ? : myself()->username;
+        myself()->alias = isset(contact()->get(myself()->username)['Alias']) ? contact()->get(myself()->username)['Alias'] : myself()->nickname ? : myself()->username;
     }
 
     /**

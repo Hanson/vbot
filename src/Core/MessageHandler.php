@@ -194,9 +194,11 @@ class MessageHandler
     {
         message()->put($message->msg['MsgId'], $message);
 
-        $file = fopen(System::getPath() .'message.json', 'a');
-        fwrite($file, json_encode($message) . PHP_EOL);
-        fclose($file);
+        if(server()->config['debug']) {
+            $file = fopen(System::getPath() . 'message.json', 'a');
+            fwrite($file, json_encode($message) . PHP_EOL);
+            fclose($file);
+        }
     }
 
 }
