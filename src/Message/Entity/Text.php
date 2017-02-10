@@ -27,15 +27,17 @@ class Text extends Message implements MessageInterface
     /**
      * 发送消息
      *
-     * @param $word string 消息内容
+     * @param $word string|Text 消息内容
      * @param $username string 目标username
      * @return bool
      */
-    public static function send($username, string $word)
+    public static function send($username, $word)
     {
         if (!$word) {
             return false;
         }
+
+        $word = is_string($word) ? $word : $word->content;
 
         $random = strval(time() * 1000) . '0' . strval(rand(100, 999));
 
