@@ -33,6 +33,8 @@ class ContactFactory
 
         $this->makeContactList();
 
+        myself()->alias = contact()->get(myself()->username)['Alias'] ?? myself()->nickname ? : myself()->username;
+
         $this->getBatchGroupMembers();
 
         if(server()->config['debug']){
@@ -65,8 +67,6 @@ class ContactFactory
                 contact()->put($contact['UserName'], $contact);
             }
         }
-
-        myself()->alias = contact()->get(myself()->username)['Alias'] ?? myself()->nickname ? : myself()->username;
     }
 
     /**
