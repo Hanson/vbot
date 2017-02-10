@@ -3,7 +3,7 @@
 
 ## 环境要求
 
-* PHP >= 7(代码中使用了一些PHP7的特性)
+* PHP >= 5.6
 
 ## 安装
 
@@ -13,7 +13,7 @@
 composer require hanson/vbot
 ```
 
-2、直接下载[release](https://github.com/HanSon/vbot/files/719331/vbot.zip)
+2、直接下载[release](https://github.com/HanSon/vbot/files/754871/vbot.zip)
 
 然后执行``` php example/index.php ``` 
 
