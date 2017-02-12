@@ -13,6 +13,8 @@ use Hanson\Vbot\Message\Entity\Emoticon;
 use Hanson\Vbot\Message\Entity\Image;
 use Hanson\Vbot\Message\Entity\Location;
 use Hanson\Vbot\Message\Entity\Message;
+use Hanson\Vbot\Message\Entity\NewFriend;
+use Hanson\Vbot\Message\Entity\GroupChange;
 use Hanson\Vbot\Message\Entity\Recall;
 use Hanson\Vbot\Message\Entity\Recommend;
 use Hanson\Vbot\Message\Entity\RedPacket;
@@ -44,6 +46,8 @@ class MessageFactory
             case 1: //文本消息
                 if(Location::isLocation($msg)){
                     return new Location($msg);
+                }elseif(contact()->get($msg['FromUserName']) && str_contains($msg['Content'], '过了你的朋友验证请求')){
+                    return new NewFriend($msg);
                 }else{
                     return new Text($msg);
                 }
@@ -61,8 +65,11 @@ class MessageFactory
                 if(str_contains($msg['Content'], '利是') || str_contains($msg['Content'], '红包') || str_contains($msg['Content'], 'Red Packet')){
                     return new RedPacket($msg);
                 }
-                else if(str_contains($msg['Content'], '添加') || str_contains($msg['Content'], 'have added')){
+                else if(str_contains($msg['Content'], '添加') || str_contains($msg['Content'], 'have added') || str_contains($msg['Content'], '打招呼')){
                     # 添加好友
+                    return new NewFriend($msg);
+                }else if(str_contains($msg['Content'], '加入了群聊') || str_contains($msg['Content'], '移出了群聊') || str_contains($msg['Content'], '改群名为')){
+                    return new GroupChange($msg);
                 }
                 break;
             case 49:

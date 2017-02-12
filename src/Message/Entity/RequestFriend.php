@@ -41,7 +41,7 @@ class RequestFriend extends Message implements MessageInterface
         $isMatch = preg_match('/bigheadimgurl="(.+?)"/', $this->msg['Content'], $matches);
 
         if ($isMatch) {
-            $this->avatar = $matches[3];
+            $this->avatar = $matches[1];
         }
     }
 
