@@ -25,6 +25,8 @@ use Hanson\Vbot\Message\Entity\Official;
 use Hanson\Vbot\Message\Entity\Touch;
 use Hanson\Vbot\Message\Entity\Mina;
 use Hanson\Vbot\Message\Entity\RequestFriend;
+use Hanson\Vbot\Message\Entity\GroupChange;
+use Hanson\Vbot\Message\Entity\NewFriend;
 
 $path = __DIR__ . '/./../tmp/';
 $robot = new Vbot([
@@ -169,6 +171,26 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
     // 手机点击聊天事件
     if($message instanceof Touch){
         Text::send($message->msg['ToUserName'], "我点击了此聊天");
+    }
+
+    // 新增好友
+    if($message instanceof \Hanson\Vbot\Message\Entity\NewFriend){
+        \Hanson\Vbot\Support\Console::log('新加好友：' . $message->from['NickName']);
+    }
+
+    // 群组变动
+    if($message instanceof GroupChange){
+        /** @var $message GroupChange */
+        if($message->action === 'ADD'){
+            \Hanson\Vbot\Support\Console::log('新人进群');
+            return $message->content;
+        }elseif($message->action === 'REMOVE'){
+            \Hanson\Vbot\Support\Console::log('群主踢人了');
+            return $message->content;
+        }elseif($message->action === 'RENAME'){
+            \Hanson\Vbot\Support\Console::log($message->from['NickName'].' 改名为 '.$message->rename);
+            return $message->content;
+        }
     }
 
     return false;

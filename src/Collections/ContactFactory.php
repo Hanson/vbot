@@ -30,9 +30,7 @@ class ContactFactory
 
     public function getContacts()
     {
-
         $this->makeContactList();
-
 
         $contact = contact()->get(myself()->username);
         myself()->alias = isset($contact['Alias']) ? $contact['Alias'] : myself()->nickname ? : myself()->username;
