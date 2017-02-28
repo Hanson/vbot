@@ -145,3 +145,8 @@ $robot->server->run();
 有问题或者建议都可以提issue
 
 或者加入我新建的QQ群：492548647
+
+## 打赏
+
+<img src="https://ww2.sinaimg.cn/large/685b97a1gy1fd61orxreaj20yf19fmz1.jpg" height="320">
+<img src="https://ww2.sinaimg.cn/large/685b97a1gy1fd61qscynwj20ng0zk0tx.jpg" height="320">
