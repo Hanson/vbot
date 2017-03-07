@@ -21,6 +21,8 @@ PS:运行后二维码将保存于设置的缓存目录，命名为qr.png，控�
 
 *警告！执行前请先查看`index.php`的代码，注释掉你认为不需要的代码，避免对其他人好友造成困扰*
 
+**请在terminal运行！**
+
 # 文档
 
 详细文档在[wiki](https://github.com/HanSon/vbot/wiki)中
