@@ -7,6 +7,8 @@
 
 ## 安装
 
+**请确保已经会使用composer！请确保已经会使用composer！请确保已经会使用composer！重要的事情说三遍**
+
 1、composer
 
 ```
