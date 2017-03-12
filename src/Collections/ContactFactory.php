@@ -9,6 +9,7 @@
 namespace Hanson\Vbot\Collections;
 
 
+use Hanson\Vbot\Support\Console;
 use Hanson\Vbot\Support\FileManager;
 
 class ContactFactory
@@ -48,13 +49,15 @@ class ContactFactory
 
     /**
      * make instance model
-     *
+     * @param int $seq
      */
-    public function makeContactList()
+    public function makeContactList($seq = 0)
     {
-        $url = sprintf(server()->baseUri . '/webwxgetcontact?pass_ticket=%s&skey=%s&r=%s', server()->passTicket, server()->skey, time());
+        $url = sprintf(server()->baseUri . '/webwxgetcontact?pass_ticket=%s&skey=%s&r=%s&seq=%s', server()->passTicket, server()->skey, time(), $seq);
 
-        $memberList = http()->json($url, [], true)['MemberList'];
+        $result = http()->json($url, [], true);
+        $memberList = $result['MemberList'];
+        $seq = $result['Seq'];
 
         foreach ($memberList as $contact) {
             if(official()->isOfficial($contact['VerifyFlag'])){ #公众号
@@ -66,6 +69,11 @@ class ContactFactory
             }else{
                 contact()->put($contact['UserName'], $contact);
             }
+        }
+
+        if($seq != 0){
+            Console::log('seq: ' . $seq);
+            $this->makeContactList($seq);
         }
     }
 
