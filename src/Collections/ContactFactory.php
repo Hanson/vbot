@@ -72,7 +72,6 @@ class ContactFactory
         }
 
         if($seq != 0){
-            Console::log('seq: ' . $seq);
             $this->makeContactList($seq);
         }
     }

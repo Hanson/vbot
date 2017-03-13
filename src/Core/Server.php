@@ -179,7 +179,7 @@ class Server
                     $domainList = [
                         'wx2.qq.com' => ['file.wx2.qq.com', 'webpush.wx2.qq.com'],
                         'wx8.qq.com' => ['file.wx8.qq.com', 'webpush.wx8.qq.com'],
-                        'qq.com' => ['file.wx.qq.com', 'webpush.wx.qq.com'],
+                        'wx.qq.com' => ['file.wx.qq.com', 'webpush.wx.qq.com'],
                         'web2.wechat.com' => ['file.web2.wechat.com', 'webpushweb2.wechat.com'],
                         'wechat.com' => ['file.web.wechat.com', 'webpushweb.web.wechat.com'],
                     ];

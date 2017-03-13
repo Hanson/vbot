@@ -10,9 +10,7 @@
     ],
     "require": {
         "guzzlehttp/guzzle": "^6.2",
-        "symfony/dom-crawler": "2.8.*|3.0.*|3.1.*",
         "endroid/qrcode": "^1.7",
-        "symfony/css-selector": "2.8.*|3.0.*|3.1.*",
         "pimple/pimple": "^3.0",
         "illuminate/support": "^5.3",
         "nesbot/carbon": "^1.21",
