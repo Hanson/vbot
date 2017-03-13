@@ -152,6 +152,16 @@ $robot->server->run();
 
 [liuwons/wxBot](https://github.com/liuwons/wxBot) 参考了整个微信的登录流程与消息处理
 
+## 贡献者
+
+排名不分先后，时间排序
+
+[zhuanxuhit](https://github.com/zhuanxuhit) terminal显示二维码
+
+[littlecodersh](https://github.com/littlecodersh) 分次加载好友数量方案
+
+[yuanshi2016](https://github.com/yuanshi2016) 分次加载好友数量方案、登录域名方案以及测试
+
 ## 问题和建议
 
 有问题或者建议都可以提issue
