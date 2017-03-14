@@ -79,6 +79,22 @@ class Emoticon extends Message implements MediaInterface, MessageInterface
     }
 
     /**
+     * 从当前账号的本地表情库随机发送一个
+     *
+     * @param $username
+     */
+    public static function sendRandom($username)
+    {
+        $path = static::getPath(static::$folder);
+
+        $files = scandir($path);
+        unset($files[0], $files[1]);
+        $msgId = $files[array_rand($files)];
+
+        static::send($username, $path . '/' . $msgId);
+    }
+
+    /**
      * 下载文件
      *
      * @return mixed

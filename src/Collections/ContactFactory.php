@@ -34,11 +34,11 @@ class ContactFactory
         $this->makeContactList();
 
         $contact = contact()->get(myself()->username);
-        myself()->alias = isset($contact['Alias']) ? $contact['Alias'] : myself()->nickname ? : myself()->username;
+        myself()->alias = isset($contact['Alias']) ? $contact['Alias'] : myself()->nickname ?: myself()->username;
 
         $this->getBatchGroupMembers();
 
-        if(server()->config['debug']){
+        if (server()->config['debug']) {
             FileManager::download('contact.json', json_encode(contact()->all()));
             FileManager::download('member.json', json_encode(member()->all()));
             FileManager::download('group.json', json_encode(group()->all()));
@@ -56,23 +56,23 @@ class ContactFactory
         $url = sprintf(server()->baseUri . '/webwxgetcontact?pass_ticket=%s&skey=%s&r=%s&seq=%s', server()->passTicket, server()->skey, time(), $seq);
 
         $result = http()->json($url, [], true);
-        $memberList = $result['MemberList'];
-        $seq = $result['Seq'];
 
-        foreach ($memberList as $contact) {
-            if(official()->isOfficial($contact['VerifyFlag'])){ #公众号
-                Official::getInstance()->put($contact['UserName'], $contact);
-            }elseif (in_array($contact['UserName'], static::SPECIAL_USERS)){ # 特殊账户
-                Special::getInstance()->put($contact['UserName'], $contact);
-            }elseif (strstr($contact['UserName'], '@@') !== false){ # 群聊
-                group()->put($contact['UserName'], $contact);
-            }else{
-                contact()->put($contact['UserName'], $contact);
+        if (isset($result['MemberList']) && $result['MemberList']) {
+            foreach ($result['MemberList'] as $contact) {
+                if (official()->isOfficial($contact['VerifyFlag'])) { #公众号
+                    Official::getInstance()->put($contact['UserName'], $contact);
+                } elseif (in_array($contact['UserName'], static::SPECIAL_USERS)) { # 特殊账户
+                    Special::getInstance()->put($contact['UserName'], $contact);
+                } elseif (strstr($contact['UserName'], '@@') !== false) { # 群聊
+                    group()->put($contact['UserName'], $contact);
+                } else {
+                    contact()->put($contact['UserName'], $contact);
+                }
             }
         }
 
-        if($seq != 0){
-            $this->makeContactList($seq);
+        if (isset($result['Seq']) && $result['Seq'] != 0) {
+            $this->makeContactList($result['Seq']);
         }
     }
 
@@ -84,7 +84,7 @@ class ContactFactory
         $url = sprintf(server()->baseUri . '/webwxbatchgetcontact?type=ex&r=%s&pass_ticket=%s', time(), server()->passTicket);
 
         $list = [];
-        group()->each(function($item, $key) use (&$list){
+        group()->each(function ($item, $key) use (&$list) {
             $list[] = ['UserName' => $key, 'EncryChatRoomId' => ''];
         });
 
@@ -104,13 +104,15 @@ class ContactFactory
      */
     private function initGroupMembers($array)
     {
-        foreach ($array['ContactList'] as $group) {
-            $groupAccount =  group()->get($group['UserName']);
-            $groupAccount['MemberList'] = $group['MemberList'];
-            $groupAccount['ChatRoomId'] = $group['EncryChatRoomId'];
-            group()->put($group['UserName'], $groupAccount);
-            foreach ($group['MemberList'] as $member) {
-                member()->put($member['UserName'], $member);
+        if (isset($array['ContactList']) && $array['ContactList']) {
+            foreach ($array['ContactList'] as $group) {
+                $groupAccount = group()->get($group['UserName']);
+                $groupAccount['MemberList'] = $group['MemberList'];
+                $groupAccount['ChatRoomId'] = $group['EncryChatRoomId'];
+                group()->put($group['UserName'], $groupAccount);
+                foreach ($group['MemberList'] as $member) {
+                    member()->put($member['UserName'], $member);
+                }
             }
         }
 
