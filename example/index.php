@@ -205,10 +205,10 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
     if ($message instanceof GroupChange) {
         /** @var $message GroupChange */
         if ($message->action === 'ADD') {
-            \Hanson\Vbot\Support\Console::log('新人进群');
+            \Hanson\Vbot\Support\Console::debug('新人进群');
             return '欢迎新人 ' . $message->nickname;
         } elseif ($message->action === 'REMOVE') {
-            \Hanson\Vbot\Support\Console::log('群主踢人了');
+            \Hanson\Vbot\Support\Console::debug('群主踢人了');
             return $message->content;
         } elseif ($message->action === 'RENAME') {
 //            \Hanson\Vbot\Support\Console::log($message->from['NickName'] . ' 改名为 ' . $message->rename);
@@ -216,6 +216,10 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
                 group()->setGroupName($message->from['UserName'], 'vbot 测试群');
                 return '行不改名,坐不改姓！';
             }
+        } elseif ($message->action === 'BE_REMOVE') {
+            \Hanson\Vbot\Support\Console::debug('你被踢出了群 ' . $message->group['NickName']);
+        } elseif ($message->action === 'INVITE') {
+            \Hanson\Vbot\Support\Console::debug('你被邀请进群 ' . $message->from['NickName']);
         }
     }
 

@@ -184,6 +184,12 @@ class MessageHandler
 
         $message = $this->sync->sync();
 
+        if(count($message['ModContactList']) > 0){
+            foreach ($message['ModContactList'] as $contact) {
+                group()->put($contact['UserName'], $contact);
+            }
+        }
+
         if($message['AddMsgList']){
             foreach ($message['AddMsgList'] as $msg) {
                 $content = $this->messageFactory->make($msg);
