@@ -32,6 +32,16 @@ class Group extends Collection
     }
 
     /**
+     * 重置数据
+     *
+     * @param $array
+     */
+    public function reset($array)
+    {
+        static::$instance = new Group($array);
+    }
+
+    /**
      * 判断是否群组
      *
      * @param $userName
@@ -59,6 +69,21 @@ class Group extends Collection
         });
 
         return $groups;
+    }
+
+    /**
+     * 根据通讯录中的昵称获取通讯对象
+     *
+     * @param $nickname
+     * @return mixed
+     */
+    public function getUsernameByNickname($nickname)
+    {
+        return $this->search(function($item, $key) use ($nickname){
+            if($item['NickName'] === $nickname){
+                return true;
+            }
+        });
     }
 
     /**

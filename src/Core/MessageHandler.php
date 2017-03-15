@@ -32,6 +32,8 @@ class MessageHandler
 
     private $exceptionHandler;
 
+    private $onceHandler;
+
     private $sync;
 
     private $messageFactory;
@@ -117,10 +119,29 @@ class MessageHandler
     }
 
     /**
+     * 执行一次的处理器
+     *
+     * @param Closure $closure
+     * @throws \Exception
+     */
+    public function setOnceHandler(Closure $closure)
+    {
+        if(!$closure instanceof Closure){
+            throw new \Exception('exit handler must be a closure!');
+        }
+
+        $this->onceHandler = $closure;
+    }
+
+    /**
      * 轮询消息API接口
      */
     public function listen()
     {
+        if($this->onceHandler instanceof Closure){
+            call_user_func_array($this->onceHandler, []);
+        }
+
         while (true){
             if($this->customHandler instanceof Closure){
                 call_user_func_array($this->customHandler, []);

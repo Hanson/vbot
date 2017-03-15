@@ -44,6 +44,19 @@ function reply($str)
 
 }
 
+$groupMap = [
+    'vbot 测试群' => 1,
+];
+
+$robot->server->setOnceHandler(function () use ($groupMap) {
+    group()->reset(group()->map(function ($group, $key) use ($groupMap) {
+        if (isset($groupMap[$group['NickName']])){
+            $group['id'] = $groupMap[$group['NickName']];
+        }
+        return $group;
+    })->toArray());
+});
+
 $robot->server->setMessageHandler(function ($message) use ($path) {
     /** @var $message Message */
 
@@ -63,8 +76,10 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
             // 群组@我回复
         } elseif ($message->fromType === 'Group') {
 
-            if (str_contains($message->content, '设置群名称') && $message->from['Alias'] === 'hanson1994') {
-                group()->setGroupName($message->from['UserName'], str_replace('设置群名称', '', $message->content));
+            if (str_contains($message->content, '设置群名称')) {
+                if (isset($message->sender['Alias']) && $message->sender['Alias'] === 'hanson1994') {
+                    group()->setGroupName($message->from['UserName'], str_replace('设置群名称', '', $message->content));
+                }
             }
 
             if ($message->isAt) {
@@ -197,7 +212,7 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
             return $message->content;
         } elseif ($message->action === 'RENAME') {
 //            \Hanson\Vbot\Support\Console::log($message->from['NickName'] . ' 改名为 ' . $message->rename);
-            if ($message->rename !== 'vbot 测试群'){
+            if (isset($message->from['id']) && $message->from['id'] == 1 && $message->rename !== 'vbot 测试群') {
                 group()->setGroupName($message->from['UserName'], 'vbot 测试群');
                 return '行不改名,坐不改姓！';
             }

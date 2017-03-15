@@ -339,4 +339,9 @@ class Server
     {
         MessageHandler::getInstance()->setExceptionHandler($closure);
     }
+
+    public function setOnceHandler(\Closure $closure)
+    {
+        MessageHandler::getInstance()->setOnceHandler($closure);
+    }
 }
