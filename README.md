@@ -142,6 +142,11 @@ $robot->server->run();
   
 - [ ] 命令行操作信息发送
 
+## to do list
+- 文件下载偶尔失败
+- 登录cookie免扫码
+- 队列监听
+
 ## 参考项目
 
 [lbbniu/WebWechat](https://github.com/lbbniu/WebWechat)
