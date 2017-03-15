@@ -24,8 +24,8 @@ class NewFriend extends Message implements MessageInterface
 
     public function make()
     {
-        Console::log('检测到新加好友，正在刷新好友列表...');
+        Console::debug('检测到新加好友，正在刷新好友列表...');
         (new ContactFactory())->makeContactList();
-        Console::log('好友更新成功！');
+        Console::debug('好友更新成功！');
     }
 }

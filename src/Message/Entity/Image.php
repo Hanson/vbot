@@ -42,7 +42,7 @@ class Image extends Message implements MessageInterface, MediaInterface
         $response = static::uploadMedia($username, $file);
 
         if (!$response) {
-            Console::log("文件 {$file} 上传失败");
+            Console::log("文件 {$file} 上传失败", Console::WARNING);
             return false;
         }
 
@@ -63,7 +63,7 @@ class Image extends Message implements MessageInterface, MediaInterface
         $result = http()->json($url, $data, true);
 
         if ($result['BaseResponse']['Ret'] != 0) {
-            Console::log('发送图片失败');
+            Console::log('发送图片失败', Console::WARNING);
             return false;
         }
 

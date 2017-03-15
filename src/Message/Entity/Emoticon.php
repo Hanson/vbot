@@ -35,7 +35,7 @@ class Emoticon extends Message implements MediaInterface, MessageInterface
         $response = static::uploadMedia($username, $file);
 
         if (!$response) {
-            Console::log("表情 {$file} 上传失败");
+            Console::log("表情 {$file} 上传失败", Console::WARNING);
             return false;
         }
 
@@ -57,7 +57,7 @@ class Emoticon extends Message implements MediaInterface, MessageInterface
         $result = http()->json($url, $data, true);
 
         if ($result['BaseResponse']['Ret'] != 0) {
-            Console::log('发送表情失败');
+            Console::log('发送表情失败', Console::WARNING);
             return false;
         }
 

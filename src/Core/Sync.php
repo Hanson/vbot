@@ -107,7 +107,7 @@ class Sync
      */
     public function debugMessage($retCode, $selector, $sleep = null)
     {
-        Console::log('[DEBUG] retcode:' . $retCode . ' selector:' . $selector);
+        Console::log('retcode:' . $retCode . ' selector:' . $selector, Console::WARNING);
 
         if($sleep){
             sleep($sleep);

@@ -79,7 +79,7 @@ trait UploadAble
         $response = static::uploadMedia($username, $file);
 
         if(!$response){
-            Console::log("文件 {$file} 上传失败");
+            Console::log("文件 {$file} 上传失败", Console::WARNING);
             return false;
         }
 
@@ -100,7 +100,7 @@ trait UploadAble
         $result = http()->json($url, $data, true);
 
         if($result['BaseResponse']['Ret'] != 0){
-            Console::log('发送文件失败');
+            Console::log('发送文件失败', Console::WARNING);
             return false;
         }
 

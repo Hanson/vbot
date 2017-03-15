@@ -31,9 +31,9 @@ class GroupChange extends Message implements MessageInterface
     {
         if(str_contains($this->msg['Content'], '加入了群聊')){
             $this->action = 'ADD';
-            Console::log("检测到 {$this->from['NickName']} 有新成员，正在刷新群成员列表...");
+            Console::debug("检测到 {$this->from['NickName']} 有新成员，正在刷新群成员列表...");
             (new ContactFactory())->makeContactList();
-            Console::log('群成员更新成功！');
+            Console::debug('群成员更新成功！');
         }elseif(str_contains($this->msg['Content'], '移出了群聊')){
             $this->action = 'REMOVE';
         }elseif(str_contains($this->msg['Content'], '改群名为')){
