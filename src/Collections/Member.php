@@ -33,29 +33,4 @@ class Member extends Collection
         return static::$instance;
     }
 
-    /**
-     * 根据昵称获取群成员
-     *
-     * @param $groupUsername
-     * @param $memberNickname
-     * @param bool $blur
-     * @return array'
-     */
-    public function getMembersByNickname($groupUsername, $memberNickname, $blur = false)
-    {
-        $members = $this->get($groupUsername);
-
-        $result = [];
-
-        foreach ($members as $username => $member) {
-            if ($blur && str_contains($member['NickName'], $memberNickname)) {
-                $result[] = $member;
-            } elseif (!$blur && $member['NickName'] === $memberNickname) {
-                $result[] = $member;
-            }
-        }
-
-        return $result;
-    }
-
 }

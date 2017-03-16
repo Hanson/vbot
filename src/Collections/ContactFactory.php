@@ -110,11 +110,9 @@ class ContactFactory
                 $groupAccount['MemberList'] = $group['MemberList'];
                 $groupAccount['ChatRoomId'] = $group['EncryChatRoomId'];
                 group()->put($group['UserName'], $groupAccount);
-                $members = [];
                 foreach ($group['MemberList'] as $member) {
-                    $members[$member['UserName']] =  $member;
+                    member()->put($member['UserName'], $member);
                 }
-                member()->put($group['UserName'], $members);
             }
         }
 
