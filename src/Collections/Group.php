@@ -182,10 +182,15 @@ class Group extends Collection
      */
     public function addMember($groupUsername, $members)
     {
+        if(!$groupUsername) return false;
         $group = group()->get($groupUsername);
+
+        if(!$group) return false;
+
         $groupCount = count($group['MemberList']);
         list($fun, $key) = $groupCount > 40 ? ['invitemember', 'InviteMemberList'] : ['addmember', 'AddMemberList'];
         $members = is_string($members) ? [$members] : $members;
+
         $result = http()->json(sprintf('%s/webwxupdatechatroom?fun=%s&pass_ticket=%s', server()->baseUri, $fun, server()->passTicket), [
             'BaseRequest' => server()->baseRequest,
             'ChatRoomName' => $groupUsername,
