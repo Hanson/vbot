@@ -1,11 +1,11 @@
 
-# 安装
+## 安装
 
-## 环境要求
+### 环境要求
 
 * PHP >= 7.0
 
-## 安装
+### 安装
 
 **请确保已经会使用composer！请确保已经会使用composer！请确保已经会使用composer！**
 
@@ -31,11 +31,11 @@ PS:运行后二维码将保存于设置的缓存目录，命名为qr.png，控�
 
 **请在terminal运行！请在terminal运行！请在terminal运行！**
 
-# 文档
+## 文档
 
 详细文档在[wiki](https://github.com/HanSon/vbot/wiki)中
 
-## 例子
+### 例子
 
 [所有类型例子](https://github.com/HanSon/vbot/blob/master/example/index.php)
 
@@ -52,7 +52,7 @@ PS:运行后二维码将保存于设置的缓存目录，命名为qr.png，控�
 [聊天操作](https://github.com/HanSon/vbot/blob/master/example/contact.php)
 
 
-## 基本使用
+### 基本使用
 
 ```
 // 图灵API自动回复
@@ -94,7 +94,7 @@ $robot->server->run();
 
 ```
 
-# to do list
+## to do list
 
 - [x] 消息处理
   - [x] 文字
@@ -142,6 +142,11 @@ $robot->server->run();
   
 - [ ] 命令行操作信息发送
 
+## to do list
+- 文件下载偶尔失败
+- 登录cookie免扫码
+- 队列监听
+
 ## 参考项目
 
 [lbbniu/WebWechat](https://github.com/lbbniu/WebWechat)
@@ -162,6 +167,17 @@ $robot->server->run();
 
 [yuanshi2016](https://github.com/yuanshi2016) 分次加载好友数量方案、登录域名方案以及测试
 
+## Q&A
+
+- 问：命令行执行时乱码怎么解决？
+> 设置编码terminal为UTF-8。windows可执行`chcp 65001`
+
+- 问：windows下出错，提示`SSL certificate problem:unable to get local issuer certificate`
+> 可参考 https://easywechat.org/zh-cn/docs/troubleshooting.html
+
+- 问：初始化一直失败
+> 请确认PHP版本是否7
+
 ## 问题和建议
 
 有问题或者建议都可以提issue
@@ -170,5 +186,4 @@ $robot->server->run();
 
 ## 打赏
 
-<img src="https://ww2.sinaimg.cn/large/685b97a1gy1fd61orxreaj20yf19fmz1.jpg" height="320">
-<img src="https://ww2.sinaimg.cn/large/685b97a1gy1fd61qscynwj20ng0zk0tx.jpg" height="320">
+<img src="https://ww2.sinaimg.cn/large/685b97a1gy1fd61orxreaj20yf19fmz1.jpg" height="320"><img src="https://ww2.sinaimg.cn/large/685b97a1gy1fd61qscynwj20ng0zk0tx.jpg" height="320">
