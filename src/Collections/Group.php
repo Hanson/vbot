@@ -18,6 +18,13 @@ class Group extends Collection
     static $instance = null;
 
     /**
+     * username => id
+     *
+     * @var array
+     */
+    public $map = [];
+
+    /**
      * create a single instance
      *
      * @return Group
@@ -29,16 +36,6 @@ class Group extends Collection
         }
 
         return static::$instance;
-    }
-
-    /**
-     * 重置数据
-     *
-     * @param $array
-     */
-    public function reset($array)
-    {
-        static::$instance = new Group($array);
     }
 
     /**
@@ -84,6 +81,53 @@ class Group extends Collection
                 return true;
             }
         });
+    }
+
+    /**
+     * 根据昵称搜索群成员
+     *
+     * @param $groupUsername
+     * @param $memberNickname
+     * @param bool $blur
+     * @return array
+     */
+    public function getMembersByNickname($groupUsername, $memberNickname, $blur = false)
+    {
+        $members = $this->get($groupUsername);
+
+        $result = [];
+
+        foreach ($members['MemberList'] as $member) {
+            if ($blur && str_contains($member['NickName'], $memberNickname)) {
+                $result[] = $member;
+            } elseif (!$blur && $member['NickName'] === $memberNickname) {
+                $result[] = $member;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * 根据ID获取群username
+     *
+     * @param $id
+     * @return mixed
+     */
+    public function getUsernameById($id)
+    {
+        return array_search($id, $this->map);
+    }
+
+    /**
+     * 设置map
+     *
+     * @param $username
+     * @param $id
+     */
+    public function setMap($username, $id)
+    {
+        $this->map[$username] = $id;
     }
 
     /**

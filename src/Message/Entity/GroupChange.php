@@ -52,7 +52,7 @@ class GroupChange extends Message implements MessageInterface
         if (str_contains($this->msg['Content'], '邀请你')) {
             $this->action = 'INVITE';
         } elseif (str_contains($this->msg['Content'], '加入了群聊')) {
-            preg_match('/".+".+"(.+)"加入了群聊/', $this->msg['Content'], $match);
+            preg_match('/.+"(.+)"加入了群聊/', $this->msg['Content'], $match);
             $this->action = 'ADD';
             $this->nickname = $match[1];
             Console::debug("检测到 {$this->from['NickName']} 有新成员，正在刷新群成员列表...");
