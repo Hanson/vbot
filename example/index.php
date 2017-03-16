@@ -62,7 +62,7 @@ function isAdmin($message)
 
 $groupMap = [
     [
-        'nickname' => 'vbot 测试群',
+        'nickname' => 'vbo 测试群',
         'id' => 1
     ]
 ];
@@ -141,6 +141,16 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
                 return 'vbot 从未见过这么犯贱的人';
             }
 
+            if(substr($message->content, 0, 1) === '@' && preg_match('/@(.+)\s自作孽不可活/', $message->content, $match) && isAdmin($message)){
+                $nickname = $match[1];
+                $members = group()->getMembersByNickname($message->from['UserName'], $nickname);
+                if($members){
+                    $member = current($members);
+                    Text::send($message->from['UserName'], '拜拜 ' . $member['NickName'] . ' ，君让臣死，臣不得不死');
+                    group()->deleteMember($message->from['UserName'], $member['UserName']);
+                }
+            }
+
             if ($message->isAt) {
                 return reply($message->content);
             }
@@ -158,7 +168,7 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
     }
 
     // 表情信息 返回接收到的表情
-    if ($message instanceof Emoticon) {
+    if ($message instanceof Emoticon && random_int(0,1) && random_int(0,1)) {
         Emoticon::sendRandom($message->from['UserName']);
     }
 
