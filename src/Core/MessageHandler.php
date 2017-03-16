@@ -32,6 +32,8 @@ class MessageHandler
 
     private $exceptionHandler;
 
+    private $onceHandler;
+
     private $sync;
 
     private $messageFactory;
@@ -49,7 +51,7 @@ class MessageHandler
      */
     public static function getInstance()
     {
-        if(static::$instance === null){
+        if (static::$instance === null) {
             static::$instance = new MessageHandler();
         }
 
@@ -64,7 +66,7 @@ class MessageHandler
      */
     public function setMessageHandler(Closure $closure)
     {
-        if(!$closure instanceof Closure){
+        if (!$closure instanceof Closure) {
             throw new \Exception('message handler must be a closure!');
         }
 
@@ -79,7 +81,7 @@ class MessageHandler
      */
     public function setCustomHandler(Closure $closure)
     {
-        if(!$closure instanceof Closure){
+        if (!$closure instanceof Closure) {
             throw new \Exception('custom handler must be a closure!');
         }
 
@@ -94,7 +96,7 @@ class MessageHandler
      */
     public function setExitHandler(Closure $closure)
     {
-        if(!$closure instanceof Closure){
+        if (!$closure instanceof Closure) {
             throw new \Exception('exit handler must be a closure!');
         }
 
@@ -109,7 +111,7 @@ class MessageHandler
      */
     public function setExceptionHandler(Closure $closure)
     {
-        if(!$closure instanceof Closure){
+        if (!$closure instanceof Closure) {
             throw new \Exception('exit handler must be a closure!');
         }
 
@@ -117,29 +119,48 @@ class MessageHandler
     }
 
     /**
+     * 执行一次的处理器
+     *
+     * @param Closure $closure
+     * @throws \Exception
+     */
+    public function setOnceHandler(Closure $closure)
+    {
+        if (!$closure instanceof Closure) {
+            throw new \Exception('exit handler must be a closure!');
+        }
+
+        $this->onceHandler = $closure;
+    }
+
+    /**
      * 轮询消息API接口
      */
     public function listen()
     {
-        while (true){
-            if($this->customHandler instanceof Closure){
+        if ($this->onceHandler instanceof Closure) {
+            call_user_func_array($this->onceHandler, []);
+        }
+
+        while (true) {
+            if ($this->customHandler instanceof Closure) {
                 call_user_func_array($this->customHandler, []);
             }
 
             $time = time();
             list($retCode, $selector) = $this->sync->checkSync();
 
-            if(in_array($retCode, ['1100', '1101'])){ # 微信客户端上登出或者其他设备登录
+            if (in_array($retCode, ['1100', '1101'])) { # 微信客户端上登出或者其他设备登录
                 Console::log('微信客户端正常退出');
-                if($this->exitHandler){
+                if ($this->exitHandler) {
                     call_user_func_array($this->exitHandler, []);
                 }
                 break;
-            }elseif ($retCode == 0){
+            } elseif ($retCode == 0) {
                 $this->handlerMessage($selector);
-            }else{
+            } else {
                 Console::log('微信客户端异常退出');
-                if($this->exceptionHandler){
+                if ($this->exceptionHandler) {
                     call_user_func_array($this->exitHandler, []);
                 }
                 break;
@@ -157,27 +178,37 @@ class MessageHandler
      */
     private function handlerMessage($selector)
     {
-        if($selector === 0){
+        if ($selector === 0) {
             return;
         }
 
         $message = $this->sync->sync();
 
-        if($message['AddMsgList']){
+        if (count($message['ModContactList']) > 0) {
+            foreach ($message['ModContactList'] as $contact) {
+                if (str_contains($contact['UserName'], '@@')) {
+                    group()->put($contact['UserName'], $contact);
+                } else {
+                    contact()->put($contact['UserName'], $contact);
+                }
+            }
+        }
+
+        if ($message['AddMsgList']) {
             foreach ($message['AddMsgList'] as $msg) {
                 $content = $this->messageFactory->make($msg);
-                if($content){
+                if ($content) {
                     $this->addToMessageCollection($content);
-                    if($this->handler){
+                    if ($this->handler) {
                         $reply = call_user_func_array($this->handler, [$content]);
-                        if($reply){
-                            if($reply instanceof Image){
+                        if ($reply) {
+                            if ($reply instanceof Image) {
                                 Image::sendByMsgId($content->from['UserName'], $reply->msg['MsgId']);
-                            }elseif($reply instanceof Video){
+                            } elseif ($reply instanceof Video) {
                                 Video::sendByMsgId($content->from['UserName'], $reply->msg['MsgId']);
-                            }elseif($reply instanceof Emoticon){
+                            } elseif ($reply instanceof Emoticon) {
                                 Emoticon::sendByMsgId($content->from['UserName'], $reply->msg['MsgId']);
-                            }else{
+                            } else {
                                 Text::send($content->from['UserName'], $reply);
                             }
                         }
@@ -194,7 +225,7 @@ class MessageHandler
     {
         message()->put($message->msg['MsgId'], $message);
 
-        if(server()->config['debug']) {
+        if (server()->config['debug']) {
             $file = fopen(System::getPath() . 'message.json', 'a');
             fwrite($file, json_encode($message) . PHP_EOL);
             fclose($file);

@@ -50,9 +50,11 @@ class Http
         return $array ? json_decode($content, true) : $content;
     }
 
-    public function json($url, $options = [], $array = false)
+    public function json($url, $params = [], $array = false, $extra = [])
     {
-        $content = $this->request($url, 'POST', ['json' => $options]);
+        $params = array_merge(['json' => $params], $extra);
+
+        $content = $this->request($url, 'POST', $params);
 
         return $array ? json_decode($content, true) : $content;
     }
@@ -86,15 +88,9 @@ class Http
      */
     public function request($url, $method = 'GET', $options = [])
     {
-        try{
-            $response = $this->getClient()->request($method, $url, $options);
-            return $response->getBody()->getContents();
-        }catch (\Exception $e){
-            Console::log('http链接失败：' . $e->getMessage(), Console::ERROR);
-            Console::log('错误URL：' . $url, Console::ERROR);
-        }
+        $response = $this->getClient()->request($method, $url, $options);
 
-        return null;
+        return $response->getBody()->getContents();
     }
 
 

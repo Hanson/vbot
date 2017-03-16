@@ -35,7 +35,7 @@ class Emoticon extends Message implements MediaInterface, MessageInterface
         $response = static::uploadMedia($username, $file);
 
         if (!$response) {
-            Console::log("表情 {$file} 上传失败");
+            Console::log("表情 {$file} 上传失败", Console::WARNING);
             return false;
         }
 
@@ -57,7 +57,7 @@ class Emoticon extends Message implements MediaInterface, MessageInterface
         $result = http()->json($url, $data, true);
 
         if ($result['BaseResponse']['Ret'] != 0) {
-            Console::log('发送表情失败');
+            Console::log('发送表情失败', Console::WARNING);
             return false;
         }
 
@@ -76,6 +76,22 @@ class Emoticon extends Message implements MediaInterface, MessageInterface
         $path = static::getPath(static::$folder);
 
         static::send($username, $path . "/{$msgId}.gif");
+    }
+
+    /**
+     * 从当前账号的本地表情库随机发送一个
+     *
+     * @param $username
+     */
+    public static function sendRandom($username)
+    {
+        $path = static::getPath(static::$folder);
+
+        $files = scandir($path);
+        unset($files[0], $files[1]);
+        $msgId = $files[array_rand($files)];
+
+        static::send($username, $path . '/' . $msgId);
     }
 
     /**

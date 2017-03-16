@@ -26,7 +26,7 @@ class Contact extends Collection
      */
     public static function getInstance()
     {
-        if(static::$instance === null){
+        if (static::$instance === null) {
             static::$instance = new Contact();
         }
 
@@ -41,8 +41,8 @@ class Contact extends Collection
      */
     public function getContactById($id)
     {
-        return $this->filter(function($item, $key) use ($id){
-            if($item['Alias'] === $id){
+        return $this->filter(function ($item, $key) use ($id) {
+            if ($item['Alias'] === $id) {
                 return true;
             }
         })->first();
@@ -56,22 +56,23 @@ class Contact extends Collection
      */
     public function getUsernameById($id)
     {
-        return $this->search(function($item, $key) use ($id){
-            if($item['Alias'] === $id){
+        return $this->search(function ($item, $key) use ($id) {
+            if ($item['Alias'] === $id) {
                 return true;
             }
         });
     }
+
     /**
      * 根据通讯录中的备注获取通讯对象
      *
      * @param $id
      * @return mixed
      */
-    public function getUsernameByRemarkName( $id)
+    public function getUsernameByRemarkName($id)
     {
-        return $this->search(function($item, $key) use ($id){
-            if($item['RemarkName'] === $id){
+        return $this->search(function ($item, $key) use ($id) {
+            if ($item['RemarkName'] === $id) {
                 return true;
             }
         });
@@ -81,12 +82,15 @@ class Contact extends Collection
      * 根据通讯录中的昵称获取通讯对象
      *
      * @param $nickname
+     * @param bool $blur
      * @return mixed
      */
-    public function getUsernameByNickname($nickname)
+    public function getUsernameByNickname($nickname, $blur = false)
     {
-        return $this->search(function($item, $key) use ($nickname){
-            if($item['NickName'] === $nickname){
+        return $this->search(function ($item, $key) use ($nickname, $blur) {
+            if ($blur && str_contains($item['NickName'], $nickname)) {
+                return true;
+            } elseif (!$blur && $item['NickName'] === $nickname) {
                 return true;
             }
         });
@@ -113,7 +117,7 @@ class Contact extends Collection
         $result = http()->json($url, [
             'UserName' => $username,
             'CmdId' => 3,
-            'OP' => (int) $isStick,
+            'OP' => (int)$isStick,
             'BaseRequest' => server()->baseRequest
         ], true);
 

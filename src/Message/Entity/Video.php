@@ -34,7 +34,7 @@ class Video extends Message implements MessageInterface, MediaInterface
         $response = static::uploadMedia($username, $file);
 
         if (!$response) {
-            Console::log("视频 {$file} 上传失败");
+            Console::log("视频 {$file} 上传失败", Console::WARNING);
             return false;
         }
 
@@ -55,7 +55,7 @@ class Video extends Message implements MessageInterface, MediaInterface
         $result = http()->json($url, $data, true);
 
         if ($result['BaseResponse']['Ret'] != 0) {
-            Console::log('发送视频失败');
+            Console::log('发送视频失败', Console::WARNING);
             return false;
         }
 
@@ -90,7 +90,8 @@ class Video extends Message implements MessageInterface, MediaInterface
             ]
         ]);
         if(strlen($content) === 0){
-            Console::log('下载视频失败', Console::ERROR);
+            Console::log('下载视频失败', Console::WARNING);
+            Console::log('url:'. $url);
         }else{
             FileManager::download($this->msg['MsgId'] . '.mp4', $content, static::$folder);
         }

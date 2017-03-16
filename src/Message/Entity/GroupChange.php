@@ -18,7 +18,26 @@ class GroupChange extends Message implements MessageInterface
 
     public $action;
 
+    /**
+     * 群名重命名的名称
+     *
+     * @var
+     */
     public $rename;
+
+    /**
+     * 被踢出群时的群信息
+     *
+     * @var
+     */
+    public $group;
+
+    /**
+     * 新人进群的昵称（可能单个可能多个）
+     *
+     * @var
+     */
+    public $nickname;
 
     public function __construct($msg)
     {
@@ -29,17 +48,25 @@ class GroupChange extends Message implements MessageInterface
 
     public function make()
     {
-        if(str_contains($this->msg['Content'], '加入了群聊')){
+        Console::debug($this->msg['Content']);
+        if (str_contains($this->msg['Content'], '邀请你')) {
+            $this->action = 'INVITE';
+        } elseif (str_contains($this->msg['Content'], '加入了群聊')) {
+            preg_match('/.+"(.+)"加入了群聊/', $this->msg['Content'], $match);
             $this->action = 'ADD';
-            Console::log("检测到 {$this->from['NickName']} 有新成员，正在刷新群成员列表...");
+            $this->nickname = $match[1];
+            Console::debug("检测到 {$this->from['NickName']} 有新成员，正在刷新群成员列表...");
             (new ContactFactory())->makeContactList();
-            Console::log('群成员更新成功！');
-        }elseif(str_contains($this->msg['Content'], '移出了群聊')){
+            Console::debug('群成员更新成功！');
+        } elseif (str_contains($this->msg['Content'], '移出了群聊')) {
             $this->action = 'REMOVE';
-        }elseif(str_contains($this->msg['Content'], '改群名为')){
+        } elseif (str_contains($this->msg['Content'], '改群名为')) {
             $this->action = 'RENAME';
             preg_match('/改群名为“(.+)”/', $this->msg['Content'], $match);
             $this->updateGroupName($match[1]);
+        } elseif (str_contains($this->msg['Content'], '移出群聊')) {
+            $this->action = 'BE_REMOVE';
+            $this->group = group()->pull($this->from['UserName']);
         }
 
         $this->content = $this->msg['Content'];

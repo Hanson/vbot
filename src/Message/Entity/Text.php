@@ -58,7 +58,7 @@ class Text extends Message implements MessageInterface
         );
 
         if ($result['BaseResponse']['Ret'] != 0) {
-            Console::log('发送消息失败');
+            Console::log('发送消息失败', Console::WARNING);
             return false;
         }
 

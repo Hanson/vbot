@@ -31,13 +31,22 @@ PS:运行后二维码将保存于设置的缓存目录，命名为qr.png，控�
 
 **请在terminal运行！请在terminal运行！请在terminal运行！**
 
+## 体验
+
+<img src="https://ws2.sinaimg.cn/large/685b97a1gy1fdordpa0cgj20e80e811z.jpg" height="320">
+
+扫码后，验证输入“上山打老虎”即可自动加为好友并且拉入vbot群。
+
+vbot并非24小时执行，有时会因为开发调试等原因暂停功能。如果碰巧遇到关闭情况，可加Q群 492548647 了解开放时间。执行后发送“拉我”即可自动邀请进群。
+
+vbot示例源码为 https://github.com/HanSon/vbot/blob/master/example/index.php
+
+
 ## 文档
 
 详细文档在[wiki](https://github.com/HanSon/vbot/wiki)中
 
-### 例子
-
-[所有类型例子](https://github.com/HanSon/vbot/blob/master/example/index.php)
+### 小DEMO
 
 [红包提醒](https://github.com/HanSon/vbot/blob/master/example/hongbao.php)
 

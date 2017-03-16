@@ -52,7 +52,7 @@ class Sync
                 'BaseRequest' => server()->baseRequest,
                 'SyncKey' => server()->syncKey,
                 'rr' => ~time()
-            ], true);
+            ], true, ['timeout' => 35]);
 
             if($result['BaseResponse']['Ret'] == 0){
                 $this->generateSyncKey($result);
@@ -60,7 +60,7 @@ class Sync
 
             return $result;
         }catch (\Exception $e){
-            return null;
+            $this->sync();
         }
     }
 
@@ -107,7 +107,7 @@ class Sync
      */
     public function debugMessage($retCode, $selector, $sleep = null)
     {
-        Console::log('[DEBUG] retcode:' . $retCode . ' selector:' . $selector);
+        Console::log('retcode:' . $retCode . ' selector:' . $selector, Console::WARNING);
 
         if($sleep){
             sleep($sleep);

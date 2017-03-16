@@ -34,6 +34,18 @@ class Console
     }
 
     /**
+     * debug 模式下调试输出
+     *
+     * @param $str
+     */
+    public static function debug($str)
+    {
+        if (server()->config['debug']) {
+            static::log($str, 'DEBUG');
+        }
+    }
+
+    /**
      * 初始化二维码style
      *
      * @param OutputInterface $output
