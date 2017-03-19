@@ -103,58 +103,9 @@ $robot->server->run();
 
 ```
 
-## 已实现
-
-- [x] 消息处理
-  - [x] 文字
-  - [x] 图片
-  - [x] 语音
-  - [x] 位置
-  - [x] 视频
-  - [x] 撤回
-  - [x] 表情
-  - [x] 红包
-  - [x] 转账
-  - [x] 名片
-  - [x] 好友验证
-  - [x] 分享
-  - [x] 公众号推送
-  - [x] 新好友
-  - [x] 群变动（增加成员，移除成员，更改群名）
-  - [x] 小程序
-  
-- [x] 消息存储
-  - [x] 语音
-  - [x] 图片
-  - [x] 视频
-  - [x] 表情
-
-- [x] 消息发送
-  - [x] 发送文字
-  - [x] 发送图片
-  - [x] 发送表情
-  - [x] 发送视频
-
-- [x] 群操作
-  - [x] 创建群
-  - [x] 把某人踢出群
-  - [x] 邀请好友加入群
-  - [x] 修改群名称
-  
-- [x] 好友操作
-  - [x] 给好友添加备注
-  - [x] 通过好友验证
-
-- [x] 聊天窗口操作
-  - [x] 置顶聊天会话
-  - [x] 取消聊天会话指定
-  
-- [ ] 命令行操作信息发送
-
 ## to do list
-- 文件下载偶尔失败
-- 登录cookie免扫码
-- 队列监听
+
+vbot 已实现的功能列表 [点击查看](https://github.com/HanSon/vbot/wiki/todolist)
 
 ## 参考项目
 
@@ -178,16 +129,7 @@ $robot->server->run();
 
 ## Q&A
 
-- 问：命令行执行时乱码怎么解决？
-> 设置编码terminal为UTF-8。windows可执行`chcp 65001`
-
-- 问：windows下出错，提示`SSL certificate problem:unable to get local issuer certificate`
-> 可参考 https://easywechat.org/zh-cn/docs/troubleshooting.html
-
-- 问：初始化一直失败
-> 请确认PHP版本是否7
-
-## 问题和建议
+常见问题[点击查看](https://github.com/HanSon/vbot/wiki/Q&A)
 
 有问题或者建议都可以提issue
 
@@ -205,7 +147,5 @@ donate 名单 （排名按时间顺序）
 |[summer](https://github.com/summerblue) 以及这是用vbot实现的半自动购书流程[Laravel 入门教程(推荐)](http://t.laravel-china.org/laravel-tutorial/5.1/buy-it)|￥66.66|
 |A梦|￥18.88 * 4 |
 |[toby2016](https://github.com/toby2016)|￥5|
-
-## 打赏
 
 <img src="https://ww2.sinaimg.cn/large/685b97a1gy1fd61orxreaj20yf19fmz1.jpg" height="320"><img src="https://ww2.sinaimg.cn/large/685b97a1gy1fd61qscynwj20ng0zk0tx.jpg" height="320">
