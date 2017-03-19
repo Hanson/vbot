@@ -48,6 +48,8 @@ vbot示例源码为 https://github.com/HanSon/vbot/blob/master/example/index.php
 
 ### 小DEMO
 
+[购书半自动处理](http://t.laravel-china.org/laravel-tutorial/5.1/buy-it)
+
 [红包提醒](https://github.com/HanSon/vbot/blob/master/example/hongbao.php)
 
 [轰炸消息到某群名](https://github.com/HanSon/vbot/blob/master/example/group.php)
