@@ -76,25 +76,16 @@ $robot = new Vbot([
     'debug' => true # 用于是否输出用户组的json
 ]);
 
-// 图灵自动回复
-function reply($str){
-    return http()->post('http://www.tuling123.com/openapi/api', [
-        'key' => '1dce02aef026258eff69635a06b0ab7d',
-        'info' => $str
-    ], true)['text'];
-
-}
-
 $robot->server->setMessageHandler(function($message){
     // 文字信息
     if ($message instanceof Text) {
         /** @var $message Text */
         // 联系人自动回复
         if ($message->fromType === 'Contact') {
-            return reply($message->content);
+            return 'hello vbot';
             // 群组@我回复
         } elseif ($message->fromType === 'Group' && $message->isAt) {
-            return reply($message->content);
+            return 'hello everyone';
         }
     }
 });
