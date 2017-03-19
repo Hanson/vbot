@@ -3,7 +3,8 @@
 
 ### 环境要求
 
-* PHP >= 7.0
+- PHP >= 7.0
+- (PHP fileinfo 拓展)[http://php.net/manual/en/book.fileinfo.php] 储存文件需要用到
 
 ### 安装
 
@@ -126,7 +127,7 @@ vbot 已实现的功能列表 [点击查看](https://github.com/HanSon/vbot/wiki
 
 有问题或者建议都可以提issue
 
-或者加入我新建的QQ群：492548647
+或者加入vbot的QQ群：492548647
 
 ## donate 名单
 
