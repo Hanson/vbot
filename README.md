@@ -140,6 +140,6 @@ donate 名单 （排名按时间顺序）
 |[toby2016](https://github.com/toby2016)|￥5|
 |A梦|￥18.88 * 4 |
 |[summer](https://github.com/summerblue) 以及这是用vbot实现的半自动购书流程[Laravel 入门教程(推荐)](http://t.laravel-china.org/laravel-tutorial/5.1/buy-it)|￥66.66|
-|匿名| ￥181.8|
+|匿名的某师兄| ￥181.8|
 
 <img src="https://ww2.sinaimg.cn/large/685b97a1gy1fd61orxreaj20yf19fmz1.jpg" height="320"><img src="https://ww2.sinaimg.cn/large/685b97a1gy1fd61qscynwj20ng0zk0tx.jpg" height="320">
