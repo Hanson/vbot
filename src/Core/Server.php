@@ -10,9 +10,8 @@ namespace Hanson\Vbot\Core;
 
 
 use Endroid\QrCode\QrCode;
-use Hanson\Vbot\Collections\ContactFactory;
+use Hanson\Vbot\Core\ContactFactory;
 use Hanson\Vbot\Collections\Group;
-use Hanson\Vbot\Collections\Special;
 use Hanson\Vbot\Support\Console;
 use Hanson\Vbot\Support\FileManager;
 use Hanson\Vbot\Support\System;

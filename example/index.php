@@ -37,11 +37,19 @@ $robot = new Vbot([
 // 图灵自动回复
 function reply($str)
 {
-    return http()->post('http://www.tuling123.com/openapi/api', [
+    $result = http()->post('http://www.tuling123.com/openapi/api', [
         'key' => '1dce02aef026258eff69635a06b0ab7d',
         'info' => $str
-    ], true)['text'];
+    ], true);
 
+    return isset($result['url']) ? $result['text'] . $result['url'] : $result['text'];
+}
+
+function xiaobing($str, $replyUsername)
+{
+    \Hanson\Vbot\Support\Console::debug('内容：' . $str);
+    \Hanson\Vbot\Support\Console::debug('对象：' . $replyUsername);
+    Text::send($replyUsername, $str);
 }
 
 // 设置管理员
@@ -62,12 +70,13 @@ function isAdmin($message)
 
 $groupMap = [
     [
-        'nickname' => 'vbo 测试群',
+        'nickname' => 'vbot 测试群',
         'id' => 1
     ]
 ];
 
 $robot->server->setOnceHandler(function () use ($groupMap) {
+
     group()->each(function ($group, $key) use ($groupMap) {
         foreach ($groupMap as $map) {
             if ($group['NickName'] === $map['nickname']) {
@@ -80,14 +89,26 @@ $robot->server->setOnceHandler(function () use ($groupMap) {
     });
 });
 
-$robot->server->setMessageHandler(function ($message) use ($path) {
+$replyMap = [];
+$robot->server->setMessageHandler(function ($message) use ($path, &$replyMap) {
     /** @var $message Message */
+    $replyUsername = official()->getUsernameByNickname('小冰');
 
     // 位置信息 返回位置文字
     if ($message instanceof Location) {
         /** @var $message Location */
         Text::send('地图链接：' . $message->from['UserName'], $message->url);
         return '位置：' . $message;
+    }
+
+
+    if ($message->from['UserName'] === $replyUsername) {
+        if ($message instanceof Text) {
+            $username = last($replyMap);
+            Text::send($username, $message->content);
+        }
+        unset($replyMap[count($replyMap) - 1]);
+        return false;
     }
 
     // 文字信息
@@ -98,29 +119,34 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
             return "你好，我叫vbot，我爸是HanSon\n我的项目地址是 https://github.com/HanSon/vbot \n欢迎来给我star！";
         }
 
+
         // 联系人自动回复
         if ($message->fromType === 'Contact') {
             if ($message->content === '拉我') {
                 $username = group()->getUsernameById(1);
 
                 group()->addMember($username, $message->from['UserName']);
+                return false;
             }
 
-            if($message->content === '测试'){
-                $username = group()->getUsernameById(1);
-                print_r($username);
-                print_r(group()->get($username));
-            }
+
+//            $replyMap[] = $message->from['UserName'];
+//            xiaobing($message->content, $replyUsername);
+//            return false;
 
             return reply($message->content);
             // 群组@我回复
         } elseif ($message->fromType === 'Group') {
 
-            if (str_contains($message->content, '设置群名称') && isAdmin($message)) {
-                group()->setGroupName($message->from['UserName'], str_replace('设置群名称', '', $message->content));
+            if (str_contains($message->content, '设置群名称')) {
+                if(isAdmin($message)){
+                    group()->setGroupName($message->from['UserName'], str_replace('设置群名称', '', $message->content));
+                }else{
+                    return '你没有此权限';
+                }
             }
 
-            if (str_contains($message->content, '搜人') && isAdmin($message)) {
+            if (str_contains($message->content, '搜人')) {
                 $nickname = str_replace('搜人', '', $message->content);
                 $members = group()->getMembersByNickname($message->from['UserName'], $nickname, true);
                 $result = '搜索结果 数量：' . count($members) . "\n";
@@ -130,28 +156,38 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
                 return $result;
             }
 
-            if (str_contains($message->content, '踢人') && isAdmin($message)) {
-                $username = str_replace('踢人', '', $message->content);
-                group()->deleteMember($message->from['UserName'], $username);
+            if (str_contains($message->content, '踢人')) {
+                if(isAdmin($message)){
+                    $username = str_replace('踢人', '', $message->content);
+                    group()->deleteMember($message->from['UserName'], $username);
+                }else{
+                    return '你没有此权限';
+                }
             }
 
             if (str_contains($message->content, '踢我') && $message->isAt) {
                 Text::send($message->from['UserName'], '拜拜 ' . $message->sender['NickName']);
                 group()->deleteMember($message->from['UserName'], $message->sender['UserName']);
-                return 'vbot 从未见过这么犯贱的人';
             }
 
-            if(substr($message->content, 0, 1) === '@' && preg_match('/@(.+)\s自作孽不可活/', $message->content, $match) && isAdmin($message)){
-                $nickname = $match[1];
-                $members = group()->getMembersByNickname($message->from['UserName'], $nickname);
-                if($members){
-                    $member = current($members);
-                    Text::send($message->from['UserName'], '拜拜 ' . $member['NickName'] . ' ，君让臣死，臣不得不死');
-                    group()->deleteMember($message->from['UserName'], $member['UserName']);
+            if(substr($message->content, 0, 1) === '@' && preg_match('/@(.+)\s自作孽不可活/', $message->content, $match)){
+                if(isAdmin($message)){
+                    $nickname = $match[1];
+                    $members = group()->getMembersByNickname($message->from['UserName'], $nickname);
+                    if($members){
+                        $member = current($members);
+                        Text::send($message->from['UserName'], '拜拜 ' . $member['NickName'] . ' ，君让臣死，臣不得不死');
+                        group()->deleteMember($message->from['UserName'], $member['UserName']);
+                    }
+                }else{
+                    return '你没有此权限';
                 }
             }
 
             if ($message->isAt) {
+//                $replyMap[] = $message->from['UserName'];
+//                xiaobing($message->content, $replyUsername);
+//                return false;
                 return reply($message->content);
             }
         }
@@ -237,14 +273,14 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
     }
 
     // 分享信息
-    if ($message instanceof Share) {
-        /** @var $message Share */
-        $reply = "收到分享\n标题：{$message->title}\n描述：{$message->description}\n链接：{$message->url}";
-        if ($message->app) {
-            $reply .= "\n来源APP：{$message->app}";
-        }
-        return $reply;
-    }
+//    if ($message instanceof Share) {
+//        /** @var $message Share */
+//        $reply = "收到分享\n标题：{$message->title}\n描述：{$message->description}\n链接：{$message->url}";
+//        if ($message->app) {
+//            $reply .= "\n来源APP：{$message->app}";
+//        }
+//        return $reply;
+//    }
 
     // 分享小程序信息
     if ($message instanceof Mina) {

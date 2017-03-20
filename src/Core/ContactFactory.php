@@ -6,9 +6,10 @@
  * Time: 20:41
  */
 
-namespace Hanson\Vbot\Collections;
+namespace Hanson\Vbot\Core;
 
 
+use Hanson\Vbot\Collections\Special;
 use Hanson\Vbot\Support\Console;
 use Hanson\Vbot\Support\FileManager;
 

@@ -9,7 +9,7 @@
 namespace Hanson\Vbot\Message\Entity;
 
 
-use Hanson\Vbot\Collections\ContactFactory;
+use Hanson\Vbot\Core\ContactFactory;
 use Hanson\Vbot\Message\MessageInterface;
 use Hanson\Vbot\Support\Console;
 
