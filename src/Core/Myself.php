@@ -9,6 +9,8 @@
 namespace Hanson\Vbot\Core;
 
 
+use Hanson\Vbot\Support\Console;
+
 class Myself
 {
 
@@ -40,6 +42,9 @@ class Myself
         $this->username = $user['UserName'];
         $this->sex = $user['Sex'];
         $this->uin = $user['Uin'];
+        Console::log('当前用户昵称：' . $user['NickName']);
+        Console::log('当前用户ID：' . $user['UserName']);
+        Console::log('当前用户UIN：' . $user['Uin']);
     }
 
 }

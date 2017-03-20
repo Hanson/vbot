@@ -45,7 +45,7 @@ class Sync
 
     public function sync()
     {
-        $url = sprintf(server()->baseUri . '/webwxsync?sid=%s&skey=%s&lang=en_US&pass_ticket=%s', server()->sid, server()->skey, server()->passTicket);
+        $url = sprintf(server()->baseUri . '/webwxsync?sid=%s&skey=%s&lang=zh_CN&pass_ticket=%s', server()->sid, server()->skey, server()->passTicket);
 
         try{
             $result = http()->json($url, [

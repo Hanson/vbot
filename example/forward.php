@@ -19,7 +19,7 @@ $robot = new Vbot([
 $robot->server->setMessageHandler(function ($message) {
     if ($message instanceof Text) {
         /** @var $message Text */
-        $contact = contact()->getUsernameById('hanson');
+        $contact = contact()->getUsernameByAlias('hanson');
         Text::send($contact, $message);
     }
 });

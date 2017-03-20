@@ -23,6 +23,7 @@ $robot->server->setCustomerHandler(function () {
         // 发送白名单
         if($item['RemarkName'] && in_array($item['RemarkName'], $whiteList)){
             Text::send($username, $item['RemarkName'] . ' 新年快乐');
+            sleep(2);
         }
         // 黑名单不发送
 //        if($item['RemarkName'] && !in_array($item['RemarkName'], $blackList)){

@@ -10,9 +10,8 @@ namespace Hanson\Vbot\Collections;
 
 
 use Hanson\Vbot\Support\Console;
-use Illuminate\Support\Collection;
 
-class Group extends Collection
+class Group extends BaseCollection
 {
 
     static $instance = null;
@@ -51,36 +50,13 @@ class Group extends Collection
     /**
      * 根据群名筛选群组
      *
-     * @param $name
+     * @param $nickname
      * @param bool $blur
      * @return static
      */
-    public function getGroupsByNickname($name, $blur = false)
+    public function getGroupsByNickname($nickname, $blur = false)
     {
-        $groups = $this->filter(function($value, $key) use ($name, $blur){
-           if(!$blur){
-               return $value['NickName'] === $name;
-           }else{
-               return str_contains($value['NickName'], $name);
-           }
-        });
-
-        return $groups;
-    }
-
-    /**
-     * 根据通讯录中的昵称获取通讯对象
-     *
-     * @param $nickname
-     * @return mixed
-     */
-    public function getUsernameByNickname($nickname)
-    {
-        return $this->search(function($item, $key) use ($nickname){
-            if($item['NickName'] === $nickname){
-                return true;
-            }
-        });
+        return $this->getObject($nickname, 'NickName', false, $blur);
     }
 
     /**
@@ -89,15 +65,17 @@ class Group extends Collection
      * @param $groupUsername
      * @param $memberNickname
      * @param bool $blur
-     * @return array
+     * @return array|bool
      */
     public function getMembersByNickname($groupUsername, $memberNickname, $blur = false)
     {
-        $members = $this->get($groupUsername);
+        $group = $this->get($groupUsername);
+
+        if(!$group) return false;
 
         $result = [];
 
-        foreach ($members['MemberList'] as $member) {
+        foreach ($group['MemberList'] as $member) {
             if ($blur && str_contains($member['NickName'], $memberNickname)) {
                 $result[] = $member;
             } elseif (!$blur && $member['NickName'] === $memberNickname) {

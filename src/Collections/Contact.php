@@ -9,9 +9,7 @@
 namespace Hanson\Vbot\Collections;
 
 
-use Illuminate\Support\Collection;
-
-class Contact extends Collection
+class Contact extends BaseCollection
 {
 
     /**
@@ -35,67 +33,55 @@ class Contact extends Collection
 
     /**
      * 根据微信号获取联系人
-     *
-     * @param $id
+     * @deprecated
+     * @param $alias
      * @return mixed
      */
-    public function getContactById($id)
+    public function getContactById($alias)
     {
-        return $this->filter(function ($item, $key) use ($id) {
-            if ($item['Alias'] === $id) {
-                return true;
-            }
-        })->first();
+        return $this->getContactById($alias);
+    }
+
+    /**
+     * 根据微信号获取联系人
+     *
+     * @param $alias
+     * @return mixed
+     */
+    public function getContactByAlias($alias)
+    {
+        return $this->getObject($alias, 'Alias', true);
+    }
+
+    /**
+     * 根据微信号获取联系username
+     * @deprecated
+     * @param $alias
+     * @return mixed
+     */
+    public function getUsernameById($alias)
+    {
+        return $this->getUsernameByAlias($alias);
     }
 
     /**
      * 根据微信号获取联系username
      *
-     * @param $id
+     * @param $alias
      * @return mixed
      */
-    public function getUsernameById($id)
+    public function getUsernameByAlias($alias)
     {
-        return $this->search(function ($item, $key) use ($id) {
-            if ($item['Alias'] === $id) {
-                return true;
-            }
-        });
+        return $this->getUsername($alias, 'Alias');
     }
 
     /**
-     * 根据通讯录中的备注获取通讯对象
+     * 设置备注
      *
-     * @param $id
-     * @return mixed
+     * @param $username
+     * @param $remarkName
+     * @return bool
      */
-    public function getUsernameByRemarkName($id)
-    {
-        return $this->search(function ($item, $key) use ($id) {
-            if ($item['RemarkName'] === $id) {
-                return true;
-            }
-        });
-    }
-
-    /**
-     * 根据通讯录中的昵称获取通讯对象
-     *
-     * @param $nickname
-     * @param bool $blur
-     * @return mixed
-     */
-    public function getUsernameByNickname($nickname, $blur = false)
-    {
-        return $this->search(function ($item, $key) use ($nickname, $blur) {
-            if ($blur && str_contains($item['NickName'], $nickname)) {
-                return true;
-            } elseif (!$blur && $item['NickName'] === $nickname) {
-                return true;
-            }
-        });
-    }
-
     public function setRemarkName($username, $remarkName)
     {
         $url = sprintf('%s/webwxoplog?lang=zh_CN&pass_ticket=%s', server()->baseUri, server()->passTicket);
@@ -110,6 +96,13 @@ class Contact extends Collection
         return $result['BaseResponse']['Ret'] == 0;
     }
 
+    /**
+     * 设置是否置顶
+     *
+     * @param $username
+     * @param bool $isStick
+     * @return bool
+     */
     public function setStick($username, $isStick = true)
     {
         $url = sprintf('%s/webwxoplog?lang=zh_CN&pass_ticket=%s', server()->baseUri, server()->passTicket);
