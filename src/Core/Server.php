@@ -182,7 +182,7 @@ class Server
                         'wx8.qq.com' => ['file.wx8.qq.com', 'webpush.wx8.qq.com'],
                         'wx.qq.com' => ['file.wx.qq.com', 'webpush.wx.qq.com'],
                         'web2.wechat.com' => ['file.web2.wechat.com', 'webpushweb2.wechat.com'],
-                        'wechat.com' => ['file.web.wechat.com', 'webpushweb.web.wechat.com'],
+                        'web.wechat.com' => ['file.web.wechat.com', 'webpushweb.web.wechat.com'],
                     ];
                     $url = 'https://%s/cgi-bin/mmwebwx-bin';
                     foreach ($domainList as $domain => $list) {

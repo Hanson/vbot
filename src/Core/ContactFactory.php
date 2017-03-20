@@ -9,8 +9,8 @@
 namespace Hanson\Vbot\Core;
 
 
+use Hanson\Vbot\Collections\Official;
 use Hanson\Vbot\Collections\Special;
-use Hanson\Vbot\Support\Console;
 use Hanson\Vbot\Support\FileManager;
 
 class ContactFactory
