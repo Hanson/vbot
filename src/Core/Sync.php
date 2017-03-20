@@ -31,14 +31,14 @@ class Sync
                 '_' => time()
             ]);
 
-        $content = http()->get($url);
+        $content = http()->get($url, [], ['timeout' => 35]);
 
         try{
             preg_match('/window.synccheck=\{retcode:"(\d+)",selector:"(\d+)"\}/', $content, $matches);
 
             return [$matches[1], $matches[2]];
         }catch (\Exception $e){
-            Console::log('Sync check return:' . $content);
+            Console::log('Sync check return:' . $content, Console::ERROR);
             return [-1, -1];
         }
     }
@@ -52,7 +52,7 @@ class Sync
                 'BaseRequest' => server()->baseRequest,
                 'SyncKey' => server()->syncKey,
                 'rr' => ~time()
-            ], true, ['timeout' => 35]);
+            ], true);
 
             if($result['BaseResponse']['Ret'] == 0){
                 $this->generateSyncKey($result);
@@ -82,35 +82,5 @@ class Sync
         }
 
         server()->syncKeyStr = implode('|', $syncKey);
-    }
-
-    /**
-     * check message time
-     *
-     * @param $time
-     */
-    public function checkTime($time)
-    {
-        $checkTime = time() - $time;
-
-        if($checkTime < 0.8){
-            sleep(1 - $checkTime);
-        }
-    }
-
-    /**
-     * debug while the sync
-     *
-     * @param $retCode
-     * @param $selector
-     * @param null $sleep
-     */
-    public function debugMessage($retCode, $selector, $sleep = null)
-    {
-        Console::log('retcode:' . $retCode . ' selector:' . $selector, Console::WARNING);
-
-        if($sleep){
-            sleep($sleep);
-        }
     }
 }

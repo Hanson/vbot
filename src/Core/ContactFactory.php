@@ -59,21 +59,31 @@ class ContactFactory
         $result = http()->json($url, [], true);
 
         if (isset($result['MemberList']) && $result['MemberList']) {
-            foreach ($result['MemberList'] as $contact) {
-                if (official()->isOfficial($contact['VerifyFlag'])) { #公众号
-                    Official::getInstance()->put($contact['UserName'], $contact);
-                } elseif (in_array($contact['UserName'], static::SPECIAL_USERS)) { # 特殊账户
-                    Special::getInstance()->put($contact['UserName'], $contact);
-                } elseif (strstr($contact['UserName'], '@@') !== false) { # 群聊
-                    group()->put($contact['UserName'], $contact);
-                } else {
-                    contact()->put($contact['UserName'], $contact);
-                }
-            }
+            $this->setCollections($result['MemberList']);
         }
 
         if (isset($result['Seq']) && $result['Seq'] != 0) {
             $this->makeContactList($result['Seq']);
+        }
+    }
+
+    /**
+     * 设置联系人到collection
+     *
+     * @param $memberList
+     */
+    public function setCollections($memberList)
+    {
+        foreach ($memberList as $contact) {
+            if (in_array($contact['UserName'], static::SPECIAL_USERS)) { # 特殊账户
+                Special::getInstance()->put($contact['UserName'], $contact);
+            } elseif (official()->isOfficial($contact['VerifyFlag'])) { # 公众号
+                Official::getInstance()->put($contact['UserName'], $contact);
+            } elseif (strstr($contact['UserName'], '@@') !== false) { # 群聊
+                group()->put($contact['UserName'], $contact);
+            } else {
+                contact()->put($contact['UserName'], $contact);
+            }
         }
     }
 

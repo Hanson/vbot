@@ -8,6 +8,7 @@
 
 namespace Hanson\Vbot\Core;
 
+use Carbon\Carbon;
 use Closure;
 use Hanson\Vbot\Message\Entity\Emoticon;
 use Hanson\Vbot\Message\Entity\Image;
@@ -142,12 +143,18 @@ class MessageHandler
             call_user_func_array($this->onceHandler, []);
         }
 
+        $time = 0;
+
         while (true) {
             if ($this->customHandler instanceof Closure) {
                 call_user_func_array($this->customHandler, []);
             }
 
-            $time = time();
+            if(time() - $time > 1800){
+                Text::send('filehelper', '心跳 ' . Carbon::now()->toDateTimeString());
+                $time = time();
+            }
+
             list($retCode, $selector) = $this->sync->checkSync();
 
             if (in_array($retCode, ['1100', '1101'])) { # 微信客户端上登出或者其他设备登录
@@ -165,8 +172,6 @@ class MessageHandler
                 }
                 break;
             }
-
-            $this->sync->checkTime($time);
         }
         Console::log('程序结束');
     }

@@ -273,11 +273,7 @@ class Server
     protected function initContactList($contactList)
     {
         if($contactList){
-            foreach ($contactList as $contact) {
-                if(Group::isGroup($contact['UserName'])){
-                    group()->put($contact['UserName'], $contact);
-                }
-            }
+            (new ContactFactory())->setCollections($contactList);
         }
     }
 
