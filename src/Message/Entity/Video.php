@@ -83,7 +83,7 @@ class Video extends Message implements MessageInterface, MediaInterface
      */
     public function download()
     {
-        $url = server()->baseUri . sprintf('/webwxgetvideo?msgid=%s&skey=%s', $this->msg['MsgId'], server()->skey);
+        $url = server()->baseUri . sprintf('/webwxgetvideo?msgid=%s&skey=%s', $this->raw['MsgId'], server()->skey);
         $content = http()->request($url, 'get', [
             'headers' => [
                 'Range' => 'bytes=0-'
@@ -93,7 +93,7 @@ class Video extends Message implements MessageInterface, MediaInterface
             Console::log('下载视频失败', Console::WARNING);
             Console::log('url:'. $url);
         }else{
-            FileManager::download($this->msg['MsgId'] . '.mp4', $content, static::$folder);
+            FileManager::download($this->raw['MsgId'] . '.mp4', $content, static::$folder);
         }
     }
 

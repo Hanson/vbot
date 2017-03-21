@@ -35,9 +35,9 @@ class Voice extends Message implements MessageInterface, MediaInterface
      */
     public function download()
     {
-        $url = server()->baseUri . sprintf('/webwxgetvoice?msgid=%s&skey=%s', $this->msg['MsgId'], server()->skey);
+        $url = server()->baseUri . sprintf('/webwxgetvoice?msgid=%s&skey=%s', $this->raw['MsgId'], server()->skey);
         $content = http()->get($url);
-        FileManager::download($this->msg['MsgId'].'.mp3', $content, static::$folder);
+        FileManager::download($this->raw['MsgId'].'.mp3', $content, static::$folder);
     }
 
     public function make()

@@ -49,13 +49,13 @@ class Recommend extends Message implements MessageInterface
 
     public function make()
     {
-        $this->info = $this->msg['RecommendInfo'];
+        $this->info = $this->raw['RecommendInfo'];
         $this->parseContent();
     }
 
     private function parseContent()
     {
-        $isMatch = preg_match('/bigheadimgurl="(http:\/\/.+?)"\ssmallheadimgurl="(http:\/\/.+?)".+province="(.+?)"\scity="(.+?)".+certflag="(\d+)"\scertinfo="(.+?)"/', $this->msg['Content'], $matches);
+        $isMatch = preg_match('/bigheadimgurl="(http:\/\/.+?)"\ssmallheadimgurl="(http:\/\/.+?)".+province="(.+?)"\scity="(.+?)".+certflag="(\d+)"\scertinfo="(.+?)"/', $this->message, $matches);
 
         if($isMatch){
             $this->bigAvatar = $matches[1];

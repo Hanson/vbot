@@ -58,7 +58,7 @@ class Text extends Message implements MessageInterface
         );
 
         if ($result['BaseResponse']['Ret'] != 0) {
-            Console::log('发送消息失败', Console::WARNING);
+            Console::log('发送消息失败 ' . time(), Console::WARNING);
             return false;
         }
 
@@ -67,7 +67,7 @@ class Text extends Message implements MessageInterface
 
     public function make()
     {
-        $this->content = $this->msg['Content'];
+        $this->content = $this->message;
 
         $this->isAt = str_contains($this->content, '@' . myself()->nickname);
     }

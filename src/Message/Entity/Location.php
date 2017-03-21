@@ -42,9 +42,9 @@ class Location extends Message implements MessageInterface
      */
     private function setLocationText()
     {
-        $this->content = current(explode(":\n", $this->msg['Content']));
+        $this->content = current(explode(":\n", $this->message));
 
-        $this->url = $this->msg['Url'];
+        $this->url = $this->raw['Url'];
     }
 
     public function make()

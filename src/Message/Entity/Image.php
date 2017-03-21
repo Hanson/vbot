@@ -77,8 +77,8 @@ class Image extends Message implements MessageInterface, MediaInterface
 
     public function download()
     {
-        $url = server()->baseUri . sprintf('/webwxgetmsgimg?MsgID=%s&skey=%s', $this->msg['MsgId'], server()->skey);
+        $url = server()->baseUri . sprintf('/webwxgetmsgimg?MsgID=%s&skey=%s', $this->raw['MsgId'], server()->skey);
         $content = http()->get($url);
-        FileManager::download($this->msg['MsgId'] . '.jpg', $content, static::$folder);
+        FileManager::download($this->raw['MsgId'] . '.jpg', $content, static::$folder);
     }
 }

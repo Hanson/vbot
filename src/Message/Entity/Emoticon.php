@@ -101,9 +101,9 @@ class Emoticon extends Message implements MediaInterface, MessageInterface
      */
     public function download()
     {
-        $url = server()->baseUri . sprintf('/webwxgetmsgimg?MsgID=%s&skey=%s', $this->msg['MsgId'], server()->skey);
+        $url = server()->baseUri . sprintf('/webwxgetmsgimg?MsgID=%s&skey=%s', $this->raw['MsgId'], server()->skey);
         $content = http()->get($url);
-        FileManager::download($this->msg['MsgId'] . '.gif', $content, static::$folder);
+        FileManager::download($this->raw['MsgId'] . '.gif', $content, static::$folder);
     }
 
     public function make()

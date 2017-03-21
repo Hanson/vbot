@@ -22,6 +22,6 @@ class RedPacket extends Message implements MessageInterface
 
     public function make()
     {
-        $this->content = $this->msg['Content'];
+        $this->content = $this->message;
     }
 }

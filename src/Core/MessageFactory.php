@@ -75,6 +75,8 @@ class MessageFactory
             case 49:
                 if($msg['Status'] == 3 && $msg['FileName'] === '微信转账'){
                     return new Transfer($msg);
+                }elseif ($msg['Content'] === '该类型暂不支持，请在手机上查看'){
+                    return null;
                 }else{
                     return (new ShareFactory())->make($msg);
                 }

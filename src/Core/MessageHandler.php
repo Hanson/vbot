@@ -150,7 +150,7 @@ class MessageHandler
                 call_user_func_array($this->customHandler, []);
             }
 
-            if(time() - $time > 1800){
+            if (time() - $time > 1800) {
                 Text::send('filehelper', '心跳 ' . Carbon::now()->toDateTimeString());
                 $time = time();
             }
@@ -228,7 +228,7 @@ class MessageHandler
      */
     private function addToMessageCollection($message)
     {
-        message()->put($message->msg['MsgId'], $message);
+        message()->put($message->raw['MsgId'], $message);
 
         if (server()->config['debug']) {
             $file = fopen(System::getPath() . 'message.json', 'a');
