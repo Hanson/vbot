@@ -5,6 +5,7 @@
 
 - PHP >= 7.0
 - [PHP fileinfo 拓展](http://php.net/manual/en/book.fileinfo.php) 储存文件需要用到
+- [PHP gd 拓展](http://php.net/manual/en/book.image.php) 控制台显示二维码
 
 ### 安装
 
