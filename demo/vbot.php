@@ -94,6 +94,8 @@ $robot->server->setMessageHandler(function ($message) use ($path, &$replyMap) {
     /** @var $message Message */
     $replyUsername = official()->getUsernameByNickname('小冰');
 
+    \Hanson\Vbot\Support\Console::debug('msgId: ' . $message->raw['MsgId']);
+
     // 位置信息 返回位置文字
     if ($message instanceof Location) {
         /** @var $message Location */
@@ -242,7 +244,7 @@ $robot->server->setMessageHandler(function ($message) use ($path, &$replyMap) {
     // 转账信息
     if ($message instanceof Transfer) {
         /** @var $message Transfer */
-        return $message->content . ' 收到金额 ' . $message->fee;
+        return $message->content . ' 收到金额 ' . $message->fee . ' 转账说明： ' . $message->memo ?: '空';
     }
 
     // 推荐名片信息
@@ -302,7 +304,7 @@ $robot->server->setMessageHandler(function ($message) use ($path, &$replyMap) {
     }
 
     // 新增好友
-    if ($message instanceof \Hanson\Vbot\Message\Entity\NewFriend) {
+    if ($message instanceof NewFriend) {
         \Hanson\Vbot\Support\Console::debug('新加好友：' . $message->from['NickName']);
         Text::send($message->from['UserName'], "客官，等你很久了！感谢跟 vbot 交朋友，如果可以帮我点个star，谢谢了！https://github.com/HanSon/vbot");
         group()->addMember(group()->getUsernameById(1), $message->from['UserName']);

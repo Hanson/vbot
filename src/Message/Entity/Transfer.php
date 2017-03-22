@@ -20,6 +20,13 @@ class Transfer extends Message implements MessageInterface
      */
     public $fee;
 
+    /**
+     * 转账说明
+     *
+     * @var string
+     */
+    public $memo;
+
     public function __construct($msg)
     {
         parent::__construct($msg);
@@ -36,6 +43,7 @@ class Transfer extends Message implements MessageInterface
 
         $this->content = current($des);
 
+        $this->memo = is_string($fee['pay_memo']) ? $fee['pay_memo'] : null;
         $this->fee = substr($fee['feedesc'], 3);
     }
 }
