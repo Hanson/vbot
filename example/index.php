@@ -44,42 +44,6 @@ function reply($str)
 
 }
 
-// 设置管理员
-function isAdmin($message)
-{
-    $adminAlias = 'hanson1994';
-
-    if (in_array($message->fromType, ['Contact', 'Group'])) {
-        if ($message->fromType === 'Contact') {
-            return $message->from['Alias'] === $adminAlias;
-        } else {
-            return isset($message->sender['Alias']) && $message->sender['Alias'] === $adminAlias;
-        }
-    }
-
-    return false;
-}
-
-$groupMap = [
-    [
-        'nickname' => 'vbo 测试群',
-        'id' => 1
-    ]
-];
-
-$robot->server->setOnceHandler(function () use ($groupMap) {
-    group()->each(function ($group, $key) use ($groupMap) {
-        foreach ($groupMap as $map) {
-            if ($group['NickName'] === $map['nickname']) {
-                $group['id'] = $map['id'];
-                $groupMap[$key] = $map['id'];
-                group()->setMap($key, $map['id']);
-            }
-        }
-        return $group;
-    });
-});
-
 $robot->server->setMessageHandler(function ($message) use ($path) {
     /** @var $message Message */
 
@@ -93,62 +57,14 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
     // 文字信息
     if ($message instanceof Text) {
         /** @var $message Text */
-
-        if (str_contains($message->content, 'vbot') && !$message->isAt) {
-            return "你好，我叫vbot，我爸是HanSon\n我的项目地址是 https://github.com/HanSon/vbot \n欢迎来给我star！";
-        }
-
         // 联系人自动回复
         if ($message->fromType === 'Contact') {
-            if ($message->content === '拉我') {
-                $username = group()->getUsernameById(1);
-
-                group()->addMember($username, $message->from['UserName']);
-            }
-
-            if($message->content === '测试'){
-                $username = group()->getUsernameById(1);
-                print_r($username);
-                print_r(group()->get($username));
-            }
-
             return reply($message->content);
             // 群组@我回复
         } elseif ($message->fromType === 'Group') {
 
-            if (str_contains($message->content, '设置群名称') && isAdmin($message)) {
+            if (str_contains($message->content, '设置群名称') && $message->from['Alias'] === 'hanson1994') {
                 group()->setGroupName($message->from['UserName'], str_replace('设置群名称', '', $message->content));
-            }
-
-            if (str_contains($message->content, '搜人') && isAdmin($message)) {
-                $nickname = str_replace('搜人', '', $message->content);
-                $members = group()->getMembersByNickname($message->from['UserName'], $nickname, true);
-                $result = '搜索结果 数量：' . count($members) . "\n";
-                foreach ($members as $member) {
-                    $result .= $member['NickName'] . ' ' . $member['UserName'] . "\n";
-                }
-                return $result;
-            }
-
-            if (str_contains($message->content, '踢人') && isAdmin($message)) {
-                $username = str_replace('踢人', '', $message->content);
-                group()->deleteMember($message->from['UserName'], $username);
-            }
-
-            if (str_contains($message->content, '踢我') && $message->isAt) {
-                Text::send($message->from['UserName'], '拜拜 ' . $message->sender['NickName']);
-                group()->deleteMember($message->from['UserName'], $message->sender['UserName']);
-                return 'vbot 从未见过这么犯贱的人';
-            }
-
-            if(substr($message->content, 0, 1) === '@' && preg_match('/@(.+)\s自作孽不可活/', $message->content, $match) && isAdmin($message)){
-                $nickname = $match[1];
-                $members = group()->getMembersByNickname($message->from['UserName'], $nickname);
-                if($members){
-                    $member = current($members);
-                    Text::send($message->from['UserName'], '拜拜 ' . $member['NickName'] . ' ，君让臣死，臣不得不死');
-                    group()->deleteMember($message->from['UserName'], $member['UserName']);
-                }
             }
 
             if ($message->isAt) {
@@ -168,7 +84,7 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
     }
 
     // 表情信息 返回接收到的表情
-    if ($message instanceof Emoticon && random_int(0,1) && random_int(0,1)) {
+    if ($message instanceof Emoticon) {
         Emoticon::sendRandom($message->from['UserName']);
     }
 
@@ -267,31 +183,24 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
 
     // 新增好友
     if ($message instanceof \Hanson\Vbot\Message\Entity\NewFriend) {
-        \Hanson\Vbot\Support\Console::debug('新加好友：' . $message->from['NickName']);
-        Text::send($message->from['UserName'], "客官，等你很久了！感谢跟 vbot 交朋友，如果可以帮我点个star，谢谢了！https://github.com/HanSon/vbot");
-        group()->addMember(group()->getUsernameById(1), $message->from['UserName']);
-        return '现在拉你进去vbot的测试群，进去后为了避免轰炸记得设置免骚扰哦！如果被不小心踢出群，跟我说声“拉我”我就会拉你进群的了。';
+        \Hanson\Vbot\Support\Console::log('新加好友：' . $message->from['NickName']);
     }
 
     // 群组变动
     if ($message instanceof GroupChange) {
         /** @var $message GroupChange */
         if ($message->action === 'ADD') {
-            \Hanson\Vbot\Support\Console::debug('新人进群');
+            \Hanson\Vbot\Support\Console::log('新人进群');
             return '欢迎新人 ' . $message->nickname;
         } elseif ($message->action === 'REMOVE') {
-            \Hanson\Vbot\Support\Console::debug('群主踢人了');
+            \Hanson\Vbot\Support\Console::log('群主踢人了');
             return $message->content;
         } elseif ($message->action === 'RENAME') {
 //            \Hanson\Vbot\Support\Console::log($message->from['NickName'] . ' 改名为 ' . $message->rename);
-            if (group()->getUsernameById(1) == $message->from['UserName'] && $message->rename !== 'vbot 测试群') {
+            if ($message->rename !== 'vbot 测试群'){
                 group()->setGroupName($message->from['UserName'], 'vbot 测试群');
                 return '行不改名,坐不改姓！';
             }
-        } elseif ($message->action === 'BE_REMOVE') {
-            \Hanson\Vbot\Support\Console::debug('你被踢出了群 ' . $message->group['NickName']);
-        } elseif ($message->action === 'INVITE') {
-            \Hanson\Vbot\Support\Console::debug('你被邀请进群 ' . $message->from['NickName']);
         }
     }
 
