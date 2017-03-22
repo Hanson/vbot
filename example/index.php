@@ -84,25 +84,25 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
     // 语音消息
     if ($message instanceof Voice) {
         /** @var $message Voice */
-        return '收到一条语音并下载在' . $message::getPath($message::$folder) . "/{$message->msg['MsgId']}.mp3";
+        return '收到一条语音并下载在' . $message::getPath($message::$folder) . "/{$message->raw['MsgId']}.mp3";
     }
 
     // 撤回信息
-    if ($message instanceof Recall && $message->msg['FromUserName'] !== myself()->username) {
+    if ($message instanceof Recall && $message->raw['FromUserName'] !== myself()->username) {
         /** @var $message Recall */
         if ($message->origin instanceof Image) {
-            Text::send($message->msg['FromUserName'], "{$message->nickname} 撤回了一张照片");
-            Image::sendByMsgId($message->msg['FromUserName'], $message->origin->msg['MsgId']);
+            Text::send($message->raw['FromUserName'], "{$message->nickname} 撤回了一张照片");
+            Image::sendByMsgId($message->raw['FromUserName'], $message->origin->raw['MsgId']);
         } elseif ($message->origin instanceof Emoticon) {
-            Text::send($message->msg['FromUserName'], "{$message->nickname} 撤回了一个表情");
-            Emoticon::sendByMsgId($message->msg['FromUserName'], $message->origin->msg['MsgId']);
+            Text::send($message->raw['FromUserName'], "{$message->nickname} 撤回了一个表情");
+            Emoticon::sendByMsgId($message->raw['FromUserName'], $message->origin->raw['MsgId']);
         } elseif ($message->origin instanceof Video) {
-            Text::send($message->msg['FromUserName'], "{$message->nickname} 撤回了一个视频");
-            Video::sendByMsgId($message->msg['FromUserName'], $message->origin->msg['MsgId']);
+            Text::send($message->raw['FromUserName'], "{$message->nickname} 撤回了一个视频");
+            Video::sendByMsgId($message->raw['FromUserName'], $message->origin->raw['MsgId']);
         } elseif ($message->origin instanceof Voice) {
-            Text::send($message->msg['FromUserName'], "{$message->nickname} 撤回了一条语音");
+            Text::send($message->raw['FromUserName'], "{$message->nickname} 撤回了一条语音");
         } else {
-            Text::send($message->msg['FromUserName'], "{$message->nickname} 撤回了一条信息 \"{$message->origin->msg['Content']}\"");
+            Text::send($message->raw['FromUserName'], "{$message->nickname} 撤回了一条信息 \"{$message->origin->raw['Content']}\"");
         }
     }
 
@@ -115,7 +115,7 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
     // 转账信息
     if ($message instanceof Transfer) {
         /** @var $message Transfer */
-        return $message->content . ' 收到金额 ' . $message->fee;
+        return $message->content . ' 收到金额 ' . $message->fee . ' 转账说明： ' . $message->memo ?: '空';
     }
 
     // 推荐名片信息
@@ -171,11 +171,11 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
 
     // 手机点击聊天事件
     if ($message instanceof Touch) {
-        Text::send($message->msg['ToUserName'], "我点击了此聊天");
+        Text::send($message->raw['ToUserName'], "我点击了此聊天");
     }
 
     // 新增好友
-    if ($message instanceof \Hanson\Vbot\Message\Entity\NewFriend) {
+    if ($message instanceof NewFriend) {
         \Hanson\Vbot\Support\Console::log('新加好友：' . $message->from['NickName']);
     }
 
