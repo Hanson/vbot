@@ -17,9 +17,10 @@ class Sync
     /**
      * get a message code
      *
+     * @param int $retry
      * @return array
      */
-    public function checkSync()
+    public function checkSync($retry = 0)
     {
         $url = 'https://webpush.' . server()->domain . '/cgi-bin/mmwebwx-bin/synccheck?' . http_build_query([
                 'r' => time(),
@@ -31,19 +32,22 @@ class Sync
                 '_' => time()
             ]);
 
-        $content = http()->get($url, [], ['timeout' => 35]);
-
         try{
+            $content = http()->get($url, [], ['timeout' => 35]);
+
             preg_match('/window.synccheck=\{retcode:"(\d+)",selector:"(\d+)"\}/', $content, $matches);
 
             return [$matches[1], $matches[2]];
         }catch (\Exception $e){
-            Console::log('Sync check return:' . $content, Console::ERROR);
-            return [-1, -1];
+            if($retry == 5){
+                Console::log('synccheck 请求错误：' . $e->getMessage());
+                die();
+            }
+            return $this->checkSync($retry + 1);
         }
     }
 
-    public function sync()
+    public function sync($retry = 0)
     {
         $url = sprintf(server()->baseUri . '/webwxsync?sid=%s&skey=%s&lang=zh_CN&pass_ticket=%s', server()->sid, server()->skey, server()->passTicket);
 
@@ -60,7 +64,11 @@ class Sync
 
             return $result;
         }catch (\Exception $e){
-            $this->sync();
+            if($retry == 5){
+                Console::log('webwxsync 请求错误：' . $e->getMessage());
+                die();
+            }
+            return $this->sync($retry + 1);
         }
     }
 
