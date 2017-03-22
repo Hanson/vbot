@@ -13,13 +13,7 @@
 
 **运行微信账号的语言设置务必设置为简体中文！！否则可能出现未知的错误！**
 
-1、composer
-
-```
-composer require hanson/vbot
-```
-
-2、git
+1、git
 
 ```
 git clone https://github.com/HanSon/vbot.git
@@ -27,7 +21,13 @@ cd vbot
 composer install
 ```
 
-然后执行``` php example/index.php ``` 
+2、composer
+
+```
+composer require hanson/vbot
+```
+
+然后执行``` php example/index.php ```  ****
 
 PS:运行后二维码将保存于设置的缓存目录，命名为qr.png，控制台也会显示二维码，扫描即可（linux用户请确保已经打开ANSI COLOR）
 
