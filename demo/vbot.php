@@ -121,6 +121,9 @@ $robot->server->setMessageHandler(function ($message) use ($path, &$replyMap) {
             return "你好，我叫vbot，我爸是HanSon\n我的项目地址是 https://github.com/HanSon/vbot \n欢迎来给我star！";
         }
 
+        if ($message->content === 'emoji') {
+            return ;
+        }
 
         // 联系人自动回复
         if ($message->fromType === 'Contact') {
@@ -141,9 +144,9 @@ $robot->server->setMessageHandler(function ($message) use ($path, &$replyMap) {
         } elseif ($message->fromType === 'Group') {
 
             if (str_contains($message->content, '设置群名称')) {
-                if(isAdmin($message)){
+                if (isAdmin($message)) {
                     group()->setGroupName($message->from['UserName'], str_replace('设置群名称', '', $message->content));
-                }else{
+                } else {
                     return '你没有此权限';
                 }
             }
@@ -159,10 +162,10 @@ $robot->server->setMessageHandler(function ($message) use ($path, &$replyMap) {
             }
 
             if (str_contains($message->content, '踢人')) {
-                if(isAdmin($message)){
+                if (isAdmin($message)) {
                     $username = str_replace('踢人', '', $message->content);
                     group()->deleteMember($message->from['UserName'], $username);
-                }else{
+                } else {
                     return '你没有此权限';
                 }
             }
@@ -172,16 +175,16 @@ $robot->server->setMessageHandler(function ($message) use ($path, &$replyMap) {
                 group()->deleteMember($message->from['UserName'], $message->sender['UserName']);
             }
 
-            if(substr($message->content, 0, 1) === '@' && preg_match('/@(.+)\s自作孽不可活/', $message->content, $match)){
-                if(isAdmin($message)){
+            if (substr($message->content, 0, 1) === '@' && preg_match('/@(.+)\s自作孽不可活/', $message->content, $match)) {
+                if (isAdmin($message)) {
                     $nickname = $match[1];
                     $members = group()->getMembersByNickname($message->from['UserName'], $nickname);
-                    if($members){
+                    if ($members) {
                         $member = current($members);
                         Text::send($message->from['UserName'], '拜拜 ' . $member['NickName'] . ' ，君让臣死，臣不得不死');
                         group()->deleteMember($message->from['UserName'], $member['UserName']);
                     }
-                }else{
+                } else {
                     return '你没有此权限';
                 }
             }
@@ -206,7 +209,7 @@ $robot->server->setMessageHandler(function ($message) use ($path, &$replyMap) {
     }
 
     // 表情信息 返回接收到的表情
-    if ($message instanceof Emoticon && random_int(0,1) && random_int(0,1)) {
+    if ($message instanceof Emoticon && random_int(0, 1) && random_int(0, 1)) {
         Emoticon::sendRandom($message->from['UserName']);
     }
 
@@ -274,7 +277,7 @@ $robot->server->setMessageHandler(function ($message) use ($path, &$replyMap) {
         }
     }
 
-     //分享信息
+    //分享信息
     if ($message instanceof Share) {
         /** @var $message Share */
         $reply = "收到分享\n标题：{$message->title}\n描述：{$message->description}\n链接：{$message->url}";
@@ -316,7 +319,11 @@ $robot->server->setMessageHandler(function ($message) use ($path, &$replyMap) {
         /** @var $message GroupChange */
         if ($message->action === 'ADD') {
             \Hanson\Vbot\Support\Console::debug('新人进群');
-            return '欢迎新人 ' . $message->nickname;
+            if ($message->from['NickName'] === '华广stackoverflow') {
+                return "欢迎 {$message->nickname} 同学加入华广技术交流群！我是这里的群管家vbot，进群先给我点个star吧， https://github.com/HanSon/vbot";
+            } else {
+                return '欢迎新人 ' . $message->nickname;
+            }
         } elseif ($message->action === 'REMOVE') {
             \Hanson\Vbot\Support\Console::debug('群主踢人了');
             return $message->content;
