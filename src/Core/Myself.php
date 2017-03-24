@@ -10,6 +10,7 @@ namespace Hanson\Vbot\Core;
 
 
 use Hanson\Vbot\Support\Console;
+use Hanson\Vbot\Support\Content;
 
 class Myself
 {
@@ -38,13 +39,13 @@ class Myself
     public function init($user)
     {
         contact()->put($user['UserName'], $user);
-        $this->nickname = $user['NickName'];
+        $this->nickname = Content::emojiHandle($user['NickName']);
         $this->username = $user['UserName'];
         $this->sex = $user['Sex'];
         $this->uin = $user['Uin'];
-        Console::log('当前用户昵称：' . $user['NickName']);
-        Console::log('当前用户ID：' . $user['UserName']);
-        Console::log('当前用户UIN：' . $user['Uin']);
+        Console::log('当前用户昵称：' . $this->nickname);
+        Console::log('当前用户ID：' . $this->username);
+        Console::log('当前用户UIN：' . $this->uin);
     }
 
 }

@@ -242,4 +242,20 @@ class Group extends BaseCollection
         return $memberList;
     }
 
+    /**
+     * 存储群组前批量修改群成员nickname
+     *
+     * @param mixed $key
+     * @param mixed $value
+     * @return \Illuminate\Support\Collection
+     */
+    public function put($key, $value)
+    {
+        foreach ($value['MemberList'] as &$member) {
+            $member = $this->format($member);
+        }
+
+        return parent::put($key, $value);
+    }
+
 }

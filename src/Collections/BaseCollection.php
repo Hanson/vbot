@@ -4,6 +4,7 @@
 namespace Hanson\Vbot\Collections;
 
 
+use Hanson\Vbot\Support\Content;
 use Illuminate\Support\Collection;
 
 class BaseCollection extends Collection
@@ -66,7 +67,7 @@ class BaseCollection extends Collection
      * @param bool $blur
      * @return mixed|static
      */
-    public function getObject($search, $key, $first = false, $blur =false)
+    public function getObject($search, $key, $first = false, $blur = false)
     {
         $objects = $this->filter(function ($item) use ($search, $key, $blur) {
 
@@ -82,6 +83,45 @@ class BaseCollection extends Collection
         });
 
         return $first ? $objects->first() : $objects;
+    }
+
+    /**
+     * 存储时处理emoji
+     *
+     * @param mixed $key
+     * @param mixed $value
+     * @return Collection
+     */
+    public function put($key, $value)
+    {
+        $value = $this->format($value);
+
+        return parent::put($key, $value);
+    }
+
+    /**
+     * 处理联系人
+     *
+     * @param $contact
+     * @return mixed
+     */
+    public function format($contact)
+    {
+        if (isset($contact['DisplayName'])) {
+            $contact['DisplayName'] = Content::emojiHandle($contact['DisplayName']);
+        }
+
+        if (isset($contact['RemarkName'])) {
+            $contact['RemarkName'] = Content::emojiHandle($contact['RemarkName']);
+        }
+
+        if (isset($contact['Signature'])) {
+            $contact['Signature'] = Content::emojiHandle($contact['Signature']);
+        }
+
+        $contact['NickName'] = Content::emojiHandle($contact['NickName']);
+
+        return $contact;
     }
 
 
