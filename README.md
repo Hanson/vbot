@@ -151,6 +151,6 @@ donate 名单 （排名按时间倒序）
 |A梦|￥18.88 * 4 |
 |[toby2016](https://github.com/toby2016)|￥5|
 
-打赏时请记得备注上你的github账号或者其他链接，无则以匿名处理
+打赏时请记得备注上你的github账号或者其他链接，谢谢支持！
 
 <img src="https://ww2.sinaimg.cn/large/685b97a1gy1fd61orxreaj20yf19fmz1.jpg" height="320"><img src="https://ww2.sinaimg.cn/large/685b97a1gy1fd61qscynwj20ng0zk0tx.jpg" height="320">
