@@ -142,6 +142,7 @@ donate 名单 （排名按时间倒序）
 
 |捐助者|金额|
 |-----|----|
+|[BEIBEI123](https://github.com/beibei123)| ￥28.88|
 |[Steven Lei](https://github.com/stevenlei)| ￥88|
 |9688| ￥8.88|
 |[kisexu](https://github.com/kisexu)| ￥88|
