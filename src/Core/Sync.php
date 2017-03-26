@@ -41,7 +41,7 @@ class Sync
         }catch (\Exception $e){
             if($retry == 5){
                 Console::log('synccheck 请求错误：' . $e->getMessage());
-                die();
+                return [-1, -1];
             }
             return $this->checkSync($retry + 1);
         }
@@ -66,7 +66,7 @@ class Sync
         }catch (\Exception $e){
             if($retry == 5){
                 Console::log('webwxsync 请求错误：' . $e->getMessage());
-                die();
+                return false;
             }
             return $this->sync($retry + 1);
         }

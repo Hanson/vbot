@@ -9,8 +9,9 @@
 namespace Hanson\Vbot\Foundation;
 
 
-use Hanson\Vbot\Core\Http;
 use Hanson\Vbot\Core\Server;
+use Hanson\Vbot\Support\Console;
+use Hanson\Vbot\Support\Path;
 use Illuminate\Support\Collection;
 use Pimple\Container;
 
@@ -35,11 +36,37 @@ class Vbot extends Container
     {
         parent::__construct();
 
+        $this->setConfig($config);
+
+        $this->registerProviders();
+    }
+
+    /**
+     * 设置Config
+     *
+     * @param $config
+     */
+    private function setConfig($config)
+    {
+        $config = array_merge($config, Console::getParams());
+
+        $this->setPath($config);
+
         $this['config'] = function () use ($config) {
             return new Collection($config);
         };
+    }
 
-        $this->registerProviders();
+    /**
+     * 设置session目录以及
+     *
+     * @param $config
+     * @return mixed
+     * @throws \Exception
+     */
+    private function setPath(&$config)
+    {
+        Path::setConfig($config);
     }
 
     /**
@@ -68,7 +95,7 @@ class Vbot extends Container
      * Magic set access.
      *
      * @param string $id
-     * @param mixed  $value
+     * @param mixed $value
      */
     public function __set($id, $value)
     {

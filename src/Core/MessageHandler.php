@@ -16,7 +16,7 @@ use Hanson\Vbot\Message\Entity\Message;
 use Hanson\Vbot\Message\Entity\Text;
 use Hanson\Vbot\Message\Entity\Video;
 use Hanson\Vbot\Support\Console;
-use Hanson\Vbot\Support\System;
+use Hanson\Vbot\Support\Path;
 
 class MessageHandler
 {
@@ -157,23 +157,33 @@ class MessageHandler
 
             list($retCode, $selector) = $this->sync->checkSync();
 
-            if (in_array($retCode, ['1100', '1101'])) { # 微信客户端上登出或者其他设备登录
-                Console::log('微信客户端正常退出');
-                if ($this->exitHandler) {
-                    call_user_func_array($this->exitHandler, []);
-                }
-                break;
-            } elseif ($retCode == 0) {
-                $this->handlerMessage($selector);
-            } else {
-                Console::log('微信客户端异常退出');
-                if ($this->exceptionHandler) {
-                    call_user_func_array($this->exitHandler, []);
-                }
+            if (!$this->handleCheckSync($retCode, $selector)) {
                 break;
             }
         }
         Console::log('程序结束');
+    }
+
+    public function handleCheckSync($retCode, $selector, $test = false)
+    {
+        if (in_array($retCode, ['1100', '1101'])) { # 微信客户端上登出或者其他设备登录
+            Console::log('微信客户端正常退出');
+            if ($this->exitHandler) {
+                call_user_func_array($this->exitHandler, []);
+            }
+            return false;
+        } elseif ($retCode == 0) {
+            if(!$test){
+                $this->handlerMessage($selector);
+            }
+            return true;
+        } else {
+            Console::log('微信客户端异常退出');
+            if ($this->exceptionHandler) {
+                call_user_func_array($this->exitHandler, []);
+            }
+            return false;
+        }
     }
 
     /**
@@ -231,7 +241,7 @@ class MessageHandler
         message()->put($message->raw['MsgId'], $message);
 
         if (server()->config['debug']) {
-            $file = fopen(System::getPath() . 'message.json', 'a');
+            $file = fopen(Path::getCurrentUinPath() . 'message.json', 'a');
             fwrite($file, json_encode($message) . PHP_EOL);
             fclose($file);
         }

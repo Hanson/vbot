@@ -21,15 +21,4 @@ class System
     {
         return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
     }
-
-    public static function getPath()
-    {
-        $path = server()->config['tmp'] . '/' . myself()->alias . '/';
-
-        if(!is_dir(realpath($path))){
-            mkdir($path, 0700, true);
-        }
-
-        return $path;
-    }
 }

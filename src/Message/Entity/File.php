@@ -51,6 +51,6 @@ class File extends Message implements MessageInterface, MediaInterface
             'pass_ticket' => server()->passTicket,
             'webwx_data_ticket' => static::getTicket()
         ]);
-        FileManager::download($this->raw['FileName'], $content, static::$folder);
+        FileManager::saveToUserPath(static::$folder . DIRECTORY_SEPARATOR . $this->raw['FileName'], $content);
     }
 }

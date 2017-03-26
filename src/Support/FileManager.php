@@ -12,14 +12,34 @@ namespace Hanson\Vbot\Support;
 class FileManager
 {
 
-    public static function download($name, $data, $path = '')
+    /**
+     * 下载到某个特定路径
+     *
+     * @param string $file
+     * @param $data
+     */
+    public static function saveTo(string $file, $data)
     {
-        $path = System::getPath() . $path;
-        if(!is_dir(realpath($path))){
+        $path = dirname($file);
+
+        if(!is_dir($path)){
             mkdir($path, 0700, true);
         }
 
-        file_put_contents("$path/$name", $data);
+        file_put_contents($file, $data);
+    }
+
+    /**
+     * 下载到用户文件夹
+     *
+     * @param $file
+     * @param $data
+     */
+    public static function saveToUserPath(string $file, $data)
+    {
+        $file = Path::getCurrentUinPath() . $file;
+
+        static::saveTo($file, $data);
     }
 
 }

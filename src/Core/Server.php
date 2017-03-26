@@ -10,11 +10,9 @@ namespace Hanson\Vbot\Core;
 
 
 use Endroid\QrCode\QrCode;
-use Hanson\Vbot\Core\ContactFactory;
-use Hanson\Vbot\Collections\Group;
 use Hanson\Vbot\Support\Console;
 use Hanson\Vbot\Support\FileManager;
-use Hanson\Vbot\Support\System;
+use Hanson\Vbot\Support\Path;
 
 class Server
 {
@@ -80,20 +78,56 @@ class Server
      */
     public function run()
     {
-        $this->prepare();
+        if(!$this->tryLogin()){
+            $this->prepare();
+        }
+
         $this->init();
         Console::log('初始化成功');
 
         $this->statusNotify();
+        Console::log('当前session：' . $this->config['key']);
         Console::log('开始初始化联系人');
         $this->initContact();
         Console::log('初始化联系人成功');
         Console::log(sprintf("群数量： %d", group()->count()));
         Console::log(sprintf("联系人数量： %d", contact()->count()));
         Console::log(sprintf("公众号数量： %d", official()->count()));
+
         MessageHandler::getInstance()->listen();
     }
 
+    /**
+     * 尝试登录
+     *
+     * @return bool
+     */
+    private function tryLogin() :bool
+    {
+
+        if(is_file(Path::getCurrentSessionPath() . 'cookies') && is_file(Path::getCurrentSessionPath() . 'server.json')){
+
+            $configs = json_decode(file_get_contents(Path::getCurrentSessionPath() . 'server.json'), true);
+
+            foreach ($configs as $key => $config) {
+                $this->{$key} = $config;
+            }
+
+            list($retCode, $selector) = (new Sync())->checkSync();
+            $result = (new MessageHandler())->handleCheckSync($retCode, $selector, true);
+
+            if($result && (new Sync())->sync()){
+                Console::log('免扫码登录成功');
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * 微信登录流程
+     */
     public function prepare()
     {
         $this->getUuid();
@@ -140,13 +174,9 @@ class Server
 
         $qrCode = new QrCode($url);
 
-        if(!is_dir(realpath($this->config['tmp']))){
-            mkdir($this->config['tmp'], 0700, true);
-        }
+        $file = Path::getCurrentSessionPath() . 'qr.png';
 
-        $file = System::getPath() . 'qr.png';
-
-        FileManager::download('qr.png', file_get_contents($url));
+        FileManager::saveTo($file, file_get_contents($url));
 
         $qrCode->save($file);
     }
@@ -218,7 +248,6 @@ class Server
 
     /**
      * login wechat
-     * @return bool
      * @throws \Exception
      */
     public function login()
@@ -246,7 +275,28 @@ class Server
             'DeviceID' => $this->deviceId
         ];
 
-        return true;
+        $this->saveServer();
+    }
+
+    /**
+     * 保存server至本地
+     */
+    private function saveServer()
+    {
+        $config = json_encode([
+            'skey' => $this->skey,
+            'sid' => $this->sid,
+            'uin' => $this->uin,
+            'passTicket' => $this->passTicket,
+            'baseRequest' => $this->baseRequest,
+            'domain' => $this->domain,
+            'baseUri' => $this->baseUri,
+            'fileUri' => $this->fileUri,
+            'pushUri' => $this->pushUri,
+            'config' => $this->config
+        ]);
+
+        FileManager::saveTo(Path::getCurrentSessionPath() . 'server.json', $config);
     }
 
     protected function init($first = true)

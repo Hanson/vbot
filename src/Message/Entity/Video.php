@@ -73,7 +73,7 @@ class Video extends Message implements MessageInterface, MediaInterface
     {
         $path = static::getPath(static::$folder);
 
-        static::send($username, $path . "/{$msgId}.mp4");
+        static::send($username, $path . $msgId . '.mp4');
     }
 
     /**
@@ -93,7 +93,7 @@ class Video extends Message implements MessageInterface, MediaInterface
             Console::log('下载视频失败', Console::WARNING);
             Console::log('url:'. $url);
         }else{
-            FileManager::download($this->raw['MsgId'] . '.mp4', $content, static::$folder);
+            FileManager::saveToUserPath(static::$folder . DIRECTORY_SEPARATOR . $this->raw['MsgId'] . '.mp4', $content);
         }
     }
 

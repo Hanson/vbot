@@ -40,11 +40,11 @@ class ContactFactory
         $this->getBatchGroupMembers();
 
         if (server()->config['debug']) {
-            FileManager::download('contact.json', json_encode(contact()->all()));
-            FileManager::download('member.json', json_encode(member()->all()));
-            FileManager::download('group.json', json_encode(group()->all()));
-            FileManager::download('official.json', json_encode(official()->all()));
-            FileManager::download('special.json', json_encode(Special::getInstance()->all()));
+            FileManager::saveToUserPath('contact.json', json_encode(contact()->all()));
+            FileManager::saveToUserPath('member.json', json_encode(member()->all()));
+            FileManager::saveToUserPath('group.json', json_encode(group()->all()));
+            FileManager::saveToUserPath('official.json', json_encode(official()->all()));
+            FileManager::saveToUserPath('special.json', json_encode(Special::getInstance()->all()));
         }
     }
 
