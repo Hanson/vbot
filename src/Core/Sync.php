@@ -22,15 +22,15 @@ class Sync
      */
     public function checkSync($retry = 0)
     {
-        $url = 'https://webpush.' . server()->domain . '/cgi-bin/mmwebwx-bin/synccheck?' . http_build_query([
-                'r' => time(),
-                'sid' => server()->sid,
-                'uin' => server()->uin,
-                'skey' => server()->skey,
-                'deviceid' => server()->deviceId,
-                'synckey' => server()->syncKeyStr,
-                '_' => time()
-            ]);
+        $url = server()->pushUri . '/synccheck?' . http_build_query([
+            'r' => time(),
+            'sid' => server()->sid,
+            'uin' => server()->uin,
+            'skey' => server()->skey,
+            'deviceid' => server()->deviceId,
+            'synckey' => server()->syncKeyStr,
+            '_' => time()
+        ]);
 
         try{
             $content = http()->get($url, [], ['timeout' => 35]);
