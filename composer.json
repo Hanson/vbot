@@ -20,7 +20,7 @@
     "minimum-stability": "dev",
     "autoload": {
         "files": [
-            "src/Support/helpers.php"
+            "src/helpers.php"
         ],
         "psr-4": {
             "Hanson\\Vbot\\": "src/"
