@@ -21,4 +21,20 @@ class System
     {
         return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
     }
+
+    /**
+     * 删除目录
+     *
+     * @param $dir
+     */
+    public static function deleteDir($dir)
+    {
+        if(static::isWin()){
+            $command = "rmdir /s/q " . $dir;
+        }else{
+            $command = "rm -Rf " . $dir;
+        }
+
+        system($command);
+    }
 }

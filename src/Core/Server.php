@@ -13,6 +13,7 @@ use Endroid\QrCode\QrCode;
 use Hanson\Vbot\Support\Console;
 use Hanson\Vbot\Support\FileManager;
 use Hanson\Vbot\Support\Path;
+use Hanson\Vbot\Support\System;
 
 class Server
 {
@@ -86,7 +87,7 @@ class Server
         Console::log('初始化成功');
 
         $this->statusNotify();
-        Console::log('当前session：' . $this->config['key']);
+        Console::log('当前session：' . $this->config['session']);
         Console::log('开始初始化联系人');
         $this->initContact();
         Console::log('初始化联系人成功');
@@ -315,6 +316,7 @@ class Server
         $this->initContactList($result['ContactList']);
 
         if($result['BaseResponse']['Ret'] != 0){
+            System::deleteDir(Path::getCurrentSessionPath());
             Console::log('初始化失败，链接：' . $url, Console::ERROR);
             exit;
         }

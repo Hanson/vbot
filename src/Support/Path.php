@@ -16,27 +16,17 @@ class Path
      */
     public static function setConfig(array &$config)
     {
-        if (!isset($config['tmp'])) {
+        if (!(isset($config['tmp']) || isset($config['user_path']))) {
             throw new \Exception('请设置缓存目录！');
         }
 
-        $session = $config['session'] ?? null;
+        $tempPath = $config['user_path'] ?? $config['tmp'];
 
-        $config['session'] = $config['tmp'] . DIRECTORY_SEPARATOR . 'session';
+        $session = $config['session'] ?: bin2hex(random_bytes(3));
 
-        if($session){
-            if(!is_dir($config['session'] . DIRECTORY_SEPARATOR . $session)){
-                mkdir($config['session'] . DIRECTORY_SEPARATOR . $session, 0700, true);
-            }
-        }else{
-            $session = bin2hex(random_bytes(3));
-            mkdir($config['session'] . DIRECTORY_SEPARATOR . $session, 0700, true);
-        }
-
-        Console::log('key' . $session);
-        $config['key'] = $session;
-        $config['tmp'] = realpath($config['tmp'] . DIRECTORY_SEPARATOR . 'users') . DIRECTORY_SEPARATOR;
-        $config['session'] = realpath($config['session'] . DIRECTORY_SEPARATOR . $session) . DIRECTORY_SEPARATOR;
+        $config['session'] = $session;
+        $config['user_path'] = static::getRealPath($tempPath . DIRECTORY_SEPARATOR . 'users') . DIRECTORY_SEPARATOR;
+        $config['session_path'] = static::getRealPath($tempPath . DIRECTORY_SEPARATOR . 'session' . DIRECTORY_SEPARATOR . $session) . DIRECTORY_SEPARATOR;
 
         return $config;
     }
@@ -48,7 +38,7 @@ class Path
      */
     public static function getCurrentSessionPath(): string
     {
-        return server()->config['session'];
+        return server()->config['session_path'];
     }
 
     /**
@@ -58,7 +48,22 @@ class Path
      */
     public static function getCurrentUinPath() :string
     {
-        return server()->config['tmp'] . myself()->uin . DIRECTORY_SEPARATOR;
+        return server()->config['user_path'] . myself()->uin . DIRECTORY_SEPARATOR;
+    }
+
+    /**
+     * 获取real path
+     *
+     * @param $path
+     * @return string
+     */
+    public static function getRealPath($path)
+    {
+        if(!is_dir($path)){
+            mkdir($path, 0700, true);
+        }
+
+        return realpath($path);
     }
 
 }
