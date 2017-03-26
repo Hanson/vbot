@@ -62,13 +62,13 @@ class MessageFactory
             case 10002:
                 return new Recall($msg);
             case 10000:
-                if(str_contains($msg['Content'], '利是') || str_contains($msg['Content'], '红包') || str_contains($msg['Content'], 'Red Packet')){
+                if(str_contains($msg['Content'], '利是') || str_contains($msg['Content'], '红包')){
                     return new RedPacket($msg);
                 }
-                else if(str_contains($msg['Content'], '添加') || str_contains($msg['Content'], 'have added') || str_contains($msg['Content'], '打招呼')){
+                else if(str_contains($msg['Content'], '添加') || str_contains($msg['Content'], '打招呼')){
                     # 添加好友
                     return new NewFriend($msg);
-                }else if(str_contains($msg['Content'], '加入了群聊') || str_contains($msg['Content'], '移出了群聊') || str_contains($msg['Content'], '改群名为') || str_contains($msg['Content'], '移出群聊') || str_contains($msg['Content'], '邀请你')){
+                }else if(str_contains($msg['Content'], '加入了群聊') || str_contains($msg['Content'], '移出了群聊') || str_contains($msg['Content'], '改群名为') || str_contains($msg['Content'], '移出群聊') || str_contains($msg['Content'], '邀请你') || str_contains($msg['Content'], '分享的二维码加入群聊')){
                     return new GroupChange($msg);
                 }
                 break;
