@@ -144,6 +144,7 @@ donate 名单 （排名按时间倒序）
 
 |捐助者|金额|
 |-----|----|
+|匿名| ￥6.66|
 |[包菜网](http://baocai.us)| ￥16.88|
 |[BEIBEI123](https://github.com/beibei123)| ￥28.88|
 |[Steven Lei](https://github.com/stevenlei)| ￥88|
