@@ -124,5 +124,33 @@ class BaseCollection extends Collection
         return $contact;
     }
 
+    /**
+     * 通过接口更新群组信息
+     *
+     * @param $username
+     * @param $list
+     * @return array
+     */
+    public function update($username, $list) :array
+    {
+        if(is_string($username))
+            $username = [$username];
+
+        $url = server()->baseUri . '/webwxbatchgetcontact?type=ex&r=' . time();
+
+        $data = [
+            'BaseRequest' => server()->baseRequest,
+            'Count' => count($username),
+            'List' => $list
+        ];
+
+        $response = http()->json($url, $data, true);
+
+        foreach ($response['ContactList'] as $item) {
+            $this->put($item['UserName'], $item);
+        }
+
+        return is_string($username) ? head($response['ContactList']) : $response['ContactList'];
+    }
 
 }

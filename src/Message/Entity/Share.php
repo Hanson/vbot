@@ -42,5 +42,6 @@ class Share extends Message implements MessageInterface
         $this->app = $appInfo['appname'];
 
         $this->url = $this->raw['Url'];
+        $this->content = '[分享]';
     }
 }

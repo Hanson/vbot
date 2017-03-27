@@ -48,7 +48,6 @@ class GroupChange extends Message implements MessageInterface
 
     public function make()
     {
-        Console::debug($this->message);
         if (str_contains($this->message, '邀请你')) {
             $this->action = 'INVITE';
         } elseif (str_contains($this->message, '加入了群聊') || str_contains($this->message, '分享的二维码加入群聊')) {
@@ -58,9 +57,7 @@ class GroupChange extends Message implements MessageInterface
             }
             $this->action = 'ADD';
             $this->nickname = $match[1];
-            Console::debug("检测到 {$this->from['NickName']} 有新成员，正在刷新群成员列表...");
-            (new ContactFactory())->makeContactList();
-            Console::debug('群成员更新成功！');
+            group()->update($this->raw['FromUserName']);
         } elseif (str_contains($this->message, '移出了群聊')) {
             $this->action = 'REMOVE';
         } elseif (str_contains($this->message, '改群名为')) {

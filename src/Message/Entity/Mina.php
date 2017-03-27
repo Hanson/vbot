@@ -32,5 +32,7 @@ class Mina extends Message implements MessageInterface
 
         $this->title = $info['title'];
         $this->url = $info['url'];
+
+        $this->content = '[小程序]';
     }
 }

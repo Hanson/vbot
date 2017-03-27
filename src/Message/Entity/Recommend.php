@@ -51,6 +51,7 @@ class Recommend extends Message implements MessageInterface
     {
         $this->info = $this->raw['RecommendInfo'];
         $this->parseContent();
+        $this->content = '[名片推荐]';
     }
 
     private function parseContent()

@@ -117,4 +117,34 @@ class Contact extends BaseCollection
         return $result['BaseResponse']['Ret'] == 0;
     }
 
+    /**
+     * 更新群组
+     *
+     * @param $username
+     * @param null $list
+     * @return array
+     */
+    public function update($username, $list = null) :array
+    {
+        $username = is_array($username) ?: [$username];
+        return parent::update($username, $this->makeUsernameList($username));
+    }
+
+    /**
+     * 生成username list 格式
+     *
+     * @param $username
+     * @return array
+     */
+    public function makeUsernameList($username)
+    {
+        $usernameList = [];
+
+        foreach ($username as $item) {
+            $usernameList[] = ['UserName' => $item, 'EncryChatRoomId' => ''];
+        }
+
+        return $usernameList;
+    }
+
 }

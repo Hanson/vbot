@@ -109,5 +109,7 @@ class Emoticon extends Message implements MediaInterface, MessageInterface
     public function make()
     {
         $this->download();
+
+        $this->content = '[动画表情]';
     }
 }

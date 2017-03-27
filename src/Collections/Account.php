@@ -39,7 +39,7 @@ class Account
      */
     public function getAccount($username)
     {
-        if(starts_with('@@', $username)){
+        if(starts_with($username, '@@')){
             return group()->get($username);
         }else{
             $account = contact()->get($username, null);

@@ -227,31 +227,16 @@ class Group extends BaseCollection
     }
 
     /**
-     * 更新群组信息
+     * 更新群组
      *
      * @param $username
+     * @param null $list
      * @return array
      */
-    public function update($username) :array
+    public function update($username, $list = null) :array
     {
-        if(is_string($username))
-            $username = [$username];
-
-        $url = server()->baseUri . '/webwxbatchgetcontact?type=ex&r=' . time();
-
-        $data = [
-            'BaseRequest' => server()->baseRequest,
-            'Count' => count($username),
-            'List' => $this->makeUsernameList($username)
-        ];
-
-        $response = http()->json($url, $data, true);
-
-        foreach ($response['ContactList'] as $item) {
-            $this->put($item['UserName'], $item);
-        }
-
-        return is_string($username) ? head($response['ContactList']) : $response['ContactList'];
+        $username = is_array($username) ?: [$username];
+        return parent::update($username, $this->makeUsernameList($username));
     }
 
     /**

@@ -100,5 +100,6 @@ class Video extends Message implements MessageInterface, MediaInterface
     public function make()
     {
         $this->download();
+        $this->content = '[视频]';
     }
 }

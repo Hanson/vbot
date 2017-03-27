@@ -27,6 +27,7 @@ class Console
     const INFO = 'INFO';
     const WARNING = 'WARNING';
     const ERROR = 'ERROR';
+    const MESSAGE = 'MESSAGE';
 
     /**
      * 输出字符串

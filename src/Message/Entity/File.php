@@ -52,5 +52,7 @@ class File extends Message implements MessageInterface, MediaInterface
             'webwx_data_ticket' => static::getTicket()
         ]);
         FileManager::saveToUserPath(static::$folder . DIRECTORY_SEPARATOR . $this->raw['FileName'], $content);
+
+        $this->content = '[文件]';
     }
 }

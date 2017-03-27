@@ -73,6 +73,8 @@ class Image extends Message implements MessageInterface, MediaInterface
     public function make()
     {
         $this->download();
+
+        $this->content = '[图片]';
     }
 
     public function download()
