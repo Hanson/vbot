@@ -3,19 +3,18 @@
 
 ### 环境要求
 
-* PHP >= 7.0
+- PHP >= 7.0
+- [PHP fileinfo 拓展](http://php.net/manual/en/book.fileinfo.php) 储存文件需要用到
+- [PHP gd 拓展](http://php.net/manual/en/book.image.php) 控制台显示二维码
+- [PHP 系统命令 拓展](https://secure.php.net/manual/en/book.exec.php) 执行clear命令
 
 ### 安装
 
-**请确保已经会使用composer！请确保已经会使用composer！请确保已经会使用composer！**
+**请确保已经会使用composer！**
 
-1、composer
+**运行微信账号的语言设置务必设置为简体中文！！否则可能出现未知的错误！**
 
-```
-composer require hanson/vbot
-```
-
-2、git
+1、git
 
 ```
 git clone https://github.com/HanSon/vbot.git
@@ -23,7 +22,13 @@ cd vbot
 composer install
 ```
 
-然后执行``` php example/index.php ``` 
+2、composer
+
+```
+composer require hanson/vbot
+```
+
+然后执行``` php example/index.php ```  
 
 PS:运行后二维码将保存于设置的缓存目录，命名为qr.png，控制台也会显示二维码，扫描即可（linux用户请确保已经打开ANSI COLOR）
 
@@ -47,6 +52,8 @@ vbot示例源码为 https://github.com/HanSon/vbot/blob/master/example/index.php
 详细文档在[wiki](https://github.com/HanSon/vbot/wiki)中
 
 ### 小DEMO
+
+[购书半自动处理](http://t.laravel-china.org/laravel-tutorial/5.1/buy-it)
 
 [红包提醒](https://github.com/HanSon/vbot/blob/master/example/hongbao.php)
 
@@ -76,25 +83,16 @@ $robot = new Vbot([
     'debug' => true # 用于是否输出用户组的json
 ]);
 
-// 图灵自动回复
-function reply($str){
-    return http()->post('http://www.tuling123.com/openapi/api', [
-        'key' => '1dce02aef026258eff69635a06b0ab7d',
-        'info' => $str
-    ], true)['text'];
-
-}
-
 $robot->server->setMessageHandler(function($message){
     // 文字信息
     if ($message instanceof Text) {
         /** @var $message Text */
         // 联系人自动回复
         if ($message->fromType === 'Contact') {
-            return reply($message->content);
+            return 'hello vbot';
             // 群组@我回复
         } elseif ($message->fromType === 'Group' && $message->isAt) {
-            return reply($message->content);
+            return 'hello everyone';
         }
     }
 });
@@ -105,56 +103,7 @@ $robot->server->run();
 
 ## to do list
 
-- [x] 消息处理
-  - [x] 文字
-  - [x] 图片
-  - [x] 语音
-  - [x] 位置
-  - [x] 视频
-  - [x] 撤回
-  - [x] 表情
-  - [x] 红包
-  - [x] 转账
-  - [x] 名片
-  - [x] 好友验证
-  - [x] 分享
-  - [x] 公众号推送
-  - [x] 新好友
-  - [x] 群变动（增加成员，移除成员，更改群名）
-  - [x] 小程序
-  
-- [x] 消息存储
-  - [x] 语音
-  - [x] 图片
-  - [x] 视频
-  - [x] 表情
-
-- [x] 消息发送
-  - [x] 发送文字
-  - [x] 发送图片
-  - [x] 发送表情
-  - [x] 发送视频
-
-- [x] 群操作
-  - [x] 创建群
-  - [x] 把某人踢出群
-  - [x] 邀请好友加入群
-  - [x] 修改群名称
-  
-- [x] 好友操作
-  - [x] 给好友添加备注
-  - [x] 通过好友验证
-
-- [x] 聊天窗口操作
-  - [x] 置顶聊天会话
-  - [x] 取消聊天会话指定
-  
-- [ ] 命令行操作信息发送
-
-## to do list
-- 文件下载偶尔失败
-- 登录cookie免扫码
-- 队列监听
+vbot 已实现以及待实现的功能列表 [点击查看](https://github.com/HanSon/vbot/wiki/todolist)
 
 ## 参考项目
 
@@ -178,21 +127,33 @@ $robot->server->run();
 
 ## Q&A
 
-- 问：命令行执行时乱码怎么解决？
-> 设置编码terminal为UTF-8。windows可执行`chcp 65001`
-
-- 问：windows下出错，提示`SSL certificate problem:unable to get local issuer certificate`
-> 可参考 https://easywechat.org/zh-cn/docs/troubleshooting.html
-
-- 问：初始化一直失败
-> 请确认PHP版本是否7
-
-## 问题和建议
+常见问题[点击查看](https://github.com/HanSon/vbot/wiki/Q&A)
 
 有问题或者建议都可以提issue
 
-或者加入我新建的QQ群：492548647
+或者加入vbot的QQ群：492548647
 
-## 打赏
+## donate 名单
+
+
+vbot 的发展离不开大家的支持，无论是star或者donate，本人都衷心的感谢各位，也会尽自己的绵薄之力把 vbot 做到最好。
+
+donate 名单 （排名按时间倒序）
+
+|捐助者|金额|
+|-----|----|
+|[xingchenboy](https://github.com/xingchenboy)| ￥28.80|
+|匿名| ￥6.66|
+|[包菜网](http://baocai.us)| ￥16.88|
+|[BEIBEI123](https://github.com/beibei123)| ￥28.88|
+|[Steven Lei](https://github.com/stevenlei)| ￥88|
+|9688| ￥8.88|
+|[kisexu](https://github.com/kisexu)| ￥88|
+|匿名的某师兄| ￥181.80|
+|[summer](https://github.com/summerblue) 以及这是用vbot实现的半自动购书流程[Laravel 入门教程(推荐)](http://t.laravel-china.org/laravel-tutorial/5.1/buy-it)|￥66.66|
+|A梦|￥18.88 * 4 |
+|[toby2016](https://github.com/toby2016)|￥5|
+
+打赏时请记得备注上你的github账号或者其他链接，谢谢支持！
 
 <img src="https://ww2.sinaimg.cn/large/685b97a1gy1fd61orxreaj20yf19fmz1.jpg" height="320"><img src="https://ww2.sinaimg.cn/large/685b97a1gy1fd61qscynwj20ng0zk0tx.jpg" height="320">

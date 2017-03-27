@@ -61,48 +61,55 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
         if ($message->fromType === 'Contact') {
             return reply($message->content);
             // 群组@我回复
-        } elseif ($message->fromType === 'Group' && $message->isAt) {
-            return reply($message->content);
+        } elseif ($message->fromType === 'Group') {
+
+            if (str_contains($message->content, '设置群名称') && $message->from['Alias'] === 'hanson1994') {
+                group()->setGroupName($message->from['UserName'], str_replace('设置群名称', '', $message->content));
+            }
+
+            if ($message->isAt) {
+                return reply($message->content);
+            }
         }
     }
 
     // 图片信息 返回接收到的图片
     if ($message instanceof Image) {
-        return $message;
+//        return $message;
     }
 
     // 视频信息 返回接收到的视频
     if ($message instanceof Video) {
-        return $message;
+//        return $message;
     }
 
     // 表情信息 返回接收到的表情
     if ($message instanceof Emoticon) {
-        return $message;
+        Emoticon::sendRandom($message->from['UserName']);
     }
 
     // 语音消息
     if ($message instanceof Voice) {
         /** @var $message Voice */
-        return '收到一条语音并下载在' . $message::getPath($message::$folder) . "/{$message->raw['MsgId']}.mp3";
+//        return '收到一条语音并下载在' . $message::getPath($message::$folder) . "/{$message->msg['MsgId']}.mp3";
     }
 
     // 撤回信息
-    if ($message instanceof Recall && $message->raw['FromUserName'] !== myself()->username) {
+    if ($message instanceof Recall && $message->msg['FromUserName'] !== myself()->username) {
         /** @var $message Recall */
         if ($message->origin instanceof Image) {
-            Text::send($message->raw['FromUserName'], "{$message->nickname} 撤回了一张照片");
-            Image::sendByMsgId($message->raw['FromUserName'], $message->origin->raw['MsgId']);
+            Text::send($message->msg['FromUserName'], "{$message->nickname} 撤回了一张照片");
+            Image::sendByMsgId($message->msg['FromUserName'], $message->origin->msg['MsgId']);
         } elseif ($message->origin instanceof Emoticon) {
-            Text::send($message->raw['FromUserName'], "{$message->nickname} 撤回了一个表情");
-            Emoticon::sendByMsgId($message->raw['FromUserName'], $message->origin->raw['MsgId']);
+            Text::send($message->msg['FromUserName'], "{$message->nickname} 撤回了一个表情");
+            Emoticon::sendByMsgId($message->msg['FromUserName'], $message->origin->msg['MsgId']);
         } elseif ($message->origin instanceof Video) {
-            Text::send($message->raw['FromUserName'], "{$message->nickname} 撤回了一个视频");
-            Video::sendByMsgId($message->raw['FromUserName'], $message->origin->raw['MsgId']);
+            Text::send($message->msg['FromUserName'], "{$message->nickname} 撤回了一个视频");
+            Video::sendByMsgId($message->msg['FromUserName'], $message->origin->msg['MsgId']);
         } elseif ($message->origin instanceof Voice) {
-            Text::send($message->raw['FromUserName'], "{$message->nickname} 撤回了一条语音");
+            Text::send($message->msg['FromUserName'], "{$message->nickname} 撤回了一条语音");
         } else {
-            Text::send($message->raw['FromUserName'], "{$message->nickname} 撤回了一条信息 \"{$message->origin->raw['Content']}\"");
+            Text::send($message->msg['FromUserName'], "{$message->nickname} 撤回了一条信息 \"{$message->origin->msg['Content']}\"");
         }
     }
 
@@ -115,7 +122,7 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
     // 转账信息
     if ($message instanceof Transfer) {
         /** @var $message Transfer */
-        return $message->content . ' 收到金额 ' . $message->fee . ' 转账说明： ' . $message->memo ?: '空';
+        return $message->content . ' 收到金额 ' . $message->fee;
     }
 
     // 推荐名片信息
@@ -133,12 +140,15 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
     // 请求添加信息
     if ($message instanceof RequestFriend) {
         /** @var $message RequestFriend */
+        $groupUsername = group()->getGroupsByNickname('芬芬', true)->first()['UserName'];
+
+        Text::send($groupUsername, "{$message->info['NickName']} 请求添加好友 \"{$message->info['Content']}\"");
 
         if ($message->info['Content'] === '上山打老虎') {
-//            Text::send($groupUsername, '暗号正确');
+            Text::send($groupUsername, '暗号正确');
             $message->verifyUser($message::VIA);
         } else {
-//            Text::send($groupUsername, '暗号错误');
+            Text::send($groupUsername, '暗号错误');
         }
     }
 
@@ -168,11 +178,11 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
 
     // 手机点击聊天事件
     if ($message instanceof Touch) {
-        Text::send($message->raw['ToUserName'], "我点击了此聊天");
+//        Text::send($message->msg['ToUserName'], "我点击了此聊天");
     }
 
     // 新增好友
-    if ($message instanceof NewFriend) {
+    if ($message instanceof \Hanson\Vbot\Message\Entity\NewFriend) {
         \Hanson\Vbot\Support\Console::log('新加好友：' . $message->from['NickName']);
     }
 
@@ -181,13 +191,16 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
         /** @var $message GroupChange */
         if ($message->action === 'ADD') {
             \Hanson\Vbot\Support\Console::log('新人进群');
-            return $message->content;
+            return '欢迎新人 ' . $message->nickname;
         } elseif ($message->action === 'REMOVE') {
             \Hanson\Vbot\Support\Console::log('群主踢人了');
             return $message->content;
         } elseif ($message->action === 'RENAME') {
-            \Hanson\Vbot\Support\Console::log($message->from['NickName'] . ' 改名为 ' . $message->rename);
-            return $message->content;
+//            \Hanson\Vbot\Support\Console::log($message->from['NickName'] . ' 改名为 ' . $message->rename);
+            if ($message->rename !== 'vbot 测试群'){
+                group()->setGroupName($message->from['UserName'], 'vbot 测试群');
+                return '行不改名,坐不改姓！';
+            }
         }
     }
 
