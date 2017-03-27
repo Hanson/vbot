@@ -52,8 +52,6 @@ class Server
 
     public $pushUri;
 
-    public $domain = 'wx2.qq.com';
-
     public function __construct($config = [])
     {
         $this->config = $config;
@@ -206,27 +204,13 @@ class Server
                     $tip = 0;
                     break;
                 case '200':
-                    preg_match('/window.redirect_uri="(\S+?)";/', $content, $matches);
+                    preg_match('/window.redirect_uri="(https:\/\/(\S+?)\/\S+?)";/', $content, $matches);
+
                     $this->redirectUri = $matches[1] . '&fun=new';
-                    $domainList = [
-                        'wx2.qq.com' => ['file.wx2.qq.com', 'webpush.wx2.qq.com'],
-                        'wx8.qq.com' => ['file.wx8.qq.com', 'webpush.wx8.qq.com'],
-                        'wx.qq.com' => ['file.wx.qq.com', 'webpush.wx.qq.com'],
-                        'web2.wechat.com' => ['file.web2.wechat.com', 'webpush2.wechat.com'],
-                        'web.wechat.com' => ['file.web.wechat.com', 'webpush.web.wechat.com'],
-                    ];
                     $url = 'https://%s/cgi-bin/mmwebwx-bin';
-                    foreach ($domainList as $domain => $list) {
-                        if(str_contains($this->redirectUri, $domain)){
-                            $this->fileUri = sprintf($url, $list[0]);
-                            $this->pushUri = sprintf($url, $list[1]);
-                            $this->baseUri = sprintf($url, $domain);
-                            $this->domain = $domain;
-                            break;
-                        }else{
-                            $this->fileUri = $this->pushUri = $this->redirectUri;
-                        }
-                    }
+                    $this->fileUri = sprintf($url, 'file.'.$matches[2]);
+                    $this->pushUri = sprintf($url, 'webpush.'.$matches[2]);
+                    $this->baseUri = sprintf($url, $matches[2]);
                     return;
                 case '408':
                     Console::log('登录超时，请重试', Console::WARNING);
@@ -290,7 +274,6 @@ class Server
             'uin' => $this->uin,
             'passTicket' => $this->passTicket,
             'baseRequest' => $this->baseRequest,
-            'domain' => $this->domain,
             'baseUri' => $this->baseUri,
             'fileUri' => $this->fileUri,
             'pushUri' => $this->pushUri,
