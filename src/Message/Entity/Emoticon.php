@@ -35,7 +35,6 @@ class Emoticon extends Message implements MediaInterface, MessageInterface
         $response = static::uploadMedia($username, $file);
 
         if (!$response) {
-            Console::log("表情 {$file} 上传失败", Console::WARNING);
             return false;
         }
 
@@ -103,7 +102,9 @@ class Emoticon extends Message implements MediaInterface, MessageInterface
     {
         $url = server()->baseUri . sprintf('/webwxgetmsgimg?MsgID=%s&skey=%s', $this->raw['MsgId'], server()->skey);
         $content = http()->get($url);
-        FileManager::saveToUserPath(static::$folder . DIRECTORY_SEPARATOR . $this->raw['MsgId'] . '.gif', $content);
+        if($content){
+            FileManager::saveToUserPath(static::$folder . DIRECTORY_SEPARATOR . $this->raw['MsgId'] . '.gif', $content);
+        }
     }
 
     public function make()

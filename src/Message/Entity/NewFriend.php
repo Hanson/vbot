@@ -16,14 +16,15 @@ class NewFriend extends Message implements MessageInterface
 
     public function __construct($msg)
     {
-        $this->make();
+        contact()->update($msg['FromUserName']);
+
         parent::__construct($msg);
+
+        $this->make();
     }
 
     public function make()
     {
-        contact()->update($this->raw['FromUserName']);
-
         $this->content = $this->message;
     }
 }

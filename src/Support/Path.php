@@ -22,7 +22,7 @@ class Path
 
         $tempPath = $config['user_path'] ?? $config['tmp'];
 
-        $session = $config['session'] ?: bin2hex(random_bytes(3));
+        $session = $config['session'] ?? bin2hex(random_bytes(3));
 
         $config['session'] = $session;
         $config['user_path'] = static::getRealPath($tempPath . DIRECTORY_SEPARATOR . 'users') . DIRECTORY_SEPARATOR;

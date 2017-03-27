@@ -46,7 +46,9 @@ class Account
 
             $account = $account ?: member()->get($username, null);
 
-            return $account ?: official()->get($username, null);
+            $account = $account ?: official()->get($username, null);
+
+            return $account ?: Special::getInstance()->get($username, null);
         }
     }
 
