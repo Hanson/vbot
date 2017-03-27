@@ -142,13 +142,14 @@ donate 名单 （排名按时间倒序）
 
 |捐助者|金额|
 |-----|----|
+|[xingchenboy](https://github.com/xingchenboy)| ￥28.80|
 |匿名| ￥6.66|
 |[包菜网](http://baocai.us)| ￥16.88|
 |[BEIBEI123](https://github.com/beibei123)| ￥28.88|
 |[Steven Lei](https://github.com/stevenlei)| ￥88|
 |9688| ￥8.88|
 |[kisexu](https://github.com/kisexu)| ￥88|
-|匿名的某师兄| ￥181.8|
+|匿名的某师兄| ￥181.80|
 |[summer](https://github.com/summerblue) 以及这是用vbot实现的半自动购书流程[Laravel 入门教程(推荐)](http://t.laravel-china.org/laravel-tutorial/5.1/buy-it)|￥66.66|
 |A梦|￥18.88 * 4 |
 |[toby2016](https://github.com/toby2016)|￥5|
