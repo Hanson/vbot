@@ -213,16 +213,17 @@ class MessageHandler
             foreach ($message['AddMsgList'] as $msg) {
                 $content = $this->messageFactory->make($msg);
                 if ($content) {
+                    $this->debugMessage($content);
                     $this->addToMessageCollection($content);
                     if ($this->handler) {
                         $reply = call_user_func_array($this->handler, [$content]);
                         if ($reply) {
                             if ($reply instanceof Image) {
-                                Image::sendByMsgId($content->from['UserName'], $reply->msg['MsgId']);
+                                Image::sendByMsgId($content->from['UserName'], $reply->raw['MsgId']);
                             } elseif ($reply instanceof Video) {
-                                Video::sendByMsgId($content->from['UserName'], $reply->msg['MsgId']);
+                                Video::sendByMsgId($content->from['UserName'], $reply->raw['MsgId']);
                             } elseif ($reply instanceof Emoticon) {
-                                Emoticon::sendByMsgId($content->from['UserName'], $reply->msg['MsgId']);
+                                Emoticon::sendByMsgId($content->from['UserName'], $reply->raw['MsgId']);
                             } else {
                                 Text::send($content->from['UserName'], $reply);
                             }
@@ -240,10 +241,30 @@ class MessageHandler
     {
         message()->put($message->raw['MsgId'], $message);
 
+        foreach (message()->all() as $msgId => $item){
+            if($item->raw['CreateTime'] + 120 < time()){
+                message()->pull($msgId);
+            }else{
+                break;
+            }
+        }
+
         if (server()->config['debug']) {
             $file = fopen(Path::getCurrentUinPath() . 'message.json', 'a');
             fwrite($file, json_encode($message) . PHP_EOL);
             fclose($file);
+        }
+    }
+
+    /**
+     * debug出消息
+     *
+     * @param $content
+     */
+    private function debugMessage(Message $content)
+    {
+        if(server()->config['debug']){
+            Console::log("[{$content->raw['MsgId']}] " . $content->content, Console::MESSAGE);
         }
     }
 
