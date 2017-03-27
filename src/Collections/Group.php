@@ -227,6 +227,51 @@ class Group extends BaseCollection
     }
 
     /**
+     * 更新群组信息
+     *
+     * @param $username
+     * @return array
+     */
+    public function update($username) :array
+    {
+        if(is_string($username))
+            $username = [$username];
+
+        $url = server()->baseUri . '/webwxbatchgetcontact?type=ex&r=' . time();
+
+        $data = [
+            'BaseRequest' => server()->baseRequest,
+            'Count' => count($username),
+            'List' => $this->makeUsernameList($username)
+        ];
+
+        $response = http()->json($url, $data, true);
+
+        foreach ($response['ContactList'] as $item) {
+            $this->put($item['UserName'], $item);
+        }
+
+        return is_string($username) ? head($response['ContactList']) : $response['ContactList'];
+    }
+
+    /**
+     * 生成username list 格式
+     *
+     * @param $username
+     * @return array
+     */
+    public function makeUsernameList($username)
+    {
+        $usernameList = [];
+
+        foreach ($username as $item) {
+            $usernameList[] = ['UserName' => $item, 'ChatRoomId' => ''];
+        }
+
+        return $usernameList;
+    }
+
+    /**
      * 生成member list 格式
      * 
      * @param $contacts
@@ -256,6 +301,18 @@ class Group extends BaseCollection
         }
 
         return parent::put($key, $value);
+    }
+
+    /**
+     * 修改群组获取，为空时更新群组
+     *
+     * @param mixed $key
+     * @param null $default
+     * @return mixed
+     */
+    public function get($key, $default = null)
+    {
+        return parent::get($key, $this->update($key));
     }
 
 }

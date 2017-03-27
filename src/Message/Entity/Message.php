@@ -66,7 +66,6 @@ class Message
         $this->setFrom();
         $this->setFromType();
 
-//        $this->raw['Content'] = Content::formatContent($this->raw['Content']);
         $this->message = Content::formatContent($this->raw['Content']);
         if($this->fromType === 'Group'){
             $this->handleGroupContent($this->message);
