@@ -118,6 +118,58 @@ class Contact extends BaseCollection
     }
 
     /**
+     * 主动添加好友
+     *
+     * @param $username
+     * @param null $content
+     */
+    public function add($username, $content = null)
+    {
+        $this->verifyUser($username, $content);
+    }
+
+    /**
+     * 验证通过好友
+     *
+     * @param $username
+     * @param null $content
+     * @return bool
+     */
+    public function verifyUser($username, $content = null)
+    {
+        $url = sprintf(server()->baseUri . '/webwxverifyuser?lang=zh_CN&r=%s', time() * 1000);
+        $data = [
+            'BaseRequest' => server()->baseRequest,
+            'Opcode' => 2,
+            'VerifyUserListSize' => 1,
+            'VerifyUserList' => $this->verifyTicket($username),
+            'VerifyContent' => $content,
+            'SceneListCount' => 1,
+            'SceneList' => [33],
+            'skey' => server()->skey
+        ];
+
+        $result = http()->json($url, $data, true);
+
+        return $result['BaseResponse']['Ret'] == 0;
+    }
+
+    /**
+     * 返回通过好友申请所需的数组
+     *
+     * @param null $username
+     * @return array
+     */
+    public function verifyTicket($username)
+    {
+        return [
+            'Value' => $username,
+            'VerifyUserTicket' => ''
+        ];
+    }
+
+
+    /**
      * 更新群组
      *
      * @param $username

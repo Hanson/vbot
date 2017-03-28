@@ -117,6 +117,16 @@ $robot->server->setMessageHandler(function ($message) use ($path, &$replyMap) {
     if ($message instanceof Text) {
         /** @var $message Text */
 
+        if ($message->from['NickName'] === '华广stackoverflow' && preg_match('/@(.+)\s加人(.+)/', $message->content, $match)){
+            $nickname = $match[1];
+            $members = group()->getMembersByNickname($message->from['UserName'], $nickname);
+            if ($members) {
+                $member = current($members);
+                echo $match[2].PHP_EOL;
+                contact()->add($member['UserName'], $match[2]);
+            }
+        }
+
         if (str_contains($message->content, 'vbot') && !$message->isAt) {
             return "你好，我叫vbot，我爸是HanSon\n我的项目地址是 https://github.com/HanSon/vbot \n欢迎来给我star！";
         }
