@@ -61,7 +61,7 @@ class Message
 
     public function __construct($msg)
     {
-        $this->raw = $this->raw = $msg;
+        $this->raw = $this->msg = $msg;
 
         $this->setFrom();
         $this->setFromType();
