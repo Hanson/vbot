@@ -38,7 +38,11 @@ composer require hanson/vbot
 
 ``` php example/index.php --session yoursession```
 
-关于session ： 带session运行会自动寻找设定session指定的cookies，如不存在则新建一个文件夹位于 `/tmp/session` 中，当下次修改代码时再执行就会免扫码自动登录。如果不设置，vbot会自动设置一个6位的字符的session值，下次登录也可以直接设定此值进行面扫码登录。
+关于session ： 
+
+带session运行会自动寻找设定session指定的cookies，如不存在则新建一个文件夹位于 `/tmp/session` 中，当下次修改代码时再执行就会免扫码自动登录。
+
+如果不设置，vbot会自动设置一个6位的字符的session值，下次登录也可以直接设定此值进行面扫码登录。
  
 PS:运行后二维码将保存于设置的缓存目录，命名为qr.png，控制台也会显示二维码，扫描即可（linux用户请确保已经打开ANSI COLOR）
 
@@ -53,7 +57,7 @@ PS:运行后二维码将保存于设置的缓存目录，命名为qr.png，控�
   - demo (vbot 当前在运行的代码，也欢迎大家提供自己的一些实战例子)
   - example (较为初级的实例)
   - src (源码)
-  - tmp (假设设置在此)
+  - tmp (假设缓存目录设置在此)
     - session
       - hanson (设定值 `php index.php --session hanson`)
       - 523eb1 (随机值)
