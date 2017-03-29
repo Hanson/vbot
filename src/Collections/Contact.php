@@ -149,7 +149,7 @@ class Contact extends BaseCollection
             'skey' => server()->skey
         ];
 
-        $result = http()->json($url, $data, true);
+        $result = http()->post($url, json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), true);
 
         return $result['BaseResponse']['Ret'] == 0;
     }
