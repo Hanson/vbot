@@ -39,7 +39,7 @@ class Contact extends BaseCollection
      */
     public function getContactById($alias)
     {
-        return $this->getContactById($alias);
+        return $this->getContactByAlias($alias);
     }
 
     /**
