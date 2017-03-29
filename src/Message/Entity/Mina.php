@@ -26,11 +26,13 @@ class Mina extends Message implements MessageInterface
 
     public function make()
     {
-        $array = (array)simplexml_load_string($this->msg['Content'], 'SimpleXMLElement', LIBXML_NOCDATA);
+        $array = (array)simplexml_load_string($this->message, 'SimpleXMLElement', LIBXML_NOCDATA);
 
         $info = (array)$array['appmsg'];
 
         $this->title = $info['title'];
         $this->url = $info['url'];
+
+        $this->content = '[小程序]';
     }
 }

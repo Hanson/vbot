@@ -32,13 +32,13 @@ class RequestFriend extends Message implements MessageInterface
 
     public function make()
     {
-        $this->info = $this->msg['RecommendInfo'];
+        $this->info = $this->raw['RecommendInfo'];
         $this->parseContent();
     }
 
     private function parseContent()
     {
-        $isMatch = preg_match('/bigheadimgurl="(.+?)"/', $this->msg['Content'], $matches);
+        $isMatch = preg_match('/bigheadimgurl="(.+?)"/', $this->message, $matches);
 
         if ($isMatch) {
             $this->avatar = $matches[1];

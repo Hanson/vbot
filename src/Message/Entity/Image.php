@@ -34,7 +34,7 @@ class Image extends Message implements MessageInterface, MediaInterface
     {
         $path = static::getPath(static::$folder);
 
-        static::send($username, $path . "/{$msgId}.jpg");
+        static::send($username, $path . $msgId . '.jpg');
     }
 
     public static function send($username, $file)
@@ -42,7 +42,7 @@ class Image extends Message implements MessageInterface, MediaInterface
         $response = static::uploadMedia($username, $file);
 
         if (!$response) {
-            Console::log("文件 {$file} 上传失败", Console::WARNING);
+            Console::log("图片 {$file} 上传失败", Console::WARNING);
             return false;
         }
 
@@ -73,12 +73,14 @@ class Image extends Message implements MessageInterface, MediaInterface
     public function make()
     {
         $this->download();
+
+        $this->content = '[图片]';
     }
 
     public function download()
     {
-        $url = server()->baseUri . sprintf('/webwxgetmsgimg?MsgID=%s&skey=%s', $this->msg['MsgId'], server()->skey);
+        $url = server()->baseUri . sprintf('/webwxgetmsgimg?MsgID=%s&skey=%s', $this->raw['MsgId'], server()->skey);
         $content = http()->get($url);
-        FileManager::download($this->msg['MsgId'] . '.jpg', $content, static::$folder);
+        FileManager::saveToUserPath(static::$folder . DIRECTORY_SEPARATOR . $this->raw['MsgId'] . '.jpg', $content);
     }
 }

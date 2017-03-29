@@ -28,13 +28,52 @@ composer install
 composer require hanson/vbot
 ```
 
-然后执行``` php example/index.php ```  
+### 运行
 
+正常运行
+
+``` php example/index.php ```
+  
+带session运行
+
+``` php example/index.php --session yoursession```
+
+关于session ： 
+
+带session运行会自动寻找设定session指定的cookies，如不存在则新建一个文件夹位于 `/tmp/session` 中，当下次修改代码时再执行就会免扫码自动登录。
+
+如果不设置，vbot会自动设置一个6位的字符的session值，下次登录也可以直接设定此值进行面扫码登录。
+ 
 PS:运行后二维码将保存于设置的缓存目录，命名为qr.png，控制台也会显示二维码，扫描即可（linux用户请确保已经打开ANSI COLOR）
 
 *警告！执行前请先查看`index.php`的代码，注释掉你认为不需要的代码，避免对其他人好友造成困扰*
 
 **请在terminal运行！请在terminal运行！请在terminal运行！**
+
+
+## 目录结构
+
+- vbot
+  - demo (vbot 当前在运行的代码，也欢迎大家提供自己的一些实战例子)
+  - example (较为初级的实例)
+  - src (源码)
+  - tmp (假设缓存目录设置在此)
+    - session
+      - hanson (设定值 `php index.php --session hanson`)
+      - 523eb1 (随机值)
+    - users
+      - 23534234345 (微信账号的UIN值)
+        - file (文件)
+        - gif (表情)
+        - jpg (图片)
+        - mp3 (语音)
+        - mp4 (视频)
+        - contact.json (联系人 debug模式下存在)
+        - group.json (群组 debug模式下存在)
+        - member.json (所有群的所有成员 debug模式下存在)
+        - official.json (公众号 debug模式下存在)
+        - special.json (特殊账号 debug模式下存在)
+        - message.json (消息)
 
 ## 体验
 
@@ -53,19 +92,21 @@ vbot示例源码为 https://github.com/HanSon/vbot/blob/master/example/index.php
 
 ### 小DEMO
 
+[vbot 实例](demo/vbot.php)
+
 [购书半自动处理](http://t.laravel-china.org/laravel-tutorial/5.1/buy-it)
 
-[红包提醒](https://github.com/HanSon/vbot/blob/master/example/hongbao.php)
+[红包提醒](example/hongbao.php)
 
-[轰炸消息到某群名](https://github.com/HanSon/vbot/blob/master/example/group.php)
+[轰炸消息到某群名](xample/group.php)
 
-[消息转发](https://github.com/HanSon/vbot/blob/master/example/forward.php)
+[消息转发](xample/forward.php)
 
-[自定义处理器](https://github.com/HanSon/vbot/blob/master/example/custom.php)
+[自定义处理器](xample/custom.php)
 
-[一键拜年](https://github.com/HanSon/vbot/blob/master/example/bainian.php)
+[一键拜年](xample/bainian.php)
 
-[聊天操作](https://github.com/HanSon/vbot/blob/master/example/contact.php)
+[聊天操作](xample/contact.php)
 
 
 ### 基本使用
@@ -79,7 +120,7 @@ use Hanson\Vbot\Message\Entity\Message;
 use Hanson\Vbot\Message\Entity\Text;
 
 $robot = new Vbot([
-    'tmp' => '/path/to/tmp/', # 用于生成登录二维码以及文件保存
+    'user_path' => '/path/to/tmp/', # 用于生成登录二维码以及文件保存
     'debug' => true # 用于是否输出用户组的json
 ]);
 

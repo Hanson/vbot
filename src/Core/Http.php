@@ -9,7 +9,8 @@
 namespace Hanson\Vbot\Core;
 
 use GuzzleHttp\Client as HttpClient;
-use Hanson\Vbot\Support\Console;
+use GuzzleHttp\Cookie\FileCookieJar;
+use Hanson\Vbot\Support\Path;
 
 class Http
 {
@@ -17,6 +18,11 @@ class Http
     static $instance;
 
     protected $client;
+
+    /**
+     * @var FileCookieJar;
+     */
+    protected $cookieJar;
 
     /**
      * @return Http
@@ -74,7 +80,8 @@ class Http
     public function getClient()
     {
         if (!($this->client instanceof HttpClient)) {
-            $this->client = new HttpClient(['cookies' => true]);
+            $this->cookieJar = new FileCookieJar(Path::getCurrentSessionPath() . 'cookies', true);
+            $this->client = new HttpClient(['cookies' => $this->cookieJar]);
         }
 
         return $this->client;
@@ -89,6 +96,8 @@ class Http
     public function request($url, $method = 'GET', $options = [])
     {
         $response = $this->getClient()->request($method, $url, $options);
+
+        $this->cookieJar->save(Path::getCurrentSessionPath() . 'cookies');
 
         return $response->getBody()->getContents();
     }

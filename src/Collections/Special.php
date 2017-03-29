@@ -9,9 +9,7 @@
 namespace Hanson\Vbot\Collections;
 
 
-use Illuminate\Support\Collection;
-
-class Special extends Collection
+class Special extends BaseCollection
 {
 
     static $instance = null;

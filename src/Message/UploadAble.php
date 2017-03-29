@@ -29,7 +29,7 @@ trait UploadAble
      */
     public static function uploadMedia($username, $file)
     {
-        $url = 'https://file.wx2.qq.com/cgi-bin/mmwebwx-bin/webwxuploadmedia?f=json';
+        $url = server()->fileUri . '/webwxuploadmedia?f=json';
         static::$mediaCount = ++static::$mediaCount;
         static::$file = $file;
 
@@ -122,7 +122,7 @@ trait UploadAble
         $fileExplode = explode('.', $file);
         $fileExtension = end($fileExplode);
 
-        return [$mime, $fileExtension === 'jpg' ? 'pic' : $fileExtension === 'mp4' ? 'video' : 'doc'];
+        return [$mime, $fileExtension === 'jpg' ? 'pic' : ($fileExtension === 'mp4' ? 'video' : 'doc')];
     }
 
     /**

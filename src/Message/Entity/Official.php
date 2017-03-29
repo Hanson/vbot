@@ -30,7 +30,7 @@ class Official extends Message implements MessageInterface
 
     public function make()
     {
-        $array = (array)simplexml_load_string($this->msg['Content'], 'SimpleXMLElement', LIBXML_NOCDATA);
+        $array = (array)simplexml_load_string($this->message, 'SimpleXMLElement', LIBXML_NOCDATA);
 
         $info = (array)$array['appmsg'];
 
@@ -41,6 +41,8 @@ class Official extends Message implements MessageInterface
 
         $this->app = $appInfo['appname'];
 
-        $this->url = $this->msg['Url'];
+        $this->url = $this->raw['Url'];
+
+        $this->content = '[公众号推送]';
     }
 }

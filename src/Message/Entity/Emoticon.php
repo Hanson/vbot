@@ -35,7 +35,6 @@ class Emoticon extends Message implements MediaInterface, MessageInterface
         $response = static::uploadMedia($username, $file);
 
         if (!$response) {
-            Console::log("表情 {$file} 上传失败", Console::WARNING);
             return false;
         }
 
@@ -75,7 +74,7 @@ class Emoticon extends Message implements MediaInterface, MessageInterface
     {
         $path = static::getPath(static::$folder);
 
-        static::send($username, $path . "/{$msgId}.gif");
+        static::send($username, $path . $msgId . '.gif');
     }
 
     /**
@@ -91,7 +90,7 @@ class Emoticon extends Message implements MediaInterface, MessageInterface
         unset($files[0], $files[1]);
         $msgId = $files[array_rand($files)];
 
-        static::send($username, $path . '/' . $msgId);
+        static::send($username, $path . $msgId);
     }
 
     /**
@@ -101,13 +100,17 @@ class Emoticon extends Message implements MediaInterface, MessageInterface
      */
     public function download()
     {
-        $url = server()->baseUri . sprintf('/webwxgetmsgimg?MsgID=%s&skey=%s', $this->msg['MsgId'], server()->skey);
+        $url = server()->baseUri . sprintf('/webwxgetmsgimg?MsgID=%s&skey=%s', $this->raw['MsgId'], server()->skey);
         $content = http()->get($url);
-        FileManager::download($this->msg['MsgId'] . '.gif', $content, static::$folder);
+        if($content){
+            FileManager::saveToUserPath(static::$folder . DIRECTORY_SEPARATOR . $this->raw['MsgId'] . '.gif', $content);
+        }
     }
 
     public function make()
     {
         $this->download();
+
+        $this->content = '[动画表情]';
     }
 }

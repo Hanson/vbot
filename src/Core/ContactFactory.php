@@ -6,10 +6,11 @@
  * Time: 20:41
  */
 
-namespace Hanson\Vbot\Collections;
+namespace Hanson\Vbot\Core;
 
 
-use Hanson\Vbot\Support\Console;
+use Hanson\Vbot\Collections\Official;
+use Hanson\Vbot\Collections\Special;
 use Hanson\Vbot\Support\FileManager;
 
 class ContactFactory
@@ -39,11 +40,11 @@ class ContactFactory
         $this->getBatchGroupMembers();
 
         if (server()->config['debug']) {
-            FileManager::download('contact.json', json_encode(contact()->all()));
-            FileManager::download('member.json', json_encode(member()->all()));
-            FileManager::download('group.json', json_encode(group()->all()));
-            FileManager::download('official.json', json_encode(official()->all()));
-            FileManager::download('special.json', json_encode(Special::getInstance()->all()));
+            FileManager::saveToUserPath('contact.json', json_encode(contact()->all()));
+            FileManager::saveToUserPath('member.json', json_encode(member()->all()));
+            FileManager::saveToUserPath('group.json', json_encode(group()->all()));
+            FileManager::saveToUserPath('official.json', json_encode(official()->all()));
+            FileManager::saveToUserPath('special.json', json_encode(Special::getInstance()->all()));
         }
     }
 
@@ -58,21 +59,31 @@ class ContactFactory
         $result = http()->json($url, [], true);
 
         if (isset($result['MemberList']) && $result['MemberList']) {
-            foreach ($result['MemberList'] as $contact) {
-                if (official()->isOfficial($contact['VerifyFlag'])) { #公众号
-                    Official::getInstance()->put($contact['UserName'], $contact);
-                } elseif (in_array($contact['UserName'], static::SPECIAL_USERS)) { # 特殊账户
-                    Special::getInstance()->put($contact['UserName'], $contact);
-                } elseif (strstr($contact['UserName'], '@@') !== false) { # 群聊
-                    group()->put($contact['UserName'], $contact);
-                } else {
-                    contact()->put($contact['UserName'], $contact);
-                }
-            }
+            $this->setCollections($result['MemberList']);
         }
 
         if (isset($result['Seq']) && $result['Seq'] != 0) {
             $this->makeContactList($result['Seq']);
+        }
+    }
+
+    /**
+     * 设置联系人到collection
+     *
+     * @param $memberList
+     */
+    public function setCollections($memberList)
+    {
+        foreach ($memberList as $contact) {
+            if (in_array($contact['UserName'], static::SPECIAL_USERS)) { # 特殊账户
+                Special::getInstance()->put($contact['UserName'], $contact);
+            } elseif (official()->isOfficial($contact['VerifyFlag'])) { # 公众号
+                Official::getInstance()->put($contact['UserName'], $contact);
+            } elseif (strstr($contact['UserName'], '@@') !== false) { # 群聊
+                group()->put($contact['UserName'], $contact);
+            } else {
+                contact()->put($contact['UserName'], $contact);
+            }
         }
     }
 

@@ -10,11 +10,9 @@ namespace Hanson\Vbot\Core;
 
 
 use Endroid\QrCode\QrCode;
-use Hanson\Vbot\Collections\ContactFactory;
-use Hanson\Vbot\Collections\Group;
-use Hanson\Vbot\Collections\Special;
 use Hanson\Vbot\Support\Console;
 use Hanson\Vbot\Support\FileManager;
+use Hanson\Vbot\Support\Path;
 use Hanson\Vbot\Support\System;
 
 class Server
@@ -54,8 +52,6 @@ class Server
 
     public $pushUri;
 
-    public $domain = 'wx2.qq.com';
-
     public function __construct($config = [])
     {
         $this->config = $config;
@@ -81,20 +77,57 @@ class Server
      */
     public function run()
     {
-        $this->prepare();
+        if(!$this->tryLogin()){
+            $this->prepare();
+        }
+
         $this->init();
         Console::log('初始化成功');
 
         $this->statusNotify();
+        Console::log('当前session：' . $this->config['session']);
         Console::log('开始初始化联系人');
         $this->initContact();
         Console::log('初始化联系人成功');
         Console::log(sprintf("群数量： %d", group()->count()));
         Console::log(sprintf("联系人数量： %d", contact()->count()));
         Console::log(sprintf("公众号数量： %d", official()->count()));
+
         MessageHandler::getInstance()->listen();
     }
 
+    /**
+     * 尝试登录
+     *
+     * @return bool
+     */
+    private function tryLogin() :bool
+    {
+        System::isWin() ? system('cls') : system('clear');
+
+        if(is_file(Path::getCurrentSessionPath() . 'cookies') && is_file(Path::getCurrentSessionPath() . 'server.json')){
+
+            $configs = json_decode(file_get_contents(Path::getCurrentSessionPath() . 'server.json'), true);
+
+            foreach ($configs as $key => $config) {
+                $this->{$key} = $config;
+            }
+
+            list($retCode, $selector) = (new Sync())->checkSync();
+            $result = (new MessageHandler())->handleCheckSync($retCode, $selector, true);
+
+            if($result && (new Sync())->sync()){
+                Console::log('免扫码登录成功');
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * 微信登录流程
+     */
     public function prepare()
     {
         $this->getUuid();
@@ -141,13 +174,9 @@ class Server
 
         $qrCode = new QrCode($url);
 
-        if(!is_dir(realpath($this->config['tmp']))){
-            mkdir($this->config['tmp'], 0700, true);
-        }
+        $file = Path::getCurrentSessionPath() . 'qr.png';
 
-        $file = System::getPath() . 'qr.png';
-
-        FileManager::download('qr.png', file_get_contents($url));
+        FileManager::saveTo($file, file_get_contents($url));
 
         $qrCode->save($file);
     }
@@ -176,27 +205,13 @@ class Server
                     $tip = 0;
                     break;
                 case '200':
-                    preg_match('/window.redirect_uri="(\S+?)";/', $content, $matches);
+                    preg_match('/window.redirect_uri="(https:\/\/(\S+?)\/\S+?)";/', $content, $matches);
+
                     $this->redirectUri = $matches[1] . '&fun=new';
-                    $domainList = [
-                        'wx2.qq.com' => ['file.wx2.qq.com', 'webpush.wx2.qq.com'],
-                        'wx8.qq.com' => ['file.wx8.qq.com', 'webpush.wx8.qq.com'],
-                        'wx.qq.com' => ['file.wx.qq.com', 'webpush.wx.qq.com'],
-                        'web2.wechat.com' => ['file.web2.wechat.com', 'webpushweb2.wechat.com'],
-                        'wechat.com' => ['file.web.wechat.com', 'webpushweb.web.wechat.com'],
-                    ];
                     $url = 'https://%s/cgi-bin/mmwebwx-bin';
-                    foreach ($domainList as $domain => $list) {
-                        if(str_contains($this->redirectUri, $domain)){
-                            $this->fileUri = sprintf($url, $list[0]);
-                            $this->pushUri = sprintf($url, $list[1]);
-                            $this->baseUri = sprintf($url, $domain);
-                            $this->domain = $domain;
-                            break;
-                        }else{
-                            $this->fileUri = $this->pushUri = $this->redirectUri;
-                        }
-                    }
+                    $this->fileUri = sprintf($url, 'file.'.$matches[2]);
+                    $this->pushUri = sprintf($url, 'webpush.'.$matches[2]);
+                    $this->baseUri = sprintf($url, $matches[2]);
                     return;
                 case '408':
                     Console::log('登录超时，请重试', Console::WARNING);
@@ -219,7 +234,6 @@ class Server
 
     /**
      * login wechat
-     * @return bool
      * @throws \Exception
      */
     public function login()
@@ -247,7 +261,27 @@ class Server
             'DeviceID' => $this->deviceId
         ];
 
-        return true;
+        $this->saveServer();
+    }
+
+    /**
+     * 保存server至本地
+     */
+    private function saveServer()
+    {
+        $config = json_encode([
+            'skey' => $this->skey,
+            'sid' => $this->sid,
+            'uin' => $this->uin,
+            'passTicket' => $this->passTicket,
+            'baseRequest' => $this->baseRequest,
+            'baseUri' => $this->baseUri,
+            'fileUri' => $this->fileUri,
+            'pushUri' => $this->pushUri,
+            'config' => $this->config
+        ]);
+
+        FileManager::saveTo(Path::getCurrentSessionPath() . 'server.json', $config);
     }
 
     protected function init($first = true)
@@ -266,6 +300,7 @@ class Server
         $this->initContactList($result['ContactList']);
 
         if($result['BaseResponse']['Ret'] != 0){
+            System::deleteDir(Path::getCurrentSessionPath());
             Console::log('初始化失败，链接：' . $url, Console::ERROR);
             exit;
         }
@@ -274,11 +309,7 @@ class Server
     protected function initContactList($contactList)
     {
         if($contactList){
-            foreach ($contactList as $contact) {
-                if(Group::isGroup($contact['UserName'])){
-                    group()->put($contact['UserName'], $contact);
-                }
-            }
+            (new ContactFactory())->setCollections($contactList);
         }
     }
 
