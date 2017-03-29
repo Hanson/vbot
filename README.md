@@ -7,6 +7,7 @@
 - [PHP fileinfo 拓展](http://php.net/manual/en/book.fileinfo.php) 储存文件需要用到
 - [PHP gd 拓展](http://php.net/manual/en/book.image.php) 控制台显示二维码
 - [PHP 系统命令 拓展](https://secure.php.net/manual/en/book.exec.php) 执行clear命令
+- [PHP SimpleXML 拓展](https://secure.php.net/manual/en/book.simplexml.php) 解析XML
 
 ### 安装
 
