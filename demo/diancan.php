@@ -14,7 +14,7 @@ use Hanson\Vbot\Message\Entity\Text;
 use Hanson\Vbot\Message\Entity\Image;
 
 $robot = new Vbot([
-    'tmp' => __DIR__ . '/./../tmp/',
+    'user_path' => __DIR__ . '/./../tmp/',
     'debug' => true
 ]);
 

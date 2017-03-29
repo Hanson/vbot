@@ -103,6 +103,7 @@ class Server
      */
     private function tryLogin() :bool
     {
+        System::isWin() ? system('cls') : system('clear');
 
         if(is_file(Path::getCurrentSessionPath() . 'cookies') && is_file(Path::getCurrentSessionPath() . 'server.json')){
 

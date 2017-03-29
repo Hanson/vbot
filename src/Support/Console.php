@@ -77,10 +77,8 @@ class Console
 
         if(System::isWin()){
             $pxMap = ['<whitec>mm</whitec>', '<blackc>  </blackc>'];
-            system('cls');
         }else{
             $pxMap = ['<whitec>  </whitec>', '<blackc>  </blackc>'];
-            system('clear');
         }
 
         $text   = QRcode::text($text);

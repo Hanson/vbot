@@ -12,7 +12,7 @@ use Hanson\Vbot\Foundation\Vbot;
 use Hanson\Vbot\Message\Entity\Text;
 
 $robot = new Vbot([
-    'tmp' => __DIR__ . '/./../tmp/',
+    'user_path' => __DIR__ . '/./../tmp/',
     'debug' => true
 ]);
 

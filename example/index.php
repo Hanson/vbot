@@ -30,7 +30,7 @@ use Hanson\Vbot\Message\Entity\NewFriend;
 
 $path = __DIR__ . '/./../tmp/';
 $robot = new Vbot([
-    'tmp' => $path,
+    'user_path' => $path,
     'debug' => true
 ]);
 
