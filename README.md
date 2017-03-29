@@ -83,7 +83,7 @@ PS:运行后二维码将保存于设置的缓存目录，命名为qr.png，控�
 
 vbot并非24小时执行，有时会因为开发调试等原因暂停功能。如果碰巧遇到关闭情况，可加Q群 492548647 了解开放时间。执行后发送“拉我”即可自动邀请进群。
 
-vbot示例源码为 https://github.com/HanSon/vbot/blob/master/example/index.php
+vbot示例源码为 https://github.com/HanSon/vbot/tree/master/demo/vbot.php
 
 
 ## 文档
