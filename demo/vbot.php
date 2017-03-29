@@ -45,13 +45,6 @@ function reply($str)
     return isset($result['url']) ? $result['text'] . $result['url'] : $result['text'];
 }
 
-function xiaobing($str, $replyUsername)
-{
-    \Hanson\Vbot\Support\Console::debug('内容：' . $str);
-    \Hanson\Vbot\Support\Console::debug('对象：' . $replyUsername);
-    Text::send($replyUsername, $str);
-}
-
 // 设置管理员
 function isAdmin($message)
 {
@@ -89,28 +82,14 @@ $robot->server->setOnceHandler(function () use ($groupMap) {
     });
 });
 
-$replyMap = [];
-$robot->server->setMessageHandler(function ($message) use ($path, &$replyMap) {
+$robot->server->setMessageHandler(function ($message) use ($path) {
     /** @var $message Message */
-    $replyUsername = official()->getUsernameByNickname('小冰');
-
-    \Hanson\Vbot\Support\Console::debug('msgId: ' . $message->raw['MsgId']);
 
     // 位置信息 返回位置文字
     if ($message instanceof Location) {
         /** @var $message Location */
-        Text::send('地图链接：' . $message->from['UserName'], $message->url);
+        Text::send($message->from['UserName'], '地图链接：' . $message->url);
         return '位置：' . $message;
-    }
-
-
-    if ($message->from['UserName'] === $replyUsername) {
-        if ($message instanceof Text) {
-            $username = last($replyMap);
-            Text::send($username, $message->content);
-        }
-        unset($replyMap[count($replyMap) - 1]);
-        return false;
     }
 
     // 文字信息
@@ -122,17 +101,12 @@ $robot->server->setMessageHandler(function ($message) use ($path, &$replyMap) {
             $members = group()->getMembersByNickname($message->from['UserName'], $nickname);
             if ($members) {
                 $member = current($members);
-                echo $match[2].PHP_EOL;
                 contact()->add($member['UserName'], $match[2]);
             }
         }
 
         if (str_contains($message->content, 'vbot') && !$message->isAt) {
             return "你好，我叫vbot，我爸是HanSon\n我的项目地址是 https://github.com/HanSon/vbot \n欢迎来给我star！";
-        }
-
-        if ($message->content === 'emoji') {
-            return ;
         }
 
         // 联系人自动回复
@@ -143,11 +117,6 @@ $robot->server->setMessageHandler(function ($message) use ($path, &$replyMap) {
                 group()->addMember($username, $message->from['UserName']);
                 return false;
             }
-
-
-//            $replyMap[] = $message->from['UserName'];
-//            xiaobing($message->content, $replyUsername);
-//            return false;
 
             return reply($message->content);
             // 群组@我回复
@@ -200,33 +169,14 @@ $robot->server->setMessageHandler(function ($message) use ($path, &$replyMap) {
             }
 
             if ($message->isAt) {
-//                $replyMap[] = $message->from['UserName'];
-//                xiaobing($message->content, $replyUsername);
-//                return false;
                 return reply($message->content);
             }
         }
     }
 
-    // 图片信息 返回接收到的图片
-    if ($message instanceof Image) {
-//        return $message;
-    }
-
-    // 视频信息 返回接收到的视频
-    if ($message instanceof Video) {
-//        return $message;
-    }
-
     // 表情信息 返回接收到的表情
     if ($message instanceof Emoticon && random_int(0, 1) && random_int(0, 1)) {
         Emoticon::sendRandom($message->from['UserName']);
-    }
-
-    // 语音消息
-    if ($message instanceof Voice) {
-        /** @var $message Voice */
-//        return '收到一条语音并下载在' . $message::getPath($message::$folder) . "/{$message->raw['MsgId']}.mp3";
     }
 
     // 撤回信息
@@ -250,7 +200,6 @@ $robot->server->setMessageHandler(function ($message) use ($path, &$replyMap) {
 
     // 红包信息
     if ($message instanceof RedPacket) {
-        // do something to notify if you want ...
         return $message->content . ' 来自 ' . $message->from['NickName'];
     }
 
@@ -275,15 +224,10 @@ $robot->server->setMessageHandler(function ($message) use ($path, &$replyMap) {
     // 请求添加信息
     if ($message instanceof RequestFriend) {
         /** @var $message RequestFriend */
-        $groupUsername = group()->getGroupsByNickname('芬芬', true)->first()['UserName'];
-
-        Text::send($groupUsername, "{$message->info['NickName']} 请求添加好友 \"{$message->info['Content']}\"");
 
         if ($message->info['Content'] === '上山打老虎') {
-            Text::send($groupUsername, '暗号正确');
             $message->verifyUser($message::VIA);
         } else {
-            Text::send($groupUsername, '暗号错误');
         }
     }
 
@@ -302,18 +246,6 @@ $robot->server->setMessageHandler(function ($message) use ($path, &$replyMap) {
         /** @var $message Mina */
         $reply = "收到小程序\n小程序名词：{$message->title}\n链接：{$message->url}";
         return $reply;
-    }
-
-    // 公众号推送信息
-    if ($message instanceof Official) {
-        /** @var $message Official */
-        $reply = "收到公众号推送\n标题：{$message->title}\n描述：{$message->description}\n链接：{$message->url}\n来源公众号名称：{$message->app}";
-        return $reply;
-    }
-
-    // 手机点击聊天事件
-    if ($message instanceof Touch) {
-//        Text::send($message->raw['ToUserName'], "我点击了此聊天");
     }
 
     // 新增好友

@@ -33,7 +33,7 @@ class Text extends Message implements MessageInterface
      */
     public static function send($username, $word)
     {
-        if (!$word) {
+        if (!$word || !$username) {
             return false;
         }
 
