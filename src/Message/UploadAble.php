@@ -29,6 +29,10 @@ trait UploadAble
      */
     public static function uploadMedia($username, $file)
     {
+        if(!is_file($file)){
+            return false;
+        }
+
         $url = server()->fileUri . '/webwxuploadmedia?f=json';
         static::$mediaCount = ++static::$mediaCount;
         static::$file = $file;
