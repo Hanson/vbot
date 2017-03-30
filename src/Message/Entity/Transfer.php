@@ -10,6 +10,10 @@ namespace Hanson\Vbot\Message\Entity;
 
 use Hanson\Vbot\Message\MessageInterface;
 
+/**
+ * Class Transfer
+ * @package Hanson\Vbot\Message\Entity
+ */
 class Transfer extends Message implements MessageInterface
 {
 
@@ -21,19 +25,30 @@ class Transfer extends Message implements MessageInterface
     public $fee;
 
     /**
+     * 交易流水号
+     *
+     * @var
+     */
+    public $transactionId;
+
+    /**
      * 转账说明
      *
      * @var string
      */
     public $memo;
 
+    /**
+     * Transfer constructor.
+     * @param $msg
+     */
     public function __construct($msg)
     {
         parent::__construct($msg);
 
         $this->make();
     }
-
+    
     public function make()
     {
         $array = (array)simplexml_load_string($this->message, 'SimpleXMLElement', LIBXML_NOCDATA);
@@ -45,5 +60,6 @@ class Transfer extends Message implements MessageInterface
 
         $this->memo = is_string($fee['pay_memo']) ? $fee['pay_memo'] : null;
         $this->fee = substr($fee['feedesc'], 3);
+        $this->transactionId = $fee['transcationid'];
     }
 }
