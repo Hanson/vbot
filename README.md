@@ -197,7 +197,7 @@ donate 名单 （排名按时间倒序）
 
 |捐助者|金额|
 |-----|----|
-|[JellyBool](https://github.com/jellybool) [laravist](https://www.laravist.com)| ￥66.66|
+|[Laravist - 最好的 Laravel 视频教程](https://www.laravist.com)| ￥66.66|
 |[xingchenboy](https://github.com/xingchenboy)| ￥28.80|
 |匿名| ￥6.66|
 |[包菜网](http://baocai.us)| ￥16.88|
