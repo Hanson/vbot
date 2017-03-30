@@ -114,7 +114,7 @@ class Message
         }
         list($uid, $content) = explode(":\n", $content, 2);
 
-        $this->sender = account()->getAccount($uid);
+        $this->sender = account()->getAccount($uid) ?: group()->getMemberByUsername($this->raw['FromUserName'], $uid);
         $this->message = Content::replaceBr($content);
     }
 

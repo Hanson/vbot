@@ -29,7 +29,7 @@ class Http
      */
     public static function getInstance()
     {
-        if(!static::$instance){
+        if (!static::$instance) {
             static::$instance = new Http();
         }
 
@@ -38,7 +38,7 @@ class Http
 
     public function get($url, array $query = [], array $options = [])
     {
-        if($query){
+        if ($query) {
             $options['query'] = $query;
         }
 
@@ -97,7 +97,9 @@ class Http
     {
         $response = $this->getClient()->request($method, $url, $options);
 
-        $this->cookieJar->save(Path::getCurrentSessionPath() . 'cookies');
+        if (is_dir(Path::getCurrentSessionPath())) {
+            $this->cookieJar->save(Path::getCurrentSessionPath() . 'cookies');
+        }
 
         return $response->getBody()->getContents();
     }
