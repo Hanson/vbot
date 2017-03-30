@@ -190,12 +190,15 @@ vbot 已实现以及待实现的功能列表 [点击查看](https://github.com/H
 ## donate 名单
 
 
+
 vbot 的发展离不开大家的支持，无论是star或者donate，本人都衷心的感谢各位，也会尽自己的绵薄之力把 vbot 做到最好。
 
 donate 名单 （排名按时间倒序）
 
 |捐助者|金额|
 |-----|----|
+|[口语猫](http://www.kouyumao.com/)|￥50.00|
+|[Laravist - 最好的 Laravel 视频教程](https://www.laravist.com)| ￥66.66|
 |[xingchenboy](https://github.com/xingchenboy)| ￥28.80|
 |匿名| ￥6.66|
 |[包菜网](http://baocai.us)| ￥16.88|
