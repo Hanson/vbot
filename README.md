@@ -1,4 +1,9 @@
 <p align="center">
+<a href="http://hanc.cc"><img src="https://img.shields.io/badge/contact-@HanSon-orange.svg?style=flat"></a>
+<img src="https://img.shields.io/badge/license-MIT-green.svg?style=flat">
+</p>
+
+<p align="center">
   <b>Special thanks to the generous sponsorship by:</b>
   <br><br>
   <a href="https://www.yousails.com">
