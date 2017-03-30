@@ -88,9 +88,11 @@ class Emoticon extends Message implements MediaInterface, MessageInterface
 
         $files = scandir($path);
         unset($files[0], $files[1]);
-        $msgId = $files[array_rand($files)];
+        if(count($files)){
+            $msgId = $files[array_rand($files)];
 
-        static::send($username, $path . $msgId);
+            static::send($username, $path . $msgId);
+        }
     }
 
     /**
