@@ -60,6 +60,24 @@ class Group extends BaseCollection
     }
 
     /**
+     * 根据username获取群成员
+     *
+     * @param $username
+     * @param $memberUsername
+     * @return mixed
+     */
+    public function getMemberByUsername($username, $memberUsername)
+    {
+        $members = $this->get($username)['MemberList'];
+
+        foreach ($members as $member) {
+            if($memberUsername === $member['UserName']){
+                return $member;
+            }
+        }
+    }
+
+    /**
      * 根据昵称搜索群成员
      *
      * @param $groupUsername
