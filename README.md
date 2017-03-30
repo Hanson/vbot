@@ -197,6 +197,7 @@ donate 名单 （排名按时间倒序）
 
 |捐助者|金额|
 |-----|----|
+|[口语猫](http://www.kouyumao.com/)|￥50.00|
 |[Laravist - 最好的 Laravel 视频教程](https://www.laravist.com)| ￥66.66|
 |[xingchenboy](https://github.com/xingchenboy)| ￥28.80|
 |匿名| ￥6.66|
