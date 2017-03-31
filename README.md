@@ -196,6 +196,7 @@ donate 名单 （排名按时间倒序）
 
 |捐助者|金额|
 |-----|----|
+|[:bear:Neo](https://github.com/Callwoola)|￥6.66|
 |[lifesign](https://github.com/lifesign)|￥66.66|
 |[口语猫](http://www.kouyumao.com/)|￥50.00|
 |[Laravist - 最好的 Laravel 视频教程](https://www.laravist.com)| ￥66.66|
