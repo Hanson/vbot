@@ -196,6 +196,8 @@ donate 名单 （排名按时间倒序）
 
 |捐助者|金额|
 |-----|----|
+|[justmd5](https://github.com/justmd5)|￥10.00|
+|匿名| ￥20.00|
 |匿名| ￥88.88|
 |[:bear:Neo](https://github.com/Callwoola)|￥6.66|
 |[lifesign](https://github.com/lifesign)|￥66.66|
