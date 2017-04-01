@@ -196,6 +196,7 @@ donate 名单 （排名按时间倒序）
 
 |捐助者|金额|
 |-----|----|
+|匿名| ￥8.88|
 |[haidaofei](https://github.com/haidaofei)|￥88.00|
 |[kyaky](https://github.com/kyaky)|￥16.66|
 |[justmd5](https://github.com/justmd5)|￥10.00|
