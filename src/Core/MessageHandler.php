@@ -62,12 +62,12 @@ class MessageHandler
     /**
      * 消息处理器
      *
-     * @param Closure $closure
+     * @param  $closure
      * @throws \Exception
      */
-    public function setMessageHandler(Closure $closure)
+    public function setMessageHandler($closure)
     {
-        if (!$closure instanceof Closure) {
+        if (!is_callable($closure)) {
             throw new \Exception('message handler must be a closure!');
         }
 
@@ -77,12 +77,12 @@ class MessageHandler
     /**
      * 自定义处理器
      *
-     * @param Closure $closure
+     * @param  $closure
      * @throws \Exception
      */
-    public function setCustomHandler(Closure $closure)
+    public function setCustomHandler($closure)
     {
-        if (!$closure instanceof Closure) {
+        if (!is_callable($closure)) {
             throw new \Exception('custom handler must be a closure!');
         }
 
@@ -92,12 +92,12 @@ class MessageHandler
     /**
      * 退出处理器
      *
-     * @param Closure $closure
+     * @param  $closure
      * @throws \Exception
      */
-    public function setExitHandler(Closure $closure)
+    public function setExitHandler($closure)
     {
-        if (!$closure instanceof Closure) {
+        if (!is_callable($closure)) {
             throw new \Exception('exit handler must be a closure!');
         }
 
@@ -107,12 +107,12 @@ class MessageHandler
     /**
      * 异常处理器
      *
-     * @param Closure $closure
+     * @param  $closure
      * @throws \Exception
      */
-    public function setExceptionHandler(Closure $closure)
+    public function setExceptionHandler($closure)
     {
-        if (!$closure instanceof Closure) {
+        if (!is_callable($closure)) {
             throw new \Exception('exit handler must be a closure!');
         }
 
@@ -125,9 +125,9 @@ class MessageHandler
      * @param Closure $closure
      * @throws \Exception
      */
-    public function setOnceHandler(Closure $closure)
+    public function setOnceHandler($closure)
     {
-        if (!$closure instanceof Closure) {
+        if (!is_callable($closure)) {
             throw new \Exception('exit handler must be a closure!');
         }
 
@@ -139,14 +139,14 @@ class MessageHandler
      */
     public function listen()
     {
-        if ($this->onceHandler instanceof Closure) {
+        if (is_callable($this->onceHandler)) {
             call_user_func_array($this->onceHandler, []);
         }
 
         $time = 0;
 
         while (true) {
-            if ($this->customHandler instanceof Closure) {
+            if (is_callable($this->customHandler)) {
                 call_user_func_array($this->customHandler, []);
             }
 
@@ -168,9 +168,11 @@ class MessageHandler
     {
         if (in_array($retCode, ['1100', '1101'])) { # 微信客户端上登出或者其他设备登录
             Console::log('微信客户端正常退出');
-            if ($this->exitHandler) {
+
+            if (is_callable($this->exitHandler)) {
                 call_user_func_array($this->exitHandler, []);
             }
+
             return false;
         } elseif ($retCode == 0) {
             if(!$test){
@@ -179,9 +181,11 @@ class MessageHandler
             return true;
         } else {
             Console::log('微信客户端异常退出');
-            if ($this->exceptionHandler) {
+
+            if (is_callable($this->exceptionHandler)) {
                 call_user_func_array($this->exitHandler, []);
             }
+
             return false;
         }
     }
@@ -215,8 +219,10 @@ class MessageHandler
                 if ($content) {
                     $this->debugMessage($content);
                     $this->addToMessageCollection($content);
-                    if ($this->handler) {
+
+                    if (is_callable($this->handler)) {
                         $reply = call_user_func_array($this->handler, [$content]);
+
                         if ($reply) {
                             if ($reply instanceof Image) {
                                 Image::sendByMsgId($content->from['UserName'], $reply->raw['MsgId']);
