@@ -62,76 +62,51 @@ class MessageHandler
     /**
      * 消息处理器
      *
-     * @param  $closure
-     * @throws \Exception
+     * @param callable $callable
      */
-    public function setMessageHandler($closure)
+    public function setMessageHandler(callable $callable)
     {
-        if (!is_callable($closure)) {
-            throw new \Exception('message handler must be a closure!');
-        }
-
-        $this->handler = $closure;
+        $this->handler = $callable;
     }
 
     /**
      * 自定义处理器
      *
-     * @param  $closure
-     * @throws \Exception
+     * @param callable $callable
      */
-    public function setCustomHandler($closure)
+    public function setCustomHandler(callable $callable)
     {
-        if (!is_callable($closure)) {
-            throw new \Exception('custom handler must be a closure!');
-        }
-
-        $this->customHandler = $closure;
+        $this->customHandler = $callable;
     }
 
     /**
      * 退出处理器
      *
-     * @param  $closure
-     * @throws \Exception
+     * @param callable $callable
      */
-    public function setExitHandler($closure)
+    public function setExitHandler(callable $callable)
     {
-        if (!is_callable($closure)) {
-            throw new \Exception('exit handler must be a closure!');
-        }
-
-        $this->exitHandler = $closure;
+        $this->exitHandler = $callable;
     }
 
     /**
      * 异常处理器
      *
-     * @param  $closure
-     * @throws \Exception
+     * @param callable $callable
      */
-    public function setExceptionHandler($closure)
+    public function setExceptionHandler(callable $callable)
     {
-        if (!is_callable($closure)) {
-            throw new \Exception('exit handler must be a closure!');
-        }
-
-        $this->exceptionHandler = $closure;
+        $this->exceptionHandler = $callable;
     }
 
     /**
      * 执行一次的处理器
      *
-     * @param Closure $closure
-     * @throws \Exception
+     * @param callable $callable
      */
-    public function setOnceHandler($closure)
+    public function setOnceHandler(callable $callable)
     {
-        if (!is_callable($closure)) {
-            throw new \Exception('exit handler must be a closure!');
-        }
-
-        $this->onceHandler = $closure;
+        $this->onceHandler = $callable;
     }
 
     /**
@@ -139,14 +114,14 @@ class MessageHandler
      */
     public function listen()
     {
-        if (is_callable($this->onceHandler)) {
+        if ($this->onceHandler) {
             call_user_func_array($this->onceHandler, []);
         }
 
         $time = 0;
 
         while (true) {
-            if (is_callable($this->customHandler)) {
+            if ($this->customHandler) {
                 call_user_func_array($this->customHandler, []);
             }
 
@@ -169,7 +144,7 @@ class MessageHandler
         if (in_array($retCode, ['1100', '1101'])) { # 微信客户端上登出或者其他设备登录
             Console::log('微信客户端正常退出');
 
-            if (is_callable($this->exitHandler)) {
+            if ($this->exitHandler) {
                 call_user_func_array($this->exitHandler, []);
             }
 
@@ -182,7 +157,7 @@ class MessageHandler
         } else {
             Console::log('微信客户端异常退出');
 
-            if (is_callable($this->exceptionHandler)) {
+            if ($this->exceptionHandler) {
                 call_user_func_array($this->exitHandler, []);
             }
 
@@ -220,7 +195,7 @@ class MessageHandler
                     $this->debugMessage($content);
                     $this->addToMessageCollection($content);
 
-                    if (is_callable($this->handler)) {
+                    if ($this->handler) {
                         $reply = call_user_func_array($this->handler, [$content]);
 
                         if ($reply) {
