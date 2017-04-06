@@ -351,28 +351,28 @@ class Server
         $this->syncKeyStr = implode('|', $syncKey);
     }
 
-    public function setMessageHandler(\Closure $closure)
+    public function setMessageHandler($callable)
     {
-        MessageHandler::getInstance()->setMessageHandler($closure);
+        MessageHandler::getInstance()->setMessageHandler($callable);
     }
 
-    public function setCustomerHandler(\Closure $closure)
+    public function setCustomerHandler($callable)
     {
-        MessageHandler::getInstance()->setCustomHandler($closure);
+        MessageHandler::getInstance()->setCustomHandler($callable);
     }
 
-    public function setExitHandler(\Closure $closure)
+    public function setExitHandler($callable)
     {
-        MessageHandler::getInstance()->setExitHandler($closure);
+        MessageHandler::getInstance()->setExitHandler($callable);
     }
 
-    public function setExceptionHandler(\Closure $closure)
+    public function setExceptionHandler($callable)
     {
-        MessageHandler::getInstance()->setExceptionHandler($closure);
+        MessageHandler::getInstance()->setExceptionHandler($callable);
     }
 
-    public function setOnceHandler(\Closure $closure)
+    public function setOnceHandler($callable)
     {
-        MessageHandler::getInstance()->setOnceHandler($closure);
+        MessageHandler::getInstance()->setOnceHandler($callable);
     }
 }
