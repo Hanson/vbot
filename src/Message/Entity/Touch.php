@@ -22,5 +22,6 @@ class Touch extends Message implements MessageInterface
 
     public function make()
     {
+        $this->content = '[点击事件]';
     }
 }

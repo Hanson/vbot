@@ -31,7 +31,7 @@ class File extends Message implements MessageInterface, MediaInterface
 
     public function make()
     {
-        $array = (array)simplexml_load_string($this->msg['Content'], 'SimpleXMLElement', LIBXML_NOCDATA);
+        $array = (array)simplexml_load_string($this->message, 'SimpleXMLElement', LIBXML_NOCDATA);
 
         $info = (array)$array['appmsg'];
 
@@ -44,13 +44,15 @@ class File extends Message implements MessageInterface, MediaInterface
     {
         $url = server()->fileUri . '/webwxgetmedia';
         $content = http()->get($url, [
-            'sender' => $this->msg['FromUserName'],
-            'mediaid' => $this->msg['MediaId'],
-            'filename' => $this->msg['FileName'],
+            'sender' => $this->raw['FromUserName'],
+            'mediaid' => $this->raw['MediaId'],
+            'filename' => $this->raw['FileName'],
             'fromuser' => myself()->username,
             'pass_ticket' => server()->passTicket,
             'webwx_data_ticket' => static::getTicket()
         ]);
-        FileManager::download($this->msg['FileName'], $content, static::$folder);
+        FileManager::saveToUserPath(static::$folder . DIRECTORY_SEPARATOR . $this->raw['FileName'], $content);
+
+        $this->content = '[文件]';
     }
 }

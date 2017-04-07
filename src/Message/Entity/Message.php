@@ -10,13 +10,8 @@ namespace Hanson\Vbot\Message\Entity;
 
 
 use Carbon\Carbon;
-use Hanson\Vbot\Core\Server;
-use Hanson\Vbot\Collections\Contact;
-use Hanson\Vbot\Collections\Official;
 use Hanson\Vbot\Collections\Special;
 use Hanson\Vbot\Support\Content;
-use Hanson\Vbot\Support\FileManager;
-use Hanson\Vbot\Support\Console;
 
 class Message
 {
@@ -32,9 +27,14 @@ class Message
     public $sender;
 
     /**
-     * @var string 经过处理的内容
+     * @var string 经过处理的内容 （与类型相关 友好显示的文字）
      */
     public $content;
+
+    /**
+     * @var string 经处理的内容 （与类型无关 有可能是一串xml）
+     */
+    public $message;
 
     /**
      * @var Carbon 时间
@@ -46,20 +46,29 @@ class Message
      */
     public $fromType;
 
+    /**
+     * @var array 原始数据（废弃）
+     * @deprecated
+     */
     public $msg;
+
+    /**
+     * @var array 原始数据
+     */
+    public $raw;
 
     static $mediaCount = -1;
 
     public function __construct($msg)
     {
-        $this->msg = $msg;
+        $this->raw = $this->msg = $msg;
 
         $this->setFrom();
         $this->setFromType();
 
-        $this->msg['Content'] = Content::formatContent($this->msg['Content']);
+        $this->message = Content::formatContent($this->raw['Content']);
         if($this->fromType === 'Group'){
-            $this->handleGroupContent($this->msg['Content']);
+            $this->handleGroupContent($this->message);
         }
 
         $this->time = $msg['CreateTime'];
@@ -70,23 +79,23 @@ class Message
      */
     private function setFrom()
     {
-        $this->from = account()->getAccount($this->msg['FromUserName']);
+        $this->from = account()->getAccount($this->raw['FromUserName']);
     }
 
     private function setFromType()
     {
-        if ($this->msg['MsgType'] == 51) {
+        if ($this->raw['MsgType'] == 51) {
             $this->fromType = 'System';
-        } elseif ($this->msg['FromUserName'] === myself()->username) {
+        } elseif ($this->raw['FromUserName'] === myself()->username) {
             $this->fromType = 'Self';
-            $this->from = account()->getAccount($this->msg['ToUserName']);
-        } elseif (substr($this->msg['FromUserName'], 0, 2) === '@@') { # group
+            $this->from = account()->getAccount($this->raw['ToUserName']);
+        } elseif (substr($this->raw['FromUserName'], 0, 2) === '@@') { # group
             $this->fromType = 'Group';
-        } elseif (contact()->get($this->msg['FromUserName'])) {
+        } elseif (contact()->get($this->raw['FromUserName'])) {
             $this->fromType = 'Contact';
-        } elseif (official()->get($this->msg['FromUserName'])) {
+        } elseif (official()->get($this->raw['FromUserName'])) {
             $this->fromType = 'Official';
-        } elseif (Special::getInstance()->get($this->msg['FromUserName'], false)) {
+        } elseif (Special::getInstance()->get($this->raw['FromUserName'], false)) {
             $this->fromType = 'Special';
         } else {
             $this->fromType = 'Unknown';
@@ -105,8 +114,8 @@ class Message
         }
         list($uid, $content) = explode(":\n", $content, 2);
 
-        $this->sender = account()->getAccount($uid);
-        $this->msg['Content'] = Content::replaceBr($content);
+        $this->sender = account()->getAccount($uid) ?: group()->getMemberByUsername($this->raw['FromUserName'], $uid);
+        $this->message = Content::replaceBr($content);
     }
 
     public function __toString()

@@ -10,9 +10,8 @@ namespace Hanson\Vbot\Collections;
 
 
 use Hanson\Vbot\Support\Console;
-use Illuminate\Support\Collection;
 
-class Group extends Collection
+class Group extends BaseCollection
 {
 
     static $instance = null;
@@ -51,36 +50,31 @@ class Group extends Collection
     /**
      * 根据群名筛选群组
      *
-     * @param $name
+     * @param $nickname
      * @param bool $blur
      * @return static
      */
-    public function getGroupsByNickname($name, $blur = false)
+    public function getGroupsByNickname($nickname, $blur = false)
     {
-        $groups = $this->filter(function($value, $key) use ($name, $blur){
-           if(!$blur){
-               return $value['NickName'] === $name;
-           }else{
-               return str_contains($value['NickName'], $name);
-           }
-        });
-
-        return $groups;
+        return $this->getObject($nickname, 'NickName', false, $blur);
     }
 
     /**
-     * 根据通讯录中的昵称获取通讯对象
+     * 根据username获取群成员
      *
-     * @param $nickname
+     * @param $username
+     * @param $memberUsername
      * @return mixed
      */
-    public function getUsernameByNickname($nickname)
+    public function getMemberByUsername($username, $memberUsername)
     {
-        return $this->search(function($item, $key) use ($nickname){
-            if($item['NickName'] === $nickname){
-                return true;
+        $members = $this->get($username)['MemberList'];
+
+        foreach ($members as $member) {
+            if($memberUsername === $member['UserName']){
+                return $member;
             }
-        });
+        }
     }
 
     /**
@@ -89,15 +83,17 @@ class Group extends Collection
      * @param $groupUsername
      * @param $memberNickname
      * @param bool $blur
-     * @return array
+     * @return array|bool
      */
     public function getMembersByNickname($groupUsername, $memberNickname, $blur = false)
     {
-        $members = $this->get($groupUsername);
+        $group = $this->get($groupUsername);
+
+        if(!$group) return false;
 
         $result = [];
 
-        foreach ($members['MemberList'] as $member) {
+        foreach ($group['MemberList'] as $member) {
             if ($blur && str_contains($member['NickName'], $memberNickname)) {
                 $result[] = $member;
             } elseif (!$blur && $member['NickName'] === $memberNickname) {
@@ -249,6 +245,36 @@ class Group extends Collection
     }
 
     /**
+     * 更新群组
+     *
+     * @param $username
+     * @param null $list
+     * @return array
+     */
+    public function update($username, $list = null) :array
+    {
+        $username = is_array($username) ?: [$username];
+        return parent::update($username, $this->makeUsernameList($username));
+    }
+
+    /**
+     * 生成username list 格式
+     *
+     * @param $username
+     * @return array
+     */
+    public function makeUsernameList($username)
+    {
+        $usernameList = [];
+
+        foreach ($username as $item) {
+            $usernameList[] = ['UserName' => $item, 'ChatRoomId' => ''];
+        }
+
+        return $usernameList;
+    }
+
+    /**
      * 生成member list 格式
      * 
      * @param $contacts
@@ -262,6 +288,34 @@ class Group extends Collection
             $memberList[] = ['UserName' => $contact];
         }
         return $memberList;
+    }
+
+    /**
+     * 存储群组前批量修改群成员nickname
+     *
+     * @param mixed $key
+     * @param mixed $value
+     * @return \Illuminate\Support\Collection
+     */
+    public function put($key, $value)
+    {
+        foreach ($value['MemberList'] as &$member) {
+            $member = $this->format($member);
+        }
+
+        return parent::put($key, $value);
+    }
+
+    /**
+     * 修改群组获取，为空时更新群组
+     *
+     * @param mixed $key
+     * @param null $default
+     * @return mixed
+     */
+    public function get($key, $default = null)
+    {
+        return parent::get($key, $this->update($key));
     }
 
 }

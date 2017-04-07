@@ -22,14 +22,19 @@ class System
         return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
     }
 
-    public static function getPath()
+    /**
+     * 删除目录
+     *
+     * @param $dir
+     */
+    public static function deleteDir($dir)
     {
-        $path = server()->config['tmp'] . '/' . myself()->alias . '/';
-
-        if(!is_dir(realpath($path))){
-            mkdir($path, 0700, true);
+        if(static::isWin()){
+            $command = "rmdir /s/q " . $dir;
+        }else{
+            $command = "rm -Rf " . $dir;
         }
 
-        return $path;
+        system($command);
     }
 }

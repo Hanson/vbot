@@ -12,7 +12,7 @@ use Hanson\Vbot\Foundation\Vbot;
 use Hanson\Vbot\Message\Entity\Text;
 
 $robot = new Vbot([
-    'tmp' => __DIR__ . '/./../tmp/',
+    'user_path' => __DIR__ . '/./../tmp/',
     'debug' => true
 ]);
 
@@ -23,6 +23,7 @@ $robot->server->setCustomerHandler(function () {
         // 发送白名单
         if($item['RemarkName'] && in_array($item['RemarkName'], $whiteList)){
             Text::send($username, $item['RemarkName'] . ' 新年快乐');
+            sleep(2);
         }
         // 黑名单不发送
 //        if($item['RemarkName'] && !in_array($item['RemarkName'], $blackList)){

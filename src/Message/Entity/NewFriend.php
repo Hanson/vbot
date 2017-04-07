@@ -9,23 +9,22 @@
 namespace Hanson\Vbot\Message\Entity;
 
 
-use Hanson\Vbot\Collections\ContactFactory;
 use Hanson\Vbot\Message\MessageInterface;
-use Hanson\Vbot\Support\Console;
 
 class NewFriend extends Message implements MessageInterface
 {
 
     public function __construct($msg)
     {
-        $this->make();
+        contact()->update($msg['FromUserName']);
+
         parent::__construct($msg);
+
+        $this->make();
     }
 
     public function make()
     {
-        Console::debug('检测到新加好友，正在刷新好友列表...');
-        (new ContactFactory())->makeContactList();
-        Console::debug('好友更新成功！');
+        $this->content = $this->message;
     }
 }
