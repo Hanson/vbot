@@ -15,12 +15,19 @@ use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * 控制台处理类
+ *
+ * Class Console
+ * @package Hanson\Vbot\Support
+ */
 class Console
 {
 
     const INFO = 'INFO';
     const WARNING = 'WARNING';
     const ERROR = 'ERROR';
+    const MESSAGE = 'MESSAGE';
 
     /**
      * 输出字符串
@@ -70,10 +77,8 @@ class Console
 
         if(System::isWin()){
             $pxMap = ['<whitec>mm</whitec>', '<blackc>  </blackc>'];
-            system('cls');
         }else{
             $pxMap = ['<whitec>  </whitec>', '<blackc>  </blackc>'];
-            system('clear');
         }
 
         $text   = QRcode::text($text);
@@ -88,5 +93,15 @@ class Console
             }
             $output->writeln($pxMap[0]);
         }
+    }
+
+    /**
+     * 获取命令行参数
+     *
+     * @return array
+     */
+    public static function getParams()
+    {
+        return getopt("", ["session:"]);
     }
 }

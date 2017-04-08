@@ -39,13 +39,17 @@ class Account
      */
     public function getAccount($username)
     {
-        $account = group()->get($username, null);
+        if(starts_with($username, '@@')){
+            return group()->get($username);
+        }else{
+            $account = contact()->get($username, null);
 
-        $account = $account ?: contact()->get($username, null);
+            $account = $account ?: member()->get($username, null);
 
-        $account = $account ?: official()->get($username, null);
+            $account = $account ?: official()->get($username, null);
 
-        return $account ?: member()->get($username, []);
+            return $account ?: Special::getInstance()->get($username, null);
+        }
     }
 
 }

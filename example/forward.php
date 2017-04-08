@@ -12,14 +12,14 @@ use Hanson\Vbot\Foundation\Vbot;
 use Hanson\Vbot\Message\Entity\Text;
 
 $robot = new Vbot([
-    'tmp' => __DIR__ . '/./../tmp/',
+    'user_path' => __DIR__ . '/./../tmp/',
     'debug' => true
 ]);
 
 $robot->server->setMessageHandler(function ($message) {
     if ($message instanceof Text) {
         /** @var $message Text */
-        $contact = contact()->getUsernameById('hanson');
+        $contact = contact()->getUsernameByAlias('hanson');
         Text::send($contact, $message);
     }
 });
