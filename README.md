@@ -109,17 +109,13 @@ vbot示例源码为 https://github.com/HanSon/vbot/tree/master/demo/vbot.php
 
 [购书半自动处理](http://t.laravel-china.org/laravel-tutorial/5.1/buy-it)
 
-[红包提醒](example/hongbao.php)
+[轰炸消息到某群名](example/group.php)
 
-[轰炸消息到某群名](xample/group.php)
+[消息转发](example/forward.php)
 
-[消息转发](xample/forward.php)
+[自定义处理器](example/custom.php)
 
-[自定义处理器](xample/custom.php)
-
-[一键拜年](xample/bainian.php)
-
-[聊天操作](xample/contact.php)
+[一键拜年](example/bainian.php)
 
 
 ### 基本使用
