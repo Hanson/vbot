@@ -196,6 +196,7 @@ donate 名单 （排名按时间倒序）
 
 |捐助者|金额|
 |-----|----|
+|[bestony](https://github.com/bestony)|￥10.24|
 |匿名| ￥8.88|
 |[haidaofei](https://github.com/haidaofei)|￥88.00|
 |[kyaky](https://github.com/kyaky)|￥16.66|
