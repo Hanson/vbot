@@ -169,7 +169,7 @@ vbot 已实现以及待实现的功能列表 [点击查看](https://github.com/H
 
 排名不分先后，时间排序
 
-[zhuanxuhit](https://github.com/zhuanxuhit) terminal显示二维码
+[leo108](https://github.com/leo108) & [zhuanxuhit](https://github.com/zhuanxuhit)  terminal显示二维码 [php-console-qrcode](https://github.com/leo108/php-console-qrcode)
 
 [littlecodersh](https://github.com/littlecodersh) 分次加载好友数量方案
 
