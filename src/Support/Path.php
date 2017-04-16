@@ -58,7 +58,7 @@ class Path
     public static function getRealPath($path)
     {
         if (!is_dir($path)) {
-            mkdir($path, 0744, true);
+            mkdir($path, 0755, true);
         }
 
         return realpath($path);
