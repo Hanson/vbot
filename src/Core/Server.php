@@ -8,7 +8,6 @@
 
 namespace Hanson\Vbot\Core;
 
-
 use Endroid\QrCode\QrCode;
 use Hanson\Vbot\Support\Console;
 use Hanson\Vbot\Support\FileManager;
@@ -52,6 +51,10 @@ class Server
 
     public $pushUri;
 
+    protected $loginHandler = null;
+    protected $afterLoginHandler = null;
+    protected $afterInitHandler = null;
+
     public function __construct($config = [])
     {
         $this->config = $config;
@@ -65,7 +68,7 @@ class Server
      */
     public static function getInstance($config = [])
     {
-        if(!static::$instance){
+        if (!static::$instance) {
             static::$instance = new Server($config);
         }
 
@@ -77,7 +80,7 @@ class Server
      */
     public function run()
     {
-        if(!$this->tryLogin()){
+        if (!$this->tryLogin()) {
             $this->prepare();
         }
 
@@ -92,7 +95,9 @@ class Server
         Console::log(sprintf("群数量： %d", group()->count()));
         Console::log(sprintf("联系人数量： %d", contact()->count()));
         Console::log(sprintf("公众号数量： %d", official()->count()));
-
+        if ($this->afterInitHandler) {
+            call_user_func_array($this->afterInitHandler, []);
+        }
         MessageHandler::getInstance()->listen();
     }
 
@@ -101,11 +106,11 @@ class Server
      *
      * @return bool
      */
-    private function tryLogin() :bool
+    private function tryLogin(): bool
     {
         System::isWin() ? system('cls') : system('clear');
 
-        if(is_file(Path::getCurrentSessionPath() . 'cookies') && is_file(Path::getCurrentSessionPath() . 'server.json')){
+        if (is_file(Path::getCurrentSessionPath() . 'cookies') && is_file(Path::getCurrentSessionPath() . 'server.json')) {
 
             $configs = json_decode(file_get_contents(Path::getCurrentSessionPath() . 'server.json'), true);
 
@@ -116,8 +121,11 @@ class Server
             list($retCode, $selector) = (new Sync())->checkSync();
             $result = (new MessageHandler())->handleCheckSync($retCode, $selector, true);
 
-            if($result && (new Sync())->sync()){
+            if ($result && (new Sync())->sync()) {
                 Console::log('免扫码登录成功');
+                if ($this->afterLoginHandler) {
+                    call_user_func_array($this->afterLoginHandler, []);
+                }
                 return true;
             }
         }
@@ -131,12 +139,17 @@ class Server
     public function prepare()
     {
         $this->getUuid();
-        $this->generateQrCode();
+        $qrPath = $this->generateQrCode();
         Console::showQrCode('https://login.weixin.qq.com/l/' . $this->uuid);
         Console::log('请扫描二维码登录');
-
+        if ($this->loginHandler) {
+            call_user_func_array($this->loginHandler, ['qrPath' => $qrPath]);
+        }
         $this->waitForLogin();
         $this->login();
+        if ($this->afterLoginHandler) {
+            call_user_func_array($this->afterLoginHandler, []);
+        }
         Console::log('登录成功');
     }
 
@@ -152,12 +165,12 @@ class Server
             'fun' => 'new',
             'lang' => 'zh_CN',
 //            '_' => time() * 1000 . random_int(1, 999)
-            '_' => time()
+            '_' => time(),
         ]);
 
         preg_match('/window.QRLogin.code = (\d+); window.QRLogin.uuid = \"(\S+?)\"/', $content, $matches);
 
-        if(!$matches){
+        if (!$matches) {
             Console::log('获取UUID失败', Console::ERROR);
             exit;
         }
@@ -179,6 +192,7 @@ class Server
         FileManager::saveTo($file, file_get_contents($url));
 
         $qrCode->save($file);
+        return $file;
     }
 
     /**
@@ -191,7 +205,7 @@ class Server
         $retryTime = 10;
         $tip = 1;
 
-        while($retryTime > 0){
+        while ($retryTime > 0) {
             $url = sprintf('https://login.weixin.qq.com/cgi-bin/mmwebwx-bin/login?tip=%s&uuid=%s&_=%s', $tip, $this->uuid, time());
 
             $content = http()->get($url);
@@ -199,7 +213,7 @@ class Server
             preg_match('/window.code=(\d+);/', $content, $matches);
 
             $code = $matches[1];
-            switch($code){
+            switch ($code) {
                 case '201':
                     Console::log('请点击确认登录微信');
                     $tip = 0;
@@ -209,8 +223,8 @@ class Server
 
                     $this->redirectUri = $matches[1] . '&fun=new';
                     $url = 'https://%s/cgi-bin/mmwebwx-bin';
-                    $this->fileUri = sprintf($url, 'file.'.$matches[2]);
-                    $this->pushUri = sprintf($url, 'webpush.'.$matches[2]);
+                    $this->fileUri = sprintf($url, 'file.' . $matches[2]);
+                    $this->pushUri = sprintf($url, 'webpush.' . $matches[2]);
                     $this->baseUri = sprintf($url, $matches[2]);
                     return;
                 case '408':
@@ -240,25 +254,25 @@ class Server
     {
         $content = http()->get($this->redirectUri);
 
-        $data = (array)simplexml_load_string($content, 'SimpleXMLElement', LIBXML_NOCDATA);
+        $data = (array) simplexml_load_string($content, 'SimpleXMLElement', LIBXML_NOCDATA);
 
         $this->skey = $data['skey'];
         $this->sid = $data['wxsid'];
         $this->uin = $data['wxuin'];
         $this->passTicket = $data['pass_ticket'];
 
-        if(in_array('', [$this->skey, $this->sid, $this->uin, $this->passTicket])){
+        if (in_array('', [$this->skey, $this->sid, $this->uin, $this->passTicket])) {
             Console::log('登录失败', Console::ERROR);
             exit;
         }
 
-        $this->deviceId = 'e' .substr(mt_rand().mt_rand(), 1, 15);
+        $this->deviceId = 'e' . substr(mt_rand() . mt_rand(), 1, 15);
 
         $this->baseRequest = [
             'Uin' => intval($this->uin),
             'Sid' => $this->sid,
             'Skey' => $this->skey,
-            'DeviceID' => $this->deviceId
+            'DeviceID' => $this->deviceId,
         ];
 
         $this->saveServer();
@@ -278,7 +292,7 @@ class Server
             'baseUri' => $this->baseUri,
             'fileUri' => $this->fileUri,
             'pushUri' => $this->pushUri,
-            'config' => $this->config
+            'config' => $this->config,
         ]);
 
         FileManager::saveTo(Path::getCurrentSessionPath() . 'server.json', $config);
@@ -289,7 +303,7 @@ class Server
         $url = sprintf($this->baseUri . '/webwxinit?r=%d', time());
 
         $content = http()->json($url, [
-            'BaseRequest' => $this->baseRequest
+            'BaseRequest' => $this->baseRequest,
         ]);
 
         $result = json_decode($content, true);
@@ -299,7 +313,7 @@ class Server
 
         $this->initContactList($result['ContactList']);
 
-        if($result['BaseResponse']['Ret'] != 0){
+        if ($result['BaseResponse']['Ret'] != 0) {
             System::deleteDir(Path::getCurrentSessionPath());
             Console::log('初始化失败，链接：' . $url, Console::ERROR);
             exit;
@@ -308,7 +322,7 @@ class Server
 
     protected function initContactList($contactList)
     {
-        if($contactList){
+        if ($contactList) {
             (new ContactFactory())->setCollections($contactList);
         }
     }
@@ -330,7 +344,7 @@ class Server
             'Code' => 3,
             'FromUserName' => myself()->username,
             'ToUserName' => myself()->username,
-            'ClientMsgId' => time()
+            'ClientMsgId' => time(),
         ]);
     }
 
@@ -340,11 +354,11 @@ class Server
 
         $syncKey = [];
 
-        if(is_array($this->syncKey['List'])){
+        if (is_array($this->syncKey['List'])) {
             foreach ($this->syncKey['List'] as $item) {
                 $syncKey[] = $item['Key'] . '_' . $item['Val'];
             }
-        }elseif($first){
+        } elseif ($first) {
             $this->init(false);
         }
 
@@ -374,5 +388,29 @@ class Server
     public function setOnceHandler(\Closure $closure)
     {
         MessageHandler::getInstance()->setOnceHandler($closure);
+    }
+
+    public function setLoginHandler(\Closure $closure)
+    {
+        if (!$closure instanceof \Closure) {
+            throw new \Exception('login handler must be a closure!');
+        }
+        $this->loginHandler = $closure;
+    }
+
+    public function setAfterLoginHandler(\Closure $closure)
+    {
+        if (!$closure instanceof \Closure) {
+            throw new \Exception('after login handler must be a closure!');
+        }
+        $this->afterLoginHandler = $closure;
+    }
+
+    public function setAfterInitHandler(\Closure $closure)
+    {
+        if (!$closure instanceof \Closure) {
+            throw new \Exception('after login handler must be a closure!');
+        }
+        $this->afterInitHandler = $closure;
     }
 }

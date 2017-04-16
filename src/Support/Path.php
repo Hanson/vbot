@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Hanson\Vbot\Support;
-
 
 class Path
 {
@@ -46,7 +44,7 @@ class Path
      *
      * @return string
      */
-    public static function getCurrentUinPath() :string
+    public static function getCurrentUinPath(): string
     {
         return server()->config['user_path'] . myself()->uin . DIRECTORY_SEPARATOR;
     }
@@ -59,8 +57,8 @@ class Path
      */
     public static function getRealPath($path)
     {
-        if(!is_dir($path)){
-            mkdir($path, 0700, true);
+        if (!is_dir($path)) {
+            mkdir($path, 0744, true);
         }
 
         return realpath($path);
