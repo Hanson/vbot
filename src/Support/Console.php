@@ -8,7 +8,6 @@
 
 namespace Hanson\Vbot\Support;
 
-
 use Carbon\Carbon;
 use PHPQRCode\QRcode;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
@@ -29,6 +28,8 @@ class Console
     const ERROR = 'ERROR';
     const MESSAGE = 'MESSAGE';
 
+    static $loggerHandler = null;
+
     /**
      * 输出字符串
      *
@@ -37,7 +38,11 @@ class Console
      */
     public static function log($str, $level = 'INFO')
     {
-        echo '[' . Carbon::now()->toDateTimeString() . ']' . "[{$level}] " . $str . PHP_EOL;
+        if (self::$loggerHandler) {
+            call_user_func_array(self::$loggerHandler, ['info' => $str, 'level' => strtoupper($level)]);
+        } else {
+            echo '[' . Carbon::now()->toDateTimeString() . ']' . "[{$level}] " . $str . PHP_EOL;
+        }
     }
 
     /**
@@ -57,13 +62,13 @@ class Console
      *
      * @param OutputInterface $output
      */
-    private static function initQrcodeStyle(OutputInterface $output) {
+    private static function initQrcodeStyle(OutputInterface $output)
+    {
         $style = new OutputFormatterStyle('black', 'black', array('bold'));
         $output->getFormatter()->setStyle('blackc', $style);
         $style = new OutputFormatterStyle('white', 'white', array('bold'));
         $output->getFormatter()->setStyle('whitec', $style);
     }
-
 
     /**
      * 控制台显示二维码
@@ -75,13 +80,13 @@ class Console
         $output = new ConsoleOutput();
         static::initQrcodeStyle($output);
 
-        if(System::isWin()){
+        if (System::isWin()) {
             $pxMap = ['<whitec>mm</whitec>', '<blackc>  </blackc>'];
-        }else{
+        } else {
             $pxMap = ['<whitec>  </whitec>', '<blackc>  </blackc>'];
         }
 
-        $text   = QRcode::text($text);
+        $text = QRcode::text($text);
 
         $length = strlen($text[0]);
 
@@ -103,5 +108,13 @@ class Console
     public static function getParams()
     {
         return getopt("", ["session:"]);
+    }
+
+    public static function setLoggerHandler(\Closure $closure)
+    {
+        if (!$closure instanceof \Closure) {
+            throw new \Exception('after login handler must be a closure!');
+        }
+        self::$loggerHandler = $closure;
     }
 }

@@ -8,7 +8,6 @@
 
 namespace Hanson\Vbot\Support;
 
-
 class FileManager
 {
 
@@ -22,8 +21,8 @@ class FileManager
     {
         $path = dirname($file);
 
-        if(!is_dir($path)){
-            mkdir($path, 0700, true);
+        if (!is_dir($path)) {
+            mkdir($path, 0755, true);
         }
 
         file_put_contents($file, $data);

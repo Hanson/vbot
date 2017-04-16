@@ -9,29 +9,29 @@
 require_once __DIR__ . './../vendor/autoload.php';
 
 use Hanson\Vbot\Foundation\Vbot;
-use Hanson\Vbot\Message\Entity\Message;
-use Hanson\Vbot\Message\Entity\Image;
-use Hanson\Vbot\Message\Entity\Text;
 use Hanson\Vbot\Message\Entity\Emoticon;
+use Hanson\Vbot\Message\Entity\GroupChange;
+use Hanson\Vbot\Message\Entity\Image;
 use Hanson\Vbot\Message\Entity\Location;
+use Hanson\Vbot\Message\Entity\Message;
+use Hanson\Vbot\Message\Entity\Mina;
+use Hanson\Vbot\Message\Entity\NewFriend;
+use Hanson\Vbot\Message\Entity\Official;
+use Hanson\Vbot\Message\Entity\Recall;
+use Hanson\Vbot\Message\Entity\Recommend;
+use Hanson\Vbot\Message\Entity\RedPacket;
+use Hanson\Vbot\Message\Entity\RequestFriend;
+use Hanson\Vbot\Message\Entity\Share;
+use Hanson\Vbot\Message\Entity\Text;
+use Hanson\Vbot\Message\Entity\Touch;
+use Hanson\Vbot\Message\Entity\Transfer;
 use Hanson\Vbot\Message\Entity\Video;
 use Hanson\Vbot\Message\Entity\Voice;
-use Hanson\Vbot\Message\Entity\Recall;
-use Hanson\Vbot\Message\Entity\RedPacket;
-use Hanson\Vbot\Message\Entity\Transfer;
-use Hanson\Vbot\Message\Entity\Recommend;
-use Hanson\Vbot\Message\Entity\Share;
-use Hanson\Vbot\Message\Entity\Official;
-use Hanson\Vbot\Message\Entity\Touch;
-use Hanson\Vbot\Message\Entity\Mina;
-use Hanson\Vbot\Message\Entity\RequestFriend;
-use Hanson\Vbot\Message\Entity\GroupChange;
-use Hanson\Vbot\Message\Entity\NewFriend;
 
 $path = __DIR__ . '/./../tmp/';
 $robot = new Vbot([
     'user_path' => $path,
-    'debug' => true
+    'debug' => true,
 ]);
 
 // 图灵自动回复
@@ -39,11 +39,13 @@ function reply($str)
 {
     return http()->post('http://www.tuling123.com/openapi/api', [
         'key' => '1dce02aef026258eff69635a06b0ab7d',
-        'info' => $str
+        'info' => $str,
     ], true)['text'];
 
 }
-
+\Hanson\Vbot\Support\Console::setLoggerHandler(function ($info, $level) {
+    echo '[自定义日志][' . \Carbon\Carbon::now()->toDateTimeString() . ']' . "[{$level}] " . $info . PHP_EOL;
+});
 $robot->server->setMessageHandler(function ($message) use ($path) {
     /** @var $message Message */
 
@@ -130,10 +132,10 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
         /** @var $message Recommend */
         if ($message->isOfficial) {
             return $message->from['NickName'] . ' 向你推荐了公众号 ' . $message->province . $message->city .
-            " {$message->info['NickName']} 公众号信息： {$message->description}";
+                " {$message->info['NickName']} 公众号信息： {$message->description}";
         } else {
             return $message->from['NickName'] . ' 向你推荐了 ' . $message->province . $message->city .
-            " {$message->info['NickName']} 头像链接： {$message->bigAvatar}";
+                " {$message->info['NickName']} 头像链接： {$message->bigAvatar}";
         }
     }
 
@@ -191,7 +193,7 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
             return $message->content;
         } elseif ($message->action === 'RENAME') {
 //            \Hanson\Vbot\Support\Console::log($message->from['NickName'] . ' 改名为 ' . $message->rename);
-            if ($message->rename !== 'vbot 测试群'){
+            if ($message->rename !== 'vbot 测试群') {
                 group()->setGroupName($message->from['UserName'], 'vbot 测试群');
                 return '行不改名,坐不改姓！';
             }
@@ -200,6 +202,18 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
 
     return false;
 
+});
+
+$robot->server->setLoginHandler(function ($qrPath) {
+    \Hanson\Vbot\Support\Console::log('The login qrcode is: ' . $qrPath);
+});
+
+$robot->server->setAfterLoginHandler(function () {
+    \Hanson\Vbot\Support\Console::log('After login success callback');
+});
+
+$robot->server->setAfterInitHandler(function () {
+    \Hanson\Vbot\Support\Console::log('After initContact callback');
 });
 
 $robot->server->setExitHandler(function () {
