@@ -193,6 +193,7 @@ donate 名单 （排名按时间倒序）
 
 |捐助者|金额|
 |-----|----|
+|[liuhui5354](https://github.com/liuhui5354)|￥6.66|
 |匿名| ￥6.66|
 |匿名| ￥50.00|
 |[bestony](https://github.com/bestony)|￥10.24|
