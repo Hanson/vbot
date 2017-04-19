@@ -5,33 +5,70 @@ namespace Hanson\Vbot\Foundation;
 
 
 use Illuminate\Config\Repository;
-use Illuminate\Support\Collection;
+use Pimple\Container;
 
-class Config extends Repository
+class Config extends Container
 {
+    /**
+     * Repository instance.
+     *
+     * @var Repository
+     */
+    protected static $instance;
 
-    public static function __callStatic($method, $args)
+    /**
+     * init config.
+     *
+     * @var array
+     */
+    protected static $config = [];
+
+    /**
+     * init config.
+     *
+     * @param array $config
+     */
+    public static function initConfig($config = [])
     {
-        $instance = static::getFacadeRoot();
-
-        if (! $instance) {
-            throw new RuntimeException('A facade root has not been set.');
-        }
-
-        switch (count($args)) {
-            case 0:
-                return $instance->$method();
-            case 1:
-                return $instance->$method($args[0]);
-            case 2:
-                return $instance->$method($args[0], $args[1]);
-            case 3:
-                return $instance->$method($args[0], $args[1], $args[2]);
-            case 4:
-                return $instance->$method($args[0], $args[1], $args[2], $args[3]);
-            default:
-                return call_user_func_array([$instance, $method], $args);
-        }
+        static::$config = $config;
     }
 
+    /**
+     * call static function.
+     *
+     * @param $method
+     * @param $args
+     * @return mixed
+     */
+    public static function __callStatic($method, $args)
+    {
+        if (! static::$instance) {
+            static::$instance = new Repository(self::$config);
+        }
+
+        return static::$instance->{$method}(...$args);
+    }
+
+    /**
+     * Magic get access.
+     *
+     * @param string $id
+     *
+     * @return mixed
+     */
+    public function __get($id)
+    {
+        return $this->offsetGet($id);
+    }
+
+    /**
+     * Magic set access.
+     *
+     * @param string $id
+     * @param mixed $value
+     */
+    public function __set($id, $value)
+    {
+        $this->offsetSet($id, $value);
+    }
 }

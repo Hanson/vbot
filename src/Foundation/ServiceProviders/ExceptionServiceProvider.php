@@ -3,18 +3,18 @@
 namespace Hanson\Vbot\Foundation\ServiceProviders;
 
 
-use Hanson\Vbot\Core\Server;
+use Hanson\Vbot\Exceptions\Handler;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 
 
-class ServerServiceProvider implements ServiceProviderInterface
+class ExceptionServiceProvider implements ServiceProviderInterface
 {
 
     public function register(Container $pimple)
     {
-        $pimple['server'] = function ($pimple) {
-            return new Server();
+        $pimple['exception'] = function ($pimple) {
+            return new Handler();
         };
     }
 }

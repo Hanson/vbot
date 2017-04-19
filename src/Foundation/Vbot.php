@@ -9,32 +9,80 @@
 namespace Hanson\Vbot\Foundation;
 
 
-use Hanson\Vbot\Core\Server;
-use Hanson\Vbot\Support\Console;
-use Hanson\Vbot\Support\Path;
-use Illuminate\Support\Collection;
 use Pimple\Container;
 
 /**
- * Class Robot
+ * Class Vbot
  * @package Hanson\Vbot\Foundation
- * @property Server $server
+ * @property \Hanson\Vbot\Core\Server $server
+ * @property \Hanson\Vbot\Exceptions\Handler $exception
  */
-class Vbot
+class Vbot extends Container
 {
 
-    public function __construct($config)
+    /**
+     * Service Providers.
+     *
+     * @var array
+     */
+    protected $providers = [
+        ServiceProviders\ServerServiceProvider::class,
+        ServiceProviders\ExceptionServiceProvider::class,
+    ];
+
+    public function __construct(array $config)
     {
-        $this->setConfig($config);
+        parent::__construct();
+
+        Config::initConfig($config);
+
+        $this->registerProviders();
+        $this->bootstrap();
     }
 
     /**
-     * 设置Config
-     *
-     * @param $config
+     * Register providers.
      */
-    private function setConfig($config)
+    private function registerProviders()
     {
-        Config::getInstance($config);
+        foreach ($this->providers as $provider) {
+            $this->register(new $provider());
+        }
+    }
+
+    private function bootstrap()
+    {
+        $this->bootstrapWithException();
+    }
+
+    private function bootstrapWithException()
+    {
+        error_reporting(-1);
+        set_error_handler([$this->exception, 'handleError']);
+        set_exception_handler([$this->exception, 'handleException']);
+        register_shutdown_function([$this->exception, 'handleShutdown']);
+    }
+
+    /**
+     * Magic get access.
+     *
+     * @param string $id
+     *
+     * @return mixed
+     */
+    public function __get($id)
+    {
+        return $this->offsetGet($id);
+    }
+
+    /**
+     * Magic set access.
+     *
+     * @param string $id
+     * @param mixed $value
+     */
+    public function __set($id, $value)
+    {
+        $this->offsetSet($id, $value);
     }
 }

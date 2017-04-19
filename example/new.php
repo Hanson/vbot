@@ -1,8 +1,8 @@
 <?php
 
-namespace Example;
+//namespace Example;
 
-use Hanson\Vbot\Foundation\Config;
+//use Hanson\Vbot\Foundation\Config;
 use Hanson\Vbot\Foundation\Vbot;
 
 require_once __DIR__ . './../vendor/autoload.php';
@@ -13,13 +13,15 @@ $robot = new Vbot([
     'debug' => true,
 ]);
 
-echo Config::get('user_path');
-Config::set('abc', 'def');
-echo Config::get('abc');
 
-//$robot->setMessageHandler(function($message){
+//$robot->server->setMessageHandler(function($message){
 //    ;
 //});
-//
-//
-//$robot->serve();
+
+$robot->exception->setHandler(function(Exception $e){
+    echo $e->getMessage();
+    return false;
+});
+
+
+$robot->server->serve();
