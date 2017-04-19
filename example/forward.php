@@ -13,7 +13,8 @@ use Hanson\Vbot\Message\Entity\Text;
 
 $robot = new Vbot([
     'user_path' => __DIR__ . '/./../tmp/',
-    'debug' => true
+    'session' => 'console',
+    'debug' => true,
 ]);
 
 $robot->server->setMessageHandler(function ($message) {

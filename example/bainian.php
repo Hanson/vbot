@@ -13,26 +13,27 @@ use Hanson\Vbot\Message\Entity\Text;
 
 $robot = new Vbot([
     'user_path' => __DIR__ . '/./../tmp/',
-    'debug' => true
+    'session' => 'console',
+    'debug' => true,
 ]);
 
 $robot->server->setCustomerHandler(function () {
     $whiteList = ['some remark name...', 'some remark name...'];
     $blackList = ['some remark name...', 'some remark name...'];
-    contact()->each(function($item, $username) use ($whiteList, $blackList){
+    contact()->each(function ($item, $username) use ($whiteList, $blackList) {
         // 发送白名单
-        if($item['RemarkName'] && in_array($item['RemarkName'], $whiteList)){
+        if ($item['RemarkName'] && in_array($item['RemarkName'], $whiteList)) {
             Text::send($username, $item['RemarkName'] . ' 新年快乐');
             sleep(2);
         }
         // 黑名单不发送
-//        if($item['RemarkName'] && !in_array($item['RemarkName'], $blackList)){
-//            Text::send($username, $item['RemarkName'] . ' 新年快乐');
-//        }
+        //        if($item['RemarkName'] && !in_array($item['RemarkName'], $blackList)){
+        //            Text::send($username, $item['RemarkName'] . ' 新年快乐');
+        //        }
         // 全部人发送
-//        if($item['RemarkName']){
-//            Text::send($username, $item['RemarkName'] . ' 新年快乐');
-//        }
+        //        if($item['RemarkName']){
+        //            Text::send($username, $item['RemarkName'] . ' 新年快乐');
+        //        }
     });
     exit;
 });

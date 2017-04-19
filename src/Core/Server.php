@@ -298,6 +298,48 @@ class Server
         FileManager::saveTo(Path::getCurrentSessionPath() . 'server.json', $config);
     }
 
+    /**
+     * 从本地cookies 以及 server.json 恢复客户端程序
+     * @return Boolean
+     */
+    public function restoreServer()
+    {
+        if (is_file(Path::getCurrentSessionPath() . 'cookies') && is_file(Path::getCurrentSessionPath() . 'server.json')) {
+
+            $configs = json_decode(file_get_contents(Path::getCurrentSessionPath() . 'server.json'), true);
+
+            foreach ($configs as $key => $config) {
+                $this->{$key} = $config;
+            }
+            return $this->restoreMyself();
+        }
+        return false;
+    }
+
+    /**
+     * 保存登陆用户信息至本地
+     */
+    private function saveMyself($myself)
+    {
+        FileManager::saveTo(Path::getCurrentSessionPath() . 'myself.json', json_encode($myself));
+    }
+
+    /**
+     * 从本地用户信息恢复到内存
+     * @return Boolean true
+     */
+    private function restoreMyself()
+    {
+        if (is_file(Path::getCurrentSessionPath() . 'cookies') && is_file(Path::getCurrentSessionPath() . 'myself.json')) {
+
+            $myself = json_decode(file_get_contents(Path::getCurrentSessionPath() . 'myself.json'), true);
+
+            myself()->init($myself);
+            return true;
+        }
+        return false;
+    }
+
     protected function init($first = true)
     {
         $url = sprintf($this->baseUri . '/webwxinit?r=%d', time());
@@ -310,11 +352,17 @@ class Server
         $this->generateSyncKey($result, $first);
 
         myself()->init($result['User']);
+        $this->saveMyself($result['User']);
 
         $this->initContactList($result['ContactList']);
 
         if ($result['BaseResponse']['Ret'] != 0) {
-            System::deleteDir(Path::getCurrentSessionPath());
+            // fix the exception, when process exit after the cookies file deleted
+            // there will be throw a exception by GuzzleHttp\Cookie\FileCookieJar
+            // Because the FileCookieJar will save cookies to cookies file, but
+            // the file is not exist.
+            unlink(Path::getCurrentSessionPath() . '/server.json');
+            unlink(Path::getCurrentSessionPath() . '/myself.json');
             Console::log('初始化失败，链接：' . $url, Console::ERROR);
             exit;
         }
