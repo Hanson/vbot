@@ -56,11 +56,13 @@ class Server
     protected $afterLoginHandler = null;
     protected $afterInitHandler = null;
 
-    public function __construct($config = [])
-    {
-        $this->config = $config;
+    protected $vbot;
 
-        $this->config['debug'] = isset($this->config['debug']) ? $this->config['debug'] : false;
+    public function __construct($vbot)
+    {
+        $this->vbot = $vbot;
+
+//        $this->config['debug'] = isset($this->config['debug']) ? $this->config['debug'] : false;
     }
 
     /**
@@ -81,6 +83,8 @@ class Server
      */
     public function serve()
     {
+//        print_r(Config::all());
+//        print_r(Config::get('log.level'));
         echo $sdf;
         exit;
         if (!$this->tryLogin()) {

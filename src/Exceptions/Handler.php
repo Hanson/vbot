@@ -5,6 +5,7 @@ namespace Hanson\Vbot\Exceptions;
 
 
 use Closure;
+use Hanson\Vbot\Support\Log;
 use Symfony\Component\Debug\Exception\FatalErrorException;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Throwable;
@@ -13,6 +14,14 @@ use ErrorException;
 
 class Handler
 {
+
+    protected $dontReport = [
+//        ConfigErrorException::class
+    ];
+
+    protected $systemException = [
+        ConfigErrorException::class,
+    ];
 
     /**
      * exception handler.
@@ -25,19 +34,35 @@ class Handler
      * report while exception.
      *
      * @param Exception $e
+     * @return bool|mixed
      * @throws Exception
      */
-    public function report(Exception $e)
+    public function report(Exception $e): bool
     {
-        $isThrow = true;
+        if ($this->shouldntReport($e)) {
+            return true;
+        }
 
         if ($this->handler) {
-            $isThrow = call_user_func_array($this->handler, [$e]);
+            return call_user_func_array($this->handler, [$e]);
         }
 
-        if ($isThrow) {
-            throw $e;
+        return true;
+    }
+
+    /**
+     * Determine if the exception is in the "do not report" list.
+     *
+     * @param  \Exception $e
+     * @return bool
+     */
+    protected function shouldntReport(Exception $e)
+    {
+        foreach ($this->dontReport as $type) {
+            return $e instanceof $type;
         }
+
+        return false;
     }
 
     /**
@@ -73,6 +98,8 @@ class Handler
      *
      * @param  \Throwable $e
      * @return void
+     * @throws FatalThrowableError
+     * @throws Throwable
      */
     public function handleException(Throwable $e)
     {
@@ -80,7 +107,13 @@ class Handler
             $e = new FatalThrowableError($e);
         }
 
-        $this->report($e);
+        $isThrow = $this->report($e);
+
+        Log::error($e->getMessage());
+
+        if($isThrow){
+            throw $e;
+        }
     }
 
     /**

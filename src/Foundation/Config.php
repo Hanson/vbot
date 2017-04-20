@@ -7,6 +7,12 @@ namespace Hanson\Vbot\Foundation;
 use Illuminate\Config\Repository;
 use Pimple\Container;
 
+/**
+ * Class Config
+ * @package Hanson\Vbot\Foundation
+ * @method static Repository get($key, $default = null)
+ * @method static Repository set($key, $value)
+ */
 class Config extends Container
 {
     /**

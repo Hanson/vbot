@@ -9,8 +9,19 @@ require_once __DIR__ . './../vendor/autoload.php';
 
 $path = __DIR__ . '/./../tmp/';
 $robot = new Vbot([
-    'user_path' => $path,
-    'debug' => true,
+    'path'     => $path,
+    'debug'    => true,
+    'download' => [
+        'image'   => true,
+        'voice'   => true,
+        'video'   => true,
+        'emotion' => true,
+    ],
+    'log'      => [
+        'level'      => 'debug',
+        'permission' => 0777,
+        'file'       => $path . '/vbot.log',
+    ],
 ]);
 
 
@@ -18,7 +29,7 @@ $robot = new Vbot([
 //    ;
 //});
 
-$robot->exception->setHandler(function(Exception $e){
+$robot->exception->setHandler(function (Exception $e) {
     echo $e->getMessage();
     return false;
 });

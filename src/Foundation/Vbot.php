@@ -9,6 +9,10 @@
 namespace Hanson\Vbot\Foundation;
 
 
+use Hanson\Vbot\Support\Log;
+use Monolog\Handler\NullHandler;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Pimple\Container;
 
 /**
@@ -26,6 +30,7 @@ class Vbot extends Container
      * @var array
      */
     protected $providers = [
+        ServiceProviders\LogServiceProvider::class,
         ServiceProviders\ServerServiceProvider::class,
         ServiceProviders\ExceptionServiceProvider::class,
     ];
@@ -34,10 +39,39 @@ class Vbot extends Container
     {
         parent::__construct();
 
-        Config::initConfig($config);
-
+        $this->initializeConfig($config);
+        $this->initializeLogger();
         $this->registerProviders();
-        $this->bootstrap();
+
+        (new Kernel($this))->bootstrap();
+//        $this->bootstrap();
+    }
+
+    private function initializeConfig(array $config)
+    {
+        Config::initConfig($config);
+    }
+
+    private function initializeLogger()
+    {
+        if (Log::hasLogger()) {
+            return;
+        }
+
+        $logger = new Logger('vbot');
+
+        if (!Config::get('debug') || defined('PHPUNIT_RUNNING')) {
+            $logger->pushHandler(new NullHandler());
+        } elseif ($logFile = Config::get('log.file')) {
+            $logger->pushHandler(new StreamHandler(
+                    $logFile,
+                    Config::get('log.level', Logger::WARNING),
+                    true,
+                    Config::get('log.permission', null))
+            );
+        }
+
+        Log::setLogger($logger);
     }
 
     /**
@@ -48,19 +82,6 @@ class Vbot extends Container
         foreach ($this->providers as $provider) {
             $this->register(new $provider());
         }
-    }
-
-    private function bootstrap()
-    {
-        $this->bootstrapWithException();
-    }
-
-    private function bootstrapWithException()
-    {
-        error_reporting(-1);
-        set_error_handler([$this->exception, 'handleError']);
-        set_exception_handler([$this->exception, 'handleException']);
-        register_shutdown_function([$this->exception, 'handleShutdown']);
     }
 
     /**
