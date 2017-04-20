@@ -31,6 +31,7 @@ use Hanson\Vbot\Message\Entity\Voice;
 $path = __DIR__ . '/./../tmp/';
 $robot = new Vbot([
     'user_path' => $path,
+    'session' => 'console',
     'debug' => true,
 ]);
 

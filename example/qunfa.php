@@ -14,12 +14,13 @@ use Hanson\Vbot\Support\Console;
 
 $robot = new Vbot([
     'user_path' => __DIR__ . '/./../tmp/',
-    'debug' => true
+    'session' => 'console',
+    'debug' => true,
 ]);
 
-$robot->server->setCustomerHandler(function(){
+$robot->server->setCustomerHandler(function () {
 
-    contact()->each(function($item, $username){
+    contact()->each(function ($item, $username) {
         $word = '新年快乐';
         Console::log("send to username: $username  nickname:{$item['NickName']}");
         Text::send($username, $word);
