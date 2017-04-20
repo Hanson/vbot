@@ -17,23 +17,13 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class Command
 {
-    public function register()
+    public function run()
     {
         $application = new Application();
 
         $application->add(new ClearSessionCommand());
-//        $input = new ArgvInput();
-        $input = new InputDefinition(array(
-            // ...
-            new InputArgument('session', InputArgument::OPTIONAL),
-        ));
-        print_r($input->getArguments()[0]->get);
-//        $application->run();
-    }
 
-    public static function __callStatic($method, $parameters)
-    {
-        return (new static())->$method(...$parameters);
+        $application->run();
     }
 
 }
