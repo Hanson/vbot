@@ -71,7 +71,7 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
             }
 
             if ($message->isAt) {
-                return reply($message->content);
+                return reply(\Hanson\Vbot\Support\Content::filterAt($message->content));
             }
         }
     }

@@ -27,6 +27,7 @@ use Hanson\Vbot\Message\Entity\Mina;
 use Hanson\Vbot\Message\Entity\RequestFriend;
 use Hanson\Vbot\Message\Entity\GroupChange;
 use Hanson\Vbot\Message\Entity\NewFriend;
+use Hanson\Vbot\Support\Content;
 
 $path = __DIR__ . '/./../tmp/';
 $robot = new Vbot([
@@ -169,7 +170,7 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
             }
 
             if ($message->isAt) {
-                return reply($message->content);
+                return reply(Content::filterAt($message->content));
             }
         }
     }
@@ -194,7 +195,7 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
         } elseif ($message->origin instanceof Voice) {
             Text::send($message->raw['FromUserName'], "{$message->nickname} 撤回了一条语音");
         } else {
-            Text::send($message->raw['FromUserName'], "{$message->nickname} 撤回了一条信息 \"{$message->origin->message}\"");
+            Text::send($message->raw['FromUserName'], "{$message->nickname} 撤回了一条信息 \"{$message->origin->content}\"");
         }
     }
 
