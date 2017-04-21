@@ -3,7 +3,6 @@
 
 namespace Hanson\Vbot\Console;
 
-
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -25,5 +24,4 @@ class Command
 
         $application->run();
     }
-
 }

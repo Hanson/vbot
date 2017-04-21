@@ -19,9 +19,9 @@ $robot = new Vbot([
 $robot->server->setCustomerHandler(function () {
     $whiteList = ['some remark name...', 'some remark name...'];
     $blackList = ['some remark name...', 'some remark name...'];
-    contact()->each(function($item, $username) use ($whiteList, $blackList){
+    contact()->each(function ($item, $username) use ($whiteList, $blackList) {
         // 发送白名单
-        if($item['RemarkName'] && in_array($item['RemarkName'], $whiteList)){
+        if ($item['RemarkName'] && in_array($item['RemarkName'], $whiteList)) {
             Text::send($username, $item['RemarkName'] . ' 新年快乐');
             sleep(2);
         }

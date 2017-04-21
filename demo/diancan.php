@@ -27,7 +27,7 @@ function outputMenu($menu, $canteen)
     $order = $canteen === '都城' ? "当前都城菜单：\n" : "当前龙兴菜单：\n";
 
     foreach ($menu as $item) {
-        if($item['canteen'] === $canteen){
+        if ($item['canteen'] === $canteen) {
             $order .= "{$item['nickname']} {$item['food']} {$item['price']}\n";
         }
     }
@@ -37,15 +37,14 @@ function outputMenu($menu, $canteen)
 
 function displayName($array)
 {
-    if(isset($array['DisplayName']) && $array['DisplayName']){
+    if (isset($array['DisplayName']) && $array['DisplayName']) {
         return $array['DisplayName'];
-    }else {
+    } else {
         return $array['NickName'];
     }
 }
 
 $robot->server->setCustomerHandler(function () use (&$isSendToday, &$isNewDay, &$menu) {
-
     if (!$isSendToday && Carbon::now()->gt(Carbon::now()->hour(17)->minute(53))) {
         $username = group()->getUsernameByNickname('三年二班');
         Text::send($username, "小伙伴们，报名时间截止到10:30\n
@@ -71,7 +70,7 @@ $robot->server->setCustomerHandler(function () use (&$isSendToday, &$isNewDay, &
 $robot->server->setMessageHandler(function ($message) use (&$menu) {
     if ($message instanceof Text) {
         /** @var $message Text */
-        if($message->from['NickName'] === '三年二班'){
+        if ($message->from['NickName'] === '三年二班') {
             if (starts_with($message->content, '点餐')) {
                 $content = str_replace('点餐', '', $message->content);
                 $canteen = substr($content, 0, 6);
@@ -93,19 +92,19 @@ $robot->server->setMessageHandler(function ($message) use (&$menu) {
                 } else {
                     return '不存在此菜单';
                 }
-            }elseif ($message->content === '取消点餐'){
-                if(isset($menu[$message->sender['UserName']])){
+            } elseif ($message->content === '取消点餐') {
+                if (isset($menu[$message->sender['UserName']])) {
                     $canteen = $menu[$message->sender['UserName']]['canteen'];
                     unset($menu[$message->sender['UserName']]);
                     Text::send($message->from['UserName'], '取消点餐成功！');
                     return outputMenu($menu, $canteen);
-                }else{
+                } else {
                     return '你没有点餐呢！';
                 }
-            }else{
+            } else {
                 \Hanson\Vbot\Support\Console::debug($message->content);
             }
-        }else{
+        } else {
             \Hanson\Vbot\Support\Console::debug($message->from['NickName']);
         }
     }

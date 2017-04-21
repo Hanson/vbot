@@ -17,20 +17,19 @@ $robot = new Vbot([
 
 $flag = false;
 
-$robot->server->setCustomerHandler(function() use (&$flag){
+$robot->server->setCustomerHandler(function () use (&$flag) {
     // RemarkName,代表的改用户在你通讯录的名字
     $contact = contact()->getUsernameByRemarkName('hanson');
-    if ($contact === false){
+    if ($contact === false) {
         echo("找不到你要的联系人，请确认联系人姓名");
         return;
     }
-    if(!$flag){
+    if (!$flag) {
         Text::send($contact, '来轰炸吧');
         $flag = true;
     }
 
     Text::send($contact, '测试' . \Carbon\Carbon::now()->toDateTimeString());
-
 });
 
 $robot->server->run();

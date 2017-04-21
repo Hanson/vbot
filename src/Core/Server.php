@@ -17,8 +17,7 @@ use Hanson\Vbot\Support\System;
 
 class Server
 {
-
-    static $instance;
+    public static $instance;
 
     protected $uuid;
 
@@ -83,7 +82,7 @@ class Server
      */
     public function serve()
     {
-//        print_r(Config::all());
+        //        print_r(Config::all());
 //        print_r(Config::get('log.level'));
         echo $sdf;
         exit;
@@ -118,7 +117,6 @@ class Server
         System::isWin() ? system('cls') : system('clear');
 
         if (is_file(Path::getCurrentSessionPath() . 'cookies') && is_file(Path::getCurrentSessionPath() . 'server.json')) {
-
             $configs = json_decode(file_get_contents(Path::getCurrentSessionPath() . 'server.json'), true);
 
             foreach ($configs as $key => $config) {

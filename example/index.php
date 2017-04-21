@@ -41,7 +41,6 @@ function reply($str)
         'key' => '1dce02aef026258eff69635a06b0ab7d',
         'info' => $str,
     ], true)['text'];
-
 }
 \Hanson\Vbot\Support\Console::setLoggerHandler(function ($info, $level) {
     echo '[自定义日志][' . \Carbon\Carbon::now()->toDateTimeString() . ']' . "[{$level}] " . $info . PHP_EOL;
@@ -64,7 +63,6 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
             return reply($message->content);
             // 群组@我回复
         } elseif ($message->fromType === 'Group') {
-
             if (str_contains($message->content, '设置群名称') && $message->from['Alias'] === 'hanson1994') {
                 group()->setGroupName($message->from['UserName'], str_replace('设置群名称', '', $message->content));
             }
@@ -77,12 +75,12 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
 
     // 图片信息 返回接收到的图片
     if ($message instanceof Image) {
-//        return $message;
+        //        return $message;
     }
 
     // 视频信息 返回接收到的视频
     if ($message instanceof Video) {
-//        return $message;
+        //        return $message;
     }
 
     // 表情信息 返回接收到的表情
@@ -174,7 +172,7 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
 
     // 手机点击聊天事件
     if ($message instanceof Touch) {
-//        Text::send($message->msg['ToUserName'], "我点击了此聊天");
+        //        Text::send($message->msg['ToUserName'], "我点击了此聊天");
     }
 
     // 新增好友
@@ -192,7 +190,7 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
             \Hanson\Vbot\Support\Console::log('群主踢人了');
             return $message->content;
         } elseif ($message->action === 'RENAME') {
-//            \Hanson\Vbot\Support\Console::log($message->from['NickName'] . ' 改名为 ' . $message->rename);
+            //            \Hanson\Vbot\Support\Console::log($message->from['NickName'] . ' 改名为 ' . $message->rename);
             if ($message->rename !== 'vbot 测试群') {
                 group()->setGroupName($message->from['UserName'], 'vbot 测试群');
                 return '行不改名,坐不改姓！';
@@ -201,7 +199,6 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
     }
 
     return false;
-
 });
 
 $robot->server->setLoginHandler(function ($qrPath) {

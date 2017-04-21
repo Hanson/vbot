@@ -17,16 +17,14 @@ $robot = new Vbot([
     'debug' => true
 ]);
 
-$robot->server->setCustomerHandler(function(){
-
-    contact()->each(function($item, $username){
+$robot->server->setCustomerHandler(function () {
+    contact()->each(function ($item, $username) {
         $word = '新年快乐';
         Console::log("send to username: $username  nickname:{$item['NickName']}");
         Text::send($username, $word);
         sleep(2);
     });
     exit;
-
 });
 
 $robot->server->run();

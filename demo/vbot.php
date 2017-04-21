@@ -69,7 +69,6 @@ $groupMap = [
 ];
 
 $robot->server->setOnceHandler(function () use ($groupMap) {
-
     group()->each(function ($group, $key) use ($groupMap) {
         foreach ($groupMap as $map) {
             if ($group['NickName'] === $map['nickname']) {
@@ -96,7 +95,7 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
     if ($message instanceof Text) {
         /** @var $message Text */
 
-        if ($message->from['NickName'] === '华广stackoverflow' && preg_match('/@(.+)\s加人(.+)/', $message->content, $match)){
+        if ($message->from['NickName'] === '华广stackoverflow' && preg_match('/@(.+)\s加人(.+)/', $message->content, $match)) {
             $nickname = $match[1];
             $members = group()->getMembersByNickname($message->from['UserName'], $nickname);
             if ($members) {
@@ -121,7 +120,6 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
             return reply($message->content);
             // 群组@我回复
         } elseif ($message->fromType === 'Group') {
-
             if (str_contains($message->content, '设置群名称')) {
                 if (isAdmin($message)) {
                     group()->setGroupName($message->from['UserName'], str_replace('设置群名称', '', $message->content));
@@ -270,7 +268,7 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
             \Hanson\Vbot\Support\Console::debug('群主踢人了');
             return $message->content;
         } elseif ($message->action === 'RENAME') {
-//            \Hanson\Vbot\Support\Console::log($message->from['NickName'] . ' 改名为 ' . $message->rename);
+            //            \Hanson\Vbot\Support\Console::log($message->from['NickName'] . ' 改名为 ' . $message->rename);
             if (group()->getUsernameById(1) == $message->from['UserName'] && $message->rename !== 'vbot 测试群') {
                 group()->setGroupName($message->from['UserName'], 'vbot 测试群');
                 return '行不改名,坐不改姓！';
@@ -283,7 +281,6 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
     }
 
     return false;
-
 });
 
 $robot->server->setExitHandler(function () {

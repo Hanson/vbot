@@ -3,21 +3,25 @@
 
 namespace Hanson\Vbot\Foundation;
 
-
 use Hanson\Vbot\Console\Command;
 use Hanson\Vbot\Exceptions\ConfigErrorException;
 use Hanson\Vbot\Foundation\Config;
+use Hanson\Vbot\Session\Session;
 
 class Kernel
 {
+    /**
+     * @var Vbot
+     */
     private $vbot;
 
-    public function __construct($vbot)
+    public function __construct(Vbot $vbot)
     {
         $this->vbot = $vbot;
     }
     public function bootstrap()
     {
+        $this->registerProviders();
         $this->bootstrapLog();
         $this->bootstrapException();
         $this->bootstrapConfig();
@@ -26,7 +30,11 @@ class Kernel
 
     private function bootstrapLog()
     {
-        
+    }
+
+    private function registerProviders()
+    {
+        $this->vbot->registerProviders();
     }
 
     private function bootstrapException()
@@ -39,13 +47,14 @@ class Kernel
 
     private function bootstrapConfig()
     {
-//        $session = Config::get('session', );
-        (new Command)->register();
+        $session = Session::currentSession();
+
+        echo $session;
     }
 
     private function bootstrapPath()
     {
-        if(!$path = Config::get('path')){
+        if (!$path = $this->vbot->config['path']) {
             throw new ConfigErrorException('path not set.');
         }
 

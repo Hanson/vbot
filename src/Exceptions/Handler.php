@@ -3,8 +3,8 @@
 
 namespace Hanson\Vbot\Exceptions;
 
-
 use Closure;
+use Hanson\Vbot\Foundation\Vbot;
 use Hanson\Vbot\Support\Log;
 use Symfony\Component\Debug\Exception\FatalErrorException;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
@@ -14,7 +14,6 @@ use ErrorException;
 
 class Handler
 {
-
     protected $dontReport = [
 //        ConfigErrorException::class
     ];
@@ -29,6 +28,16 @@ class Handler
      * @var Closure
      */
     protected $handler;
+
+    /**
+     * @var Vbot
+     */
+    protected $vbot;
+
+    public function __construct(Vbot $vbot)
+    {
+        $this->vbot = $vbot;
+    }
 
     /**
      * report while exception.
@@ -109,11 +118,17 @@ class Handler
 
         $isThrow = $this->report($e);
 
-        Log::error($e->getMessage());
+        $this->vbot->log->error($e->getMessage());
 
-        if($isThrow){
+        if ($isThrow) {
             throw $e;
         }
+    }
+
+    private function errorMessage($message)
+    {
+//        return implode("\n", $message);
+        return str_replace('#', "\n#", $message);
     }
 
     /**
@@ -152,5 +167,4 @@ class Handler
     {
         return in_array($type, [E_COMPILE_ERROR, E_CORE_ERROR, E_ERROR, E_PARSE]);
     }
-
 }

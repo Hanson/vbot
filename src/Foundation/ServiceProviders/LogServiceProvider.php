@@ -2,30 +2,25 @@
 
 namespace Hanson\Vbot\Foundation\ServiceProviders;
 
-
-use Hanson\Vbot\Foundation\Config;
+use Hanson\Vbot\Foundation\ServiceProviderInterface;
+use Hanson\Vbot\Foundation\Vbot;
+use Hanson\Vbot\Support\Log;
 use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
-use Pimple\Container;
-use Pimple\ServiceProviderInterface;
-
 
 class LogServiceProvider implements ServiceProviderInterface
 {
-
-    public function register(Container $pimple)
+    public function register(Vbot $vbot)
     {
-        $pimple['log'] = function ($pimple) {
-            $log = new Logger('vbot');
+        $vbot->singleton('log', function() use ($vbot){
+            $log = new Log('vbot');
 
             $log->pushHandler(new StreamHandler(
-                Config::get('log.file'),
-                Config::get('log.level', Logger::WARNING),
+                $vbot['config']['log.file'],
+                $vbot['config']['log.level'],
                 true,
-                Config::get('log.permission', null))
-            );
-
+                $vbot['config']['log.permission']
+            ));
             return $log;
-        };
+        });
     }
 }

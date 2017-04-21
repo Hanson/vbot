@@ -2,19 +2,19 @@
 
 namespace Hanson\Vbot\Foundation\ServiceProviders;
 
-
 use Hanson\Vbot\Exceptions\Handler;
-use Pimple\Container;
-use Pimple\ServiceProviderInterface;
-
+use Hanson\Vbot\Foundation\ServiceProviderInterface;
+use Hanson\Vbot\Foundation\Vbot;
 
 class ExceptionServiceProvider implements ServiceProviderInterface
 {
-
-    public function register(Container $pimple)
+    /**
+     * @param \Hanson\Vbot\Foundation\Vbot $vbot
+     */
+    public function register(Vbot $vbot)
     {
-        $pimple['exception'] = function ($pimple) {
-            return new Handler();
-        };
+        $vbot->singleton('exception', function() use ($vbot){
+            return new Handler($vbot);
+        });
     }
 }

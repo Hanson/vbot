@@ -18,11 +18,13 @@
     "bin": ["bin/vbot"],
     "require": {
         "guzzlehttp/guzzle": "^6.2",
-        "pimple/pimple": "^3.0",
         "nesbot/carbon": "^1.21",
         "symfony/console": "3.*",
+        "monolog/monolog": "^1.22",
         "illuminate/config": "^5.4",
-        "monolog/monolog": "^1.22"
+        "illuminate/cache": "^5.4",
+        "illuminate/filesystem": "^5.4",
+        "illuminate/container": "^5.4"
     },
     "autoload": {
         "psr-4": {

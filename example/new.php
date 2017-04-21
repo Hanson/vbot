@@ -22,6 +22,11 @@ $robot = new Vbot([
         'permission' => 0777,
         'file'       => $path . '/vbot.log',
     ],
+    'cache.default' => 'file',
+    'cache.stores.file' => [
+        'driver' => 'file',
+        'path' => __DIR__.'/../tmp'
+    ]
 ]);
 
 

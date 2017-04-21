@@ -2,19 +2,16 @@
 
 namespace Hanson\Vbot\Foundation\ServiceProviders;
 
-
 use Hanson\Vbot\Core\Server;
-use Pimple\Container;
-use Pimple\ServiceProviderInterface;
-
+use Hanson\Vbot\Foundation\ServiceProviderInterface;
+use Hanson\Vbot\Foundation\Vbot;
 
 class ServerServiceProvider implements ServiceProviderInterface
 {
-
-    public function register(Container $pimple)
+    public function register(Vbot $vbot)
     {
-        $pimple['server'] = function ($pimple) {
-            return new Server($pimple);
-        };
+        $vbot->singleton('server', function () use ($vbot){
+            return new Server($vbot);
+        });
     }
 }

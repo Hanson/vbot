@@ -10,7 +10,6 @@ use Symfony\Component\Debug\Exception\FatalThrowableError;
 
 class HandleExceptions
 {
-
     protected $app;
 
     /**
