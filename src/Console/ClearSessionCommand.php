@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Hanson\Vbot\Console;
 
 use Symfony\Component\Console\Command\Command as SymfonyCommand;

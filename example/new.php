@@ -5,9 +5,9 @@
 //use Hanson\Vbot\Foundation\Config;
 use Hanson\Vbot\Foundation\Vbot;
 
-require_once __DIR__ . './../vendor/autoload.php';
+require_once __DIR__.'./../vendor/autoload.php';
 
-$path = __DIR__ . '/./../tmp/';
+$path = __DIR__.'/./../tmp/';
 $robot = new Vbot([
     'path'     => $path,
     'debug'    => true,
@@ -20,15 +20,14 @@ $robot = new Vbot([
     'log'      => [
         'level'      => 'debug',
         'permission' => 0777,
-        'file'       => $path . '/vbot.log',
+        'file'       => $path.'/vbot.log',
     ],
-    'cache.default' => 'file',
+    'cache.default'     => 'file',
     'cache.stores.file' => [
         'driver' => 'file',
-        'path' => __DIR__.'/../tmp'
-    ]
+        'path'   => __DIR__.'/../tmp',
+    ],
 ]);
-
 
 //$robot->server->setMessageHandler(function($message){
 //    ;
@@ -36,8 +35,8 @@ $robot = new Vbot([
 
 $robot->exception->setHandler(function (Exception $e) {
     echo $e->getMessage();
+
     return false;
 });
-
 
 $robot->server->serve();

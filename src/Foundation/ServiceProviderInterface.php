@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Hanson\Vbot\Foundation;
-
 
 interface ServiceProviderInterface
 {

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Hanson\Vbot\Session;
 
 class Session

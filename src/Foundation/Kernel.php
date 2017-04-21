@@ -1,11 +1,8 @@
 <?php
 
-
 namespace Hanson\Vbot\Foundation;
 
-use Hanson\Vbot\Console\Command;
 use Hanson\Vbot\Exceptions\ConfigErrorException;
-use Hanson\Vbot\Foundation\Config;
 use Hanson\Vbot\Session\Session;
 
 class Kernel
@@ -19,6 +16,7 @@ class Kernel
     {
         $this->vbot = $vbot;
     }
+
     public function bootstrap()
     {
         $this->registerProviders();
