@@ -51,8 +51,8 @@ function isAdmin($message)
 {
     $adminAlias = 'hanson1994';
 
-    if (in_array($message->fromType, ['Contact', 'Group'])) {
-        if ($message->fromType === 'Contact') {
+    if (in_array($message->fromType, [Message::FROM_TYPE_CONTACT, Message::FROM_TYPE_GROUP])) {
+        if ($message->fromType === Message::FROM_TYPE_CONTACT) {
             return $message->from['Alias'] === $adminAlias;
         } else {
             return isset($message->sender['Alias']) && $message->sender['Alias'] === $adminAlias;
@@ -111,7 +111,7 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
         }
 
         // 联系人自动回复
-        if ($message->fromType === 'Contact') {
+        if ($message->fromType === Message::FROM_TYPE_CONTACT) {
             if ($message->content === '拉我') {
                 $username = group()->getUsernameById(1);
 
@@ -121,7 +121,7 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
 
             return reply($message->content);
             // 群组@我回复
-        } elseif ($message->fromType === 'Group') {
+        } elseif ($message->fromType === Message::FROM_TYPE_GROUP) {
 
             if (str_contains($message->content, '设置群名称')) {
                 if (isAdmin($message)) {

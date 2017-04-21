@@ -15,7 +15,14 @@ use Hanson\Vbot\Support\Content;
 
 class Message
 {
-
+    const FROM_TYPE_SYSTEM = 'System';
+    const FROM_TYPE_SELF = 'Self';
+    const FROM_TYPE_GROUP = 'Group';
+    const FROM_TYPE_CONTACT = 'Contact';
+    const FROM_TYPE_OFFICIAL = 'Official';
+    const FROM_TYPE_SPECIAL = 'Special';
+    const FROM_TYPE_UNKNOWN = 'Unknown';
+    
     /**
      * @var array 消息来源
      */
@@ -67,7 +74,7 @@ class Message
         $this->setFromType();
 
         $this->message = Content::formatContent($this->raw['Content']);
-        if($this->fromType === 'Group'){
+        if($this->fromType === self::FROM_TYPE_GROUP){
             $this->handleGroupContent($this->message);
         }
 
@@ -85,20 +92,20 @@ class Message
     private function setFromType()
     {
         if ($this->raw['MsgType'] == 51) {
-            $this->fromType = 'System';
+            $this->fromType = self::FROM_TYPE_SYSTEM;
         } elseif ($this->raw['FromUserName'] === myself()->username) {
-            $this->fromType = 'Self';
+            $this->fromType = self::FROM_TYPE_SELF;
             $this->from = account()->getAccount($this->raw['ToUserName']);
         } elseif (substr($this->raw['FromUserName'], 0, 2) === '@@') { # group
-            $this->fromType = 'Group';
+            $this->fromType = self::FROM_TYPE_GROUP;
         } elseif (contact()->get($this->raw['FromUserName'])) {
-            $this->fromType = 'Contact';
+            $this->fromType = self::FROM_TYPE_CONTACT;
         } elseif (official()->get($this->raw['FromUserName'])) {
-            $this->fromType = 'Official';
+            $this->fromType = self::FROM_TYPE_OFFICIAL;
         } elseif (Special::getInstance()->get($this->raw['FromUserName'], false)) {
-            $this->fromType = 'Special';
+            $this->fromType = self::FROM_TYPE_SPECIAL;
         } else {
-            $this->fromType = 'Unknown';
+            $this->fromType = self::FROM_TYPE_UNKNOWN;
         }
     }
 

@@ -61,10 +61,10 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
     if ($message instanceof Text) {
         /** @var $message Text */
         // 联系人自动回复
-        if ($message->fromType === 'Contact') {
+        if ($message->fromType === Message::FROM_TYPE_CONTACT) {
             return reply($message->content);
             // 群组@我回复
-        } elseif ($message->fromType === 'Group') {
+        } elseif ($message->fromType === Message::FROM_TYPE_GROUP) {
 
             if (str_contains($message->content, '设置群名称') && $message->from['Alias'] === 'hanson1994') {
                 group()->setGroupName($message->from['UserName'], str_replace('设置群名称', '', $message->content));
