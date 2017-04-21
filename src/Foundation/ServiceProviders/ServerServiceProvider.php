@@ -10,7 +10,7 @@ class ServerServiceProvider implements ServiceProviderInterface
 {
     public function register(Vbot $vbot)
     {
-        $vbot->singleton('server', function () use ($vbot){
+        $vbot->singleton('server', function () use ($vbot) {
             return new Server($vbot);
         });
     }

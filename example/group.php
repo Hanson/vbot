@@ -3,34 +3,33 @@
  * Created by PhpStorm.
  * User: HanSon
  * Date: 2016/12/7
- * Time: 16:33
+ * Time: 16:33.
  */
-
-require_once __DIR__ . './../vendor/autoload.php';
+require_once __DIR__.'./../vendor/autoload.php';
 
 use Hanson\Vbot\Foundation\Vbot;
 use Hanson\Vbot\Message\Entity\Text;
 use Hanson\Vbot\Support\Console;
 
 $robot = new Vbot([
-    'user_path' => __DIR__ . '/./../tmp/',
-    'debug' => true
+    'user_path' => __DIR__.'/./../tmp/',
+    'debug'     => true,
 ]);
 
 $robot->server->setMessageHandler(function ($message) {
     if (str_contains($message->content, '设置备注')) {
         $result = contact()->setRemarkName($message->from['UserName'], str_replace('设置备注', '', $message->content));
-        Console::log('设置备注：' . ($result ? '成功' : '失败'));
+        Console::log('设置备注：'.($result ? '成功' : '失败'));
     }
 
     if (str_contains($message->content, '设置置顶')) {
         $result = contact()->setStick($message->from['UserName']);
-        Console::log('设置置顶：' . ($result ? '成功' : '失败'));
+        Console::log('设置置顶：'.($result ? '成功' : '失败'));
     }
 
     if (str_contains($message->content, '取消置顶')) {
         $result = contact()->setStick($message->from['UserName'], false);
-        Console::log('取消置顶：' . ($result ? '成功' : '失败'));
+        Console::log('取消置顶：'.($result ? '成功' : '失败'));
     }
 
     if (str_contains($message->content, '拉群测试')) {
@@ -62,7 +61,7 @@ $robot->server->setMessageHandler(function ($message) {
 
     if (str_contains($message->content, '设置群名称')) {
         $result = group()->setGroupName($message->from['UserName'], str_replace('设置群名称', '', $message->content));
-        Console::log('设置群名称：' . ($result ? '成功' : '失败'));
+        Console::log('设置群名称：'.($result ? '成功' : '失败'));
     }
 });
 

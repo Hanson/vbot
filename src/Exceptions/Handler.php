@@ -1,16 +1,14 @@
 <?php
 
-
 namespace Hanson\Vbot\Exceptions;
 
 use Closure;
+use ErrorException;
+use Exception;
 use Hanson\Vbot\Foundation\Vbot;
-use Hanson\Vbot\Support\Log;
 use Symfony\Component\Debug\Exception\FatalErrorException;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Throwable;
-use Exception;
-use ErrorException;
 
 class Handler
 {
@@ -43,8 +41,10 @@ class Handler
      * report while exception.
      *
      * @param Exception $e
-     * @return bool|mixed
+     *
      * @throws Exception
+     *
+     * @return bool|mixed
      */
     public function report(Exception $e): bool
     {
@@ -62,7 +62,8 @@ class Handler
     /**
      * Determine if the exception is in the "do not report" list.
      *
-     * @param  \Exception $e
+     * @param \Exception $e
+     *
      * @return bool
      */
     protected function shouldntReport(Exception $e)
@@ -87,13 +88,14 @@ class Handler
     /**
      * Convert PHP errors to ErrorException instances.
      *
-     * @param  int $level
-     * @param  string $message
-     * @param  string $file
-     * @param  int $line
-     * @return void
+     * @param int    $level
+     * @param string $message
+     * @param string $file
+     * @param int    $line
      *
      * @throws \ErrorException
+     *
+     * @return void
      */
     public function handleError($level, $message, $file = '', $line = 0)
     {
@@ -105,10 +107,12 @@ class Handler
     /**
      * Handle an uncaught exception from the application.
      *
-     * @param  \Throwable $e
-     * @return void
+     * @param \Throwable $e
+     *
      * @throws FatalThrowableError
      * @throws Throwable
+     *
+     * @return void
      */
     public function handleException(Throwable $e)
     {
@@ -127,7 +131,7 @@ class Handler
 
     private function errorMessage($message)
     {
-//        return implode("\n", $message);
+        //        return implode("\n", $message);
         return str_replace('#', "\n#", $message);
     }
 
@@ -146,8 +150,9 @@ class Handler
     /**
      * Create a new fatal exception instance from an error array.
      *
-     * @param  array $error
-     * @param  int|null $traceOffset
+     * @param array    $error
+     * @param int|null $traceOffset
+     *
      * @return FatalErrorException
      */
     protected function fatalExceptionFromError(array $error, $traceOffset = null)
@@ -160,7 +165,8 @@ class Handler
     /**
      * Determine if the error type is fatal.
      *
-     * @param  int $type
+     * @param int $type
+     *
      * @return bool
      */
     protected function isFatal($type)

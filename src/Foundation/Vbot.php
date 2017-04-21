@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: Hanson
  * Date: 2016/12/9
- * Time: 21:22
+ * Time: 21:22.
  */
 
 namespace Hanson\Vbot\Foundation;
@@ -12,8 +12,8 @@ use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
 
 /**
- * Class Vbot
- * @package Hanson\Vbot\Foundation
+ * Class Vbot.
+ *
  * @property \Hanson\Vbot\Core\Server $server
  * @property \Hanson\Vbot\Exceptions\Handler $exception
  * @property \Hanson\Vbot\Support\Log $log
@@ -21,7 +21,6 @@ use Illuminate\Container\Container;
  */
 class Vbot extends Container
 {
-
     /**
      * Service Providers.
      *
@@ -31,7 +30,7 @@ class Vbot extends Container
         ServiceProviders\LogServiceProvider::class,
         ServiceProviders\ServerServiceProvider::class,
         ServiceProviders\ExceptionServiceProvider::class,
-        ServiceProviders\CacheServiceProvider::class
+        ServiceProviders\CacheServiceProvider::class,
     ];
 
     public function __construct(array $config)

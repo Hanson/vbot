@@ -11,7 +11,7 @@ class LogServiceProvider implements ServiceProviderInterface
 {
     public function register(Vbot $vbot)
     {
-        $vbot->singleton('log', function() use ($vbot){
+        $vbot->singleton('log', function () use ($vbot) {
             $log = new Log('vbot');
 
             $log->pushHandler(new StreamHandler(
@@ -20,6 +20,7 @@ class LogServiceProvider implements ServiceProviderInterface
                 true,
                 $vbot['config']['log.permission']
             ));
+
             return $log;
         });
     }

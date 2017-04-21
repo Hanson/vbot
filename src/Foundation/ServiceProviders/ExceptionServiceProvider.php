@@ -13,7 +13,7 @@ class ExceptionServiceProvider implements ServiceProviderInterface
      */
     public function register(Vbot $vbot)
     {
-        $vbot->singleton('exception', function() use ($vbot){
+        $vbot->singleton('exception', function () use ($vbot) {
             return new Handler($vbot);
         });
     }

@@ -3,19 +3,18 @@
  * Created by PhpStorm.
  * User: HanSon
  * Date: 2016/12/7
- * Time: 16:33
+ * Time: 16:33.
  */
-
-require_once __DIR__ . './../vendor/autoload.php';
+require_once __DIR__.'./../vendor/autoload.php';
 
 use Carbon\Carbon;
 use Hanson\Vbot\Foundation\Vbot;
-use Hanson\Vbot\Message\Entity\Text;
 use Hanson\Vbot\Message\Entity\Image;
+use Hanson\Vbot\Message\Entity\Text;
 
 $robot = new Vbot([
-    'user_path' => __DIR__ . '/./../tmp/',
-    'debug' => true
+    'user_path' => __DIR__.'/./../tmp/',
+    'debug'     => true,
 ]);
 
 $isSendToday = false;
@@ -52,8 +51,8 @@ $robot->server->setCustomerHandler(function () use (&$isSendToday, &$isNewDay, &
         '点餐都城辣子鸡饭16'，'点餐龙兴冬菇焖鸡饭13'\n
         请记得添加我为好友给我转账当天餐费，加好友验证输入'dmc'即可自动添加好友\n
         想取消点餐输入'取消点餐'即可");
-        Image::send($username, __DIR__ . '/extra/longxing.jpg');
-        Image::send($username, __DIR__ . '/extra/ducheng.png');
+        Image::send($username, __DIR__.'/extra/longxing.jpg');
+        Image::send($username, __DIR__.'/extra/ducheng.png');
         $isSendToday = true;
     }
 
@@ -97,6 +96,7 @@ $robot->server->setMessageHandler(function ($message) use (&$menu) {
                     $canteen = $menu[$message->sender['UserName']]['canteen'];
                     unset($menu[$message->sender['UserName']]);
                     Text::send($message->from['UserName'], '取消点餐成功！');
+
                     return outputMenu($menu, $canteen);
                 } else {
                     return '你没有点餐呢！';
