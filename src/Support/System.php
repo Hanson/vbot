@@ -3,17 +3,15 @@
  * Created by PhpStorm.
  * User: Hanson
  * Date: 2017/1/20
- * Time: 18:37
+ * Time: 18:37.
  */
 
 namespace Hanson\Vbot\Support;
 
-
 class System
 {
-
     /**
-     * 判断运行服务器是否windows
+     * 判断运行服务器是否windows.
      *
      * @return bool
      */
@@ -23,16 +21,16 @@ class System
     }
 
     /**
-     * 删除目录
+     * 删除目录.
      *
      * @param $dir
      */
     public static function deleteDir($dir)
     {
-        if(static::isWin()){
-            $command = "rmdir /s/q " . $dir;
-        }else{
-            $command = "rm -Rf " . $dir;
+        if (static::isWin()) {
+            $command = 'rmdir /s/q '.$dir;
+        } else {
+            $command = 'rm -Rf '.$dir;
         }
 
         system($command);

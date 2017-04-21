@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  * User: Hanson
  * Date: 2016/12/12
- * Time: 20:41
+ * Time: 20:41.
  */
 
 namespace Hanson\Vbot\Core;
-
 
 use Hanson\Vbot\Collections\Official;
 use Hanson\Vbot\Collections\Special;
@@ -15,7 +14,6 @@ use Hanson\Vbot\Support\FileManager;
 
 class ContactFactory
 {
-
     const SPECIAL_USERS = ['newsapp', 'fmessage', 'filehelper', 'weibo', 'qqmail',
         'fmessage', 'tmessage', 'qmessage', 'qqsync', 'floatbottle',
         'lbsapp', 'shakeapp', 'medianote', 'qqfriend', 'readerapp',
@@ -23,7 +21,7 @@ class ContactFactory
         'feedsapp', 'voip', 'blogappweixin', 'weixin', 'brandsessionholder',
         'weixinreminder', 'wxid_novlwrv3lqwv11', 'gh_22b87fa7cb3c',
         'officialaccounts', 'notification_messages', 'wxid_novlwrv3lqwv11',
-        'gh_22b87fa7cb3c', 'wxitil', 'userexperience_alarm', 'notification_messages'];
+        'gh_22b87fa7cb3c', 'wxitil', 'userexperience_alarm', 'notification_messages', ];
 
     public function __construct()
     {
@@ -49,12 +47,13 @@ class ContactFactory
     }
 
     /**
-     * make instance model
+     * make instance model.
+     *
      * @param int $seq
      */
     public function makeContactList($seq = 0)
     {
-        $url = sprintf(server()->baseUri . '/webwxgetcontact?pass_ticket=%s&skey=%s&r=%s&seq=%s', server()->passTicket, server()->skey, time(), $seq);
+        $url = sprintf(server()->baseUri.'/webwxgetcontact?pass_ticket=%s&skey=%s&r=%s&seq=%s', server()->passTicket, server()->skey, time(), $seq);
 
         $result = http()->json($url, [], true);
 
@@ -68,18 +67,18 @@ class ContactFactory
     }
 
     /**
-     * 设置联系人到collection
+     * 设置联系人到collection.
      *
      * @param $memberList
      */
     public function setCollections($memberList)
     {
         foreach ($memberList as $contact) {
-            if (in_array($contact['UserName'], static::SPECIAL_USERS)) { # 特殊账户
+            if (in_array($contact['UserName'], static::SPECIAL_USERS)) { // 特殊账户
                 Special::getInstance()->put($contact['UserName'], $contact);
-            } elseif (official()->isOfficial($contact['VerifyFlag'])) { # 公众号
+            } elseif (official()->isOfficial($contact['VerifyFlag'])) { // 公众号
                 Official::getInstance()->put($contact['UserName'], $contact);
-            } elseif (strstr($contact['UserName'], '@@') !== false) { # 群聊
+            } elseif (strstr($contact['UserName'], '@@') !== false) { // 群聊
                 group()->put($contact['UserName'], $contact);
             } else {
                 contact()->put($contact['UserName'], $contact);
@@ -88,11 +87,11 @@ class ContactFactory
     }
 
     /**
-     * 获取群组成员
+     * 获取群组成员.
      */
     public function getBatchGroupMembers()
     {
-        $url = sprintf(server()->baseUri . '/webwxbatchgetcontact?type=ex&r=%s&pass_ticket=%s', time(), server()->passTicket);
+        $url = sprintf(server()->baseUri.'/webwxbatchgetcontact?type=ex&r=%s&pass_ticket=%s', time(), server()->passTicket);
 
         $list = [];
         group()->each(function ($item, $key) use (&$list) {
@@ -101,15 +100,15 @@ class ContactFactory
 
         $content = http()->json($url, [
             'BaseRequest' => server()->baseRequest,
-            'Count' => group()->count(),
-            'List' => $list
+            'Count'       => group()->count(),
+            'List'        => $list,
         ], true);
 
         $this->initGroupMembers($content);
     }
 
     /**
-     * 初始化群组成员
+     * 初始化群组成员.
      *
      * @param $array
      */
@@ -126,7 +125,5 @@ class ContactFactory
                 }
             }
         }
-
     }
-
 }

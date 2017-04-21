@@ -3,18 +3,17 @@
  * Created by PhpStorm.
  * User: HanSon
  * Date: 2017/1/14
- * Time: 11:54
+ * Time: 11:54.
  */
 
 namespace Hanson\Vbot\Core;
 
-
 use Hanson\Vbot\Message\Entity\Emoticon;
+use Hanson\Vbot\Message\Entity\GroupChange;
 use Hanson\Vbot\Message\Entity\Image;
 use Hanson\Vbot\Message\Entity\Location;
 use Hanson\Vbot\Message\Entity\Message;
 use Hanson\Vbot\Message\Entity\NewFriend;
-use Hanson\Vbot\Message\Entity\GroupChange;
 use Hanson\Vbot\Message\Entity\Recall;
 use Hanson\Vbot\Message\Entity\Recommend;
 use Hanson\Vbot\Message\Entity\RedPacket;
@@ -28,27 +27,27 @@ use Hanson\Vbot\Message\ShareFactory;
 
 class MessageFactory
 {
-
     public function make($msg)
     {
         return $this->handleMessageByType($msg);
     }
 
-
     /**
-     * 处理消息类型
+     * 处理消息类型.
+     *
      * @param $msg
+     *
      * @return Message
      */
     private function handleMessageByType($msg)
     {
-        switch($msg['MsgType']){
+        switch ($msg['MsgType']) {
             case 1: //文本消息
-                if(Location::isLocation($msg)){
+                if (Location::isLocation($msg)) {
                     return new Location($msg);
-                }elseif(contact()->get($msg['FromUserName']) && str_contains($msg['Content'], '过了你的朋友验证请求')){
+                } elseif (contact()->get($msg['FromUserName']) && str_contains($msg['Content'], '过了你的朋友验证请求')) {
                     return new NewFriend($msg);
-                }else{
+                } else {
                     return new Text($msg);
                 }
             case 3: // 图片消息
@@ -62,22 +61,21 @@ class MessageFactory
             case 10002:
                 return new Recall($msg);
             case 10000:
-                if(str_contains($msg['Content'], '利是') || str_contains($msg['Content'], '红包')){
+                if (str_contains($msg['Content'], '利是') || str_contains($msg['Content'], '红包')) {
                     return new RedPacket($msg);
-                }
-                else if(str_contains($msg['Content'], '添加') || str_contains($msg['Content'], '打招呼')){
-                    # 添加好友
+                } elseif (str_contains($msg['Content'], '添加') || str_contains($msg['Content'], '打招呼')) {
+                    // 添加好友
                     return new NewFriend($msg);
-                }else if(str_contains($msg['Content'], '加入了群聊') || str_contains($msg['Content'], '移出了群聊') || str_contains($msg['Content'], '改群名为') || str_contains($msg['Content'], '移出群聊') || str_contains($msg['Content'], '邀请你') || str_contains($msg['Content'], '分享的二维码加入群聊')){
+                } elseif (str_contains($msg['Content'], '加入了群聊') || str_contains($msg['Content'], '移出了群聊') || str_contains($msg['Content'], '改群名为') || str_contains($msg['Content'], '移出群聊') || str_contains($msg['Content'], '邀请你') || str_contains($msg['Content'], '分享的二维码加入群聊')) {
                     return new GroupChange($msg);
                 }
                 break;
             case 49:
-                if($msg['Status'] == 3 && $msg['FileName'] === '微信转账'){
+                if ($msg['Status'] == 3 && $msg['FileName'] === '微信转账') {
                     return new Transfer($msg);
-                }elseif ($msg['Content'] === '该类型暂不支持，请在手机上查看'){
-                    return null;
-                }else{
+                } elseif ($msg['Content'] === '该类型暂不支持，请在手机上查看') {
+                    return;
+                } else {
                     return (new ShareFactory())->make($msg);
                 }
             case 37: // 好友验证
@@ -88,7 +86,7 @@ class MessageFactory
                 //Video
                 break;
             case 51:
-                if($msg['ToUserName'] === $msg['StatusNotifyUserName']){
+                if ($msg['ToUserName'] === $msg['StatusNotifyUserName']) {
                     return new Touch($msg);
                 }
                 break;
@@ -99,6 +97,5 @@ class MessageFactory
                 //Unknown
                 break;
         }
-        return null;
     }
 }

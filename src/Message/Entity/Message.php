@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  * User: Hanson
  * Date: 2016/12/15
- * Time: 0:12
+ * Time: 0:12.
  */
 
 namespace Hanson\Vbot\Message\Entity;
-
 
 use Carbon\Carbon;
 use Hanson\Vbot\Collections\Special;
@@ -22,7 +21,7 @@ class Message
     const FROM_TYPE_OFFICIAL = 'Official';
     const FROM_TYPE_SPECIAL = 'Special';
     const FROM_TYPE_UNKNOWN = 'Unknown';
-    
+
     /**
      * @var array 消息来源
      */
@@ -55,6 +54,7 @@ class Message
 
     /**
      * @var array 原始数据（废弃）
+     *
      * @deprecated
      */
     public $msg;
@@ -64,7 +64,7 @@ class Message
      */
     public $raw;
 
-    static $mediaCount = -1;
+    public static $mediaCount = -1;
 
     public function __construct($msg)
     {
@@ -74,7 +74,7 @@ class Message
         $this->setFromType();
 
         $this->message = Content::formatContent($this->raw['Content']);
-        if($this->fromType === self::FROM_TYPE_GROUP){
+        if ($this->fromType === self::FROM_TYPE_GROUP) {
             $this->handleGroupContent($this->message);
         }
 
@@ -82,7 +82,7 @@ class Message
     }
 
     /**
-     * 设置消息发送者
+     * 设置消息发送者.
      */
     private function setFrom()
     {
@@ -96,7 +96,7 @@ class Message
         } elseif ($this->raw['FromUserName'] === myself()->username) {
             $this->fromType = self::FROM_TYPE_SELF;
             $this->from = account()->getAccount($this->raw['ToUserName']);
-        } elseif (substr($this->raw['FromUserName'], 0, 2) === '@@') { # group
+        } elseif (substr($this->raw['FromUserName'], 0, 2) === '@@') { // group
             $this->fromType = self::FROM_TYPE_GROUP;
         } elseif (contact()->get($this->raw['FromUserName'])) {
             $this->fromType = self::FROM_TYPE_CONTACT;
@@ -110,13 +110,13 @@ class Message
     }
 
     /**
-     * 处理群发消息的内容
+     * 处理群发消息的内容.
      *
      * @param $content string 内容
      */
     private function handleGroupContent($content)
     {
-        if(!$content || !str_contains($content, ":\n")){
+        if (!$content || !str_contains($content, ":\n")) {
             return;
         }
         list($uid, $content) = explode(":\n", $content, 2);
@@ -129,5 +129,4 @@ class Message
     {
         return $this->content;
     }
-
 }

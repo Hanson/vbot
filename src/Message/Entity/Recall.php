@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: HanSon
  * Date: 2017/1/13
- * Time: 15:48
+ * Time: 15:48.
  */
 
 namespace Hanson\Vbot\Message\Entity;
@@ -33,14 +33,16 @@ class Recall extends Message implements MessageInterface
     }
 
     /**
-     * 解析message获取msgId
+     * 解析message获取msgId.
      *
      * @param $xml
+     *
      * @return string msgId
      */
     private function parseMsgId($xml)
     {
         preg_match('/<msgid>(\d+)<\/msgid>/', $xml, $matches);
+
         return $matches[1];
     }
 
@@ -48,14 +50,13 @@ class Recall extends Message implements MessageInterface
     {
         $msgId = $this->parseMsgId($this->message);
 
-        /** @var Message $message */
+        /* @var Message $message */
         $this->origin = message()->get($msgId, null);
 
-        if($this->origin){
+        if ($this->origin) {
             $this->nickname = $this->origin->sender ? $this->origin->sender['NickName'] : account()->getAccount($this->origin->raw['FromUserName'])['NickName'];
             $this->setContent();
         }
-
     }
 
     private function setContent()

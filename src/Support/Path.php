@@ -4,13 +4,14 @@ namespace Hanson\Vbot\Support;
 
 class Path
 {
-
     /**
-     * 设置config配置
+     * 设置config配置.
      *
      * @param $config
-     * @return mixed
+     *
      * @throws \Exception
+     *
+     * @return mixed
      */
     public static function setConfig(array &$config)
     {
@@ -23,14 +24,14 @@ class Path
         $session = $config['session'] ?? bin2hex(random_bytes(3));
 
         $config['session'] = $session;
-        $config['user_path'] = static::getRealPath($tempPath . DIRECTORY_SEPARATOR . 'users') . DIRECTORY_SEPARATOR;
-        $config['session_path'] = static::getRealPath($tempPath . DIRECTORY_SEPARATOR . 'session' . DIRECTORY_SEPARATOR . $session) . DIRECTORY_SEPARATOR;
+        $config['user_path'] = static::getRealPath($tempPath.DIRECTORY_SEPARATOR.'users').DIRECTORY_SEPARATOR;
+        $config['session_path'] = static::getRealPath($tempPath.DIRECTORY_SEPARATOR.'session'.DIRECTORY_SEPARATOR.$session).DIRECTORY_SEPARATOR;
 
         return $config;
     }
 
     /**
-     * 获取当前session路径
+     * 获取当前session路径.
      *
      * @return string
      */
@@ -40,19 +41,20 @@ class Path
     }
 
     /**
-     * 获取当前用户资源路径
+     * 获取当前用户资源路径.
      *
      * @return string
      */
     public static function getCurrentUinPath(): string
     {
-        return server()->config['user_path'] . myself()->uin . DIRECTORY_SEPARATOR;
+        return server()->config['user_path'].myself()->uin.DIRECTORY_SEPARATOR;
     }
 
     /**
-     * 获取real path
+     * 获取real path.
      *
      * @param $path
+     *
      * @return string
      */
     public static function getRealPath($path)
@@ -63,5 +65,4 @@ class Path
 
         return realpath($path);
     }
-
 }

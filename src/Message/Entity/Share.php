@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: Hanson
  * Date: 2017/1/15
- * Time: 12:29
+ * Time: 12:29.
  */
 
 namespace Hanson\Vbot\Message\Entity;
@@ -12,7 +12,6 @@ use Hanson\Vbot\Message\MessageInterface;
 
 class Share extends Message implements MessageInterface
 {
-
     public $title;
 
     public $description;
@@ -30,14 +29,14 @@ class Share extends Message implements MessageInterface
 
     public function make()
     {
-        $array = (array)simplexml_load_string($this->message, 'SimpleXMLElement', LIBXML_NOCDATA);
+        $array = (array) simplexml_load_string($this->message, 'SimpleXMLElement', LIBXML_NOCDATA);
 
-        $info = (array)$array['appmsg'];
+        $info = (array) $array['appmsg'];
 
         $this->title = $info['title'];
         $this->description = $info['des'];
 
-        $appInfo = (array)$array['appinfo'];
+        $appInfo = (array) $array['appinfo'];
 
         $this->app = $appInfo['appname'];
 

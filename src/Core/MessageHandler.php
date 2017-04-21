@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: Hanson
  * Date: 2016/12/14
- * Time: 23:08
+ * Time: 23:08.
  */
 
 namespace Hanson\Vbot\Core;
@@ -23,7 +23,7 @@ class MessageHandler
     /**
      * @var MessageHandler
      */
-    static $instance = null;
+    public static $instance = null;
 
     private $handler;
 
@@ -46,23 +46,24 @@ class MessageHandler
     }
 
     /**
-     * 设置单例模式
+     * 设置单例模式.
      *
      * @return MessageHandler
      */
     public static function getInstance()
     {
         if (static::$instance === null) {
-            static::$instance = new MessageHandler();
+            static::$instance = new self();
         }
 
         return static::$instance;
     }
 
     /**
-     * 消息处理器
+     * 消息处理器.
      *
      * @param Closure $closure
+     *
      * @throws \Exception
      */
     public function setMessageHandler(Closure $closure)
@@ -75,9 +76,10 @@ class MessageHandler
     }
 
     /**
-     * 自定义处理器
+     * 自定义处理器.
      *
      * @param Closure $closure
+     *
      * @throws \Exception
      */
     public function setCustomHandler(Closure $closure)
@@ -90,9 +92,10 @@ class MessageHandler
     }
 
     /**
-     * 退出处理器
+     * 退出处理器.
      *
      * @param Closure $closure
+     *
      * @throws \Exception
      */
     public function setExitHandler(Closure $closure)
@@ -105,9 +108,10 @@ class MessageHandler
     }
 
     /**
-     * 异常处理器
+     * 异常处理器.
      *
      * @param Closure $closure
+     *
      * @throws \Exception
      */
     public function setExceptionHandler(Closure $closure)
@@ -120,9 +124,10 @@ class MessageHandler
     }
 
     /**
-     * 执行一次的处理器
+     * 执行一次的处理器.
      *
      * @param Closure $closure
+     *
      * @throws \Exception
      */
     public function setOnceHandler(Closure $closure)
@@ -135,7 +140,7 @@ class MessageHandler
     }
 
     /**
-     * 轮询消息API接口
+     * 轮询消息API接口.
      */
     public function listen()
     {
@@ -151,7 +156,7 @@ class MessageHandler
             }
 
             if (time() - $time > 1800) {
-                Text::send('filehelper', '心跳 ' . Carbon::now()->toDateTimeString());
+                Text::send('filehelper', '心跳 '.Carbon::now()->toDateTimeString());
                 $time = time();
             }
 
@@ -166,28 +171,31 @@ class MessageHandler
 
     public function handleCheckSync($retCode, $selector, $test = false)
     {
-        if (in_array($retCode, ['1100', '1101'])) { # 微信客户端上登出或者其他设备登录
+        if (in_array($retCode, ['1100', '1101'])) { // 微信客户端上登出或者其他设备登录
             Console::log('微信客户端正常退出');
             if ($this->exitHandler) {
                 call_user_func_array($this->exitHandler, []);
             }
+
             return false;
         } elseif ($retCode == 0) {
-            if(!$test){
+            if (!$test) {
                 $this->handlerMessage($selector);
             }
+
             return true;
         } else {
             Console::log('微信客户端异常退出');
             if ($this->exceptionHandler) {
                 call_user_func_array($this->exitHandler, []);
             }
+
             return false;
         }
     }
 
     /**
-     * 处理消息
+     * 处理消息.
      *
      * @param $selector
      */
@@ -241,31 +249,30 @@ class MessageHandler
     {
         message()->put($message->raw['MsgId'], $message);
 
-        foreach (message()->all() as $msgId => $item){
-            if($item->raw['CreateTime'] + 120 < time()){
+        foreach (message()->all() as $msgId => $item) {
+            if ($item->raw['CreateTime'] + 120 < time()) {
                 message()->pull($msgId);
-            }else{
+            } else {
                 break;
             }
         }
 
         if (server()->config['debug']) {
-            $file = fopen(Path::getCurrentUinPath() . 'message.json', 'a');
-            fwrite($file, json_encode($message) . PHP_EOL);
+            $file = fopen(Path::getCurrentUinPath().'message.json', 'a');
+            fwrite($file, json_encode($message).PHP_EOL);
             fclose($file);
         }
     }
 
     /**
-     * debug出消息
+     * debug出消息.
      *
      * @param $content
      */
     private function debugMessage(Message $content)
     {
-        if(server()->config['debug']){
-            Console::log("[{$content->raw['MsgId']}] " . $content->content, Console::MESSAGE);
+        if (server()->config['debug']) {
+            Console::log("[{$content->raw['MsgId']}] ".$content->content, Console::MESSAGE);
         }
     }
-
 }

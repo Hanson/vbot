@@ -1,20 +1,18 @@
 <?php
 
-
 namespace Hanson\Vbot\Collections;
-
 
 use Hanson\Vbot\Support\Content;
 use Illuminate\Support\Collection;
 
 class BaseCollection extends Collection
 {
-
     /**
      * 根据昵称获取对象
      *
      * @param $nickname
      * @param bool $blur
+     *
      * @return bool|string
      */
     public function getUsernameByNickname($nickname, $blur = false)
@@ -27,6 +25,7 @@ class BaseCollection extends Collection
      *
      * @param $remark
      * @param $blur
+     *
      * @return mixed
      */
     public function getUsernameByRemarkName($remark, $blur = false)
@@ -35,18 +34,20 @@ class BaseCollection extends Collection
     }
 
     /**
-     * 获取Username
+     * 获取Username.
      *
      * @param $search
      * @param $key
      * @param bool $blur
+     *
      * @return string
      */
     public function getUsername($search, $key, $blur = false)
     {
         return $this->search(function ($item) use ($search, $key, $blur) {
-
-            if (!isset($item[$key])) return false;
+            if (!isset($item[$key])) {
+                return false;
+            }
 
             if ($blur && str_contains($item[$key], $search)) {
                 return true;
@@ -59,19 +60,21 @@ class BaseCollection extends Collection
     }
 
     /**
-     * 获取整个数组
+     * 获取整个数组.
      *
      * @param $search
      * @param $key
      * @param bool $first
      * @param bool $blur
+     *
      * @return mixed|static
      */
     public function getObject($search, $key, $first = false, $blur = false)
     {
         $objects = $this->filter(function ($item) use ($search, $key, $blur) {
-
-            if (!isset($item[$key])) return false;
+            if (!isset($item[$key])) {
+                return false;
+            }
 
             if ($blur && str_contains($item[$key], $search)) {
                 return true;
@@ -86,10 +89,11 @@ class BaseCollection extends Collection
     }
 
     /**
-     * 存储时处理emoji
+     * 存储时处理emoji.
      *
      * @param mixed $key
      * @param mixed $value
+     *
      * @return Collection
      */
     public function put($key, $value)
@@ -100,9 +104,10 @@ class BaseCollection extends Collection
     }
 
     /**
-     * 处理联系人
+     * 处理联系人.
      *
      * @param $contact
+     *
      * @return mixed
      */
     public function format($contact)
@@ -125,23 +130,25 @@ class BaseCollection extends Collection
     }
 
     /**
-     * 通过接口更新群组信息
+     * 通过接口更新群组信息.
      *
      * @param $username
      * @param $list
+     *
      * @return array
      */
     public function update($username, $list) :array
     {
-        if(is_string($username))
+        if (is_string($username)) {
             $username = [$username];
+        }
 
-        $url = server()->baseUri . '/webwxbatchgetcontact?type=ex&r=' . time();
+        $url = server()->baseUri.'/webwxbatchgetcontact?type=ex&r='.time();
 
         $data = [
             'BaseRequest' => server()->baseRequest,
-            'Count' => count($username),
-            'List' => $list
+            'Count'       => count($username),
+            'List'        => $list,
         ];
 
         $response = http()->json($url, $data, true);
@@ -152,5 +159,4 @@ class BaseCollection extends Collection
 
         return is_string($username) ? head($response['ContactList']) : $response['ContactList'];
     }
-
 }
