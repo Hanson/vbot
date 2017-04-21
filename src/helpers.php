@@ -3,24 +3,24 @@
  * Created by PhpStorm.
  * User: Hanson
  * Date: 2016/12/29
- * Time: 0:10
+ * Time: 0:10.
  */
-
-use Hanson\Vbot\Core\Server;
-use Hanson\Vbot\Core\Myself;
-use Hanson\Vbot\Core\Http;
 use Hanson\Vbot\Collections\Account;
-use Hanson\Vbot\Collections\Member;
 use Hanson\Vbot\Collections\Contact;
-use Hanson\Vbot\Collections\Message;
 use Hanson\Vbot\Collections\Group;
+use Hanson\Vbot\Collections\Member;
+use Hanson\Vbot\Collections\Message;
 use Hanson\Vbot\Collections\Official;
+use Hanson\Vbot\Core\Http;
+use Hanson\Vbot\Core\Myself;
+use Hanson\Vbot\Core\Server;
 
-if (! function_exists('server')) {
+if (!function_exists('server')) {
     /**
      * Get the available container instance.
      *
-     * @param  array  $config
+     * @param array $config
+     *
      * @return Server
      */
     function server($config = [])
@@ -28,7 +28,7 @@ if (! function_exists('server')) {
         return Server::getInstance($config);
     }
 }
-if (! function_exists('myself')) {
+if (!function_exists('myself')) {
     /**
      * Get the available container instance.
      *
@@ -39,7 +39,7 @@ if (! function_exists('myself')) {
         return Myself::getInstance();
     }
 }
-if (! function_exists('http')) {
+if (!function_exists('http')) {
     /**
      * Get the available container instance.
      *
@@ -50,7 +50,7 @@ if (! function_exists('http')) {
         return Http::getInstance();
     }
 }
-if (! function_exists('account')) {
+if (!function_exists('account')) {
     /**
      * Get the available container instance.
      *
@@ -61,7 +61,7 @@ if (! function_exists('account')) {
         return Account::getInstance();
     }
 }
-if (! function_exists('contact')) {
+if (!function_exists('contact')) {
     /**
      * Get the available container instance.
      *
@@ -72,7 +72,7 @@ if (! function_exists('contact')) {
         return Contact::getInstance();
     }
 }
-if (! function_exists('member')) {
+if (!function_exists('member')) {
     /**
      * Get the available container instance.
      *
@@ -83,7 +83,7 @@ if (! function_exists('member')) {
         return Member::getInstance();
     }
 }
-if (! function_exists('group')) {
+if (!function_exists('group')) {
     /**
      * Get the available container instance.
      *
@@ -94,7 +94,7 @@ if (! function_exists('group')) {
         return Group::getInstance();
     }
 }
-if (! function_exists('message')) {
+if (!function_exists('message')) {
     /**
      * Get the available container instance.
      *
@@ -105,7 +105,7 @@ if (! function_exists('message')) {
         return Message::getInstance();
     }
 }
-if (! function_exists('official')) {
+if (!function_exists('official')) {
     /**
      * Get the available container instance.
      *

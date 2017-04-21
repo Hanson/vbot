@@ -3,45 +3,44 @@
  * Created by PhpStorm.
  * User: Hanson
  * Date: 2016/12/13
- * Time: 20:56
+ * Time: 20:56.
  */
 
 namespace Hanson\Vbot\Collections;
 
-
 class Account
 {
-
     /**
      * @var Account
      */
-    static $instance = null;
+    public static $instance = null;
 
     /**
-     * create a single instance
+     * create a single instance.
      *
      * @return Account
      */
     public static function getInstance()
     {
         if (static::$instance === null) {
-            static::$instance = new Account();
+            static::$instance = new self();
         }
 
         return static::$instance;
     }
 
     /**
-     * 根据username获取账号
+     * 根据username获取账号.
      *
      * @param $username
+     *
      * @return mixed
      */
     public function getAccount($username)
     {
-        if(starts_with($username, '@@')){
+        if (starts_with($username, '@@')) {
             return group()->get($username);
-        }else{
+        } else {
             $account = contact()->get($username, null);
 
             $account = $account ?: member()->get($username, null);
@@ -51,5 +50,4 @@ class Account
             return $account ?: Special::getInstance()->get($username, null);
         }
     }
-
 }

@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: Hanson
  * Date: 2016/12/9
- * Time: 21:13
+ * Time: 21:13.
  */
 
 namespace Hanson\Vbot\Core;
@@ -14,8 +14,7 @@ use Hanson\Vbot\Support\Path;
 
 class Http
 {
-
-    static $instance;
+    public static $instance;
 
     protected $client;
 
@@ -30,7 +29,7 @@ class Http
     public static function getInstance()
     {
         if (!static::$instance) {
-            static::$instance = new Http();
+            static::$instance = new self();
         }
 
         return static::$instance;
@@ -80,7 +79,7 @@ class Http
     public function getClient()
     {
         if (!($this->client instanceof HttpClient)) {
-            $this->cookieJar = new FileCookieJar(Path::getCurrentSessionPath() . 'cookies', true);
+            $this->cookieJar = new FileCookieJar(Path::getCurrentSessionPath().'cookies', true);
             $this->client = new HttpClient(['cookies' => $this->cookieJar]);
         }
 
@@ -90,7 +89,8 @@ class Http
     /**
      * @param $url
      * @param string $method
-     * @param array $options
+     * @param array  $options
+     *
      * @return string
      */
     public function request($url, $method = 'GET', $options = [])
@@ -98,11 +98,9 @@ class Http
         $response = $this->getClient()->request($method, $url, $options);
 
         if (is_dir(Path::getCurrentSessionPath())) {
-            $this->cookieJar->save(Path::getCurrentSessionPath() . 'cookies');
+            $this->cookieJar->save(Path::getCurrentSessionPath().'cookies');
         }
 
         return $response->getBody()->getContents();
     }
-
-
 }

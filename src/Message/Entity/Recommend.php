@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: Hanson
  * Date: 2017/1/15
- * Time: 12:29
+ * Time: 12:29.
  */
 
 namespace Hanson\Vbot\Message\Entity;
@@ -12,7 +12,6 @@ use Hanson\Vbot\Message\MessageInterface;
 
 class Recommend extends Message implements MessageInterface
 {
-
     /**
      * @var array 推荐信息
      */
@@ -27,7 +26,7 @@ class Recommend extends Message implements MessageInterface
     public $description;
 
     /**
-     * 国内为省，国外为国
+     * 国内为省，国外为国.
      *
      * @var string
      */
@@ -58,14 +57,14 @@ class Recommend extends Message implements MessageInterface
     {
         $isMatch = preg_match('/bigheadimgurl="(http:\/\/.+?)"\ssmallheadimgurl="(http:\/\/.+?)".+province="(.+?)"\scity="(.+?)".+certflag="(\d+)"\scertinfo="(.+?)"/', $this->message, $matches);
 
-        if($isMatch){
+        if ($isMatch) {
             $this->bigAvatar = $matches[1];
             $this->smallAvatar = $matches[2];
             $this->province = $matches[3];
             $this->city = $matches[4];
             $flag = $matches[5];
             $desc = $matches[6];
-            if(official()->isOfficial($flag)){
+            if (official()->isOfficial($flag)) {
                 $this->isOfficial = true;
                 $this->description = $desc;
             }
