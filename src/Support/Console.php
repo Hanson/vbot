@@ -38,12 +38,12 @@ class Console
     {
         if (self::$loggerHandler) {
             call_user_func_array(self::$loggerHandler, [
-                'info' => $str,
-                'level' => strtoupper($level),
+                'info'    => $str,
+                'level'   => strtoupper($level),
                 'session' => server()->config['session'],
             ]);
         } else {
-            echo '[' . server()->config['session'] . '] [' . Carbon::now()->toDateTimeString() . ']' . "[{$level}] " . $str . PHP_EOL;
+            echo '['.server()->config['session'].'] ['.Carbon::now()->toDateTimeString().']'."[{$level}] ".$str.PHP_EOL;
         }
     }
 
