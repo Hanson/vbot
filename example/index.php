@@ -41,8 +41,8 @@ function reply($str)
         'info' => $str,
     ], true)['text'];
 }
-\Hanson\Vbot\Support\Console::setLoggerHandler(function ($info, $level) {
-    echo '[自定义日志]['.\Carbon\Carbon::now()->toDateTimeString().']'."[{$level}] ".$info.PHP_EOL;
+\Hanson\Vbot\Support\Console::setLoggerHandler(function ($info, $level, $session) {
+    echo '['.$session.'] [自定义日志]['.\Carbon\Carbon::now()->toDateTimeString().']'."[{$level}] ".$info.PHP_EOL;
 });
 $robot->server->setMessageHandler(function ($message) use ($path) {
     /** @var $message Message */
