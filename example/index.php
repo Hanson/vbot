@@ -5,7 +5,7 @@
  * Date: 2016/12/7
  * Time: 16:33.
  */
-require_once __DIR__.'./../vendor/autoload.php';
+require_once __DIR__ . './../vendor/autoload.php';
 
 use Hanson\Vbot\Foundation\Vbot;
 use Hanson\Vbot\Message\Entity\Emoticon;
@@ -26,23 +26,23 @@ use Hanson\Vbot\Message\Entity\Transfer;
 use Hanson\Vbot\Message\Entity\Video;
 use Hanson\Vbot\Message\Entity\Voice;
 
-$path = __DIR__.'/./../tmp/';
+$path = __DIR__ . '/./../tmp/';
 $robot = new Vbot([
     'user_path' => $path,
-    'session'   => 'console',
-    'debug'     => true,
+    'session' => 'console',
+    'debug' => true,
 ]);
 
 // 图灵自动回复
 function reply($str)
 {
     return http()->post('http://www.tuling123.com/openapi/api', [
-        'key'  => '1dce02aef026258eff69635a06b0ab7d',
+        'key' => '1dce02aef026258eff69635a06b0ab7d',
         'info' => $str,
     ], true)['text'];
 }
-\Hanson\Vbot\Support\Console::setLoggerHandler(function ($info, $level) {
-    echo '[自定义日志]['.\Carbon\Carbon::now()->toDateTimeString().']'."[{$level}] ".$info.PHP_EOL;
+\Hanson\Vbot\Support\Console::setLoggerHandler(function ($info, $level, $session) {
+    echo '[' . $session . '] [自定义日志][' . \Carbon\Carbon::now()->toDateTimeString() . ']' . "[{$level}] " . $info . PHP_EOL;
 });
 $robot->server->setMessageHandler(function ($message) use ($path) {
     /** @var $message Message */
@@ -50,9 +50,9 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
     // 位置信息 返回位置文字
     if ($message instanceof Location) {
         /* @var $message Location */
-        Text::send($message->from['UserName'], '地图链接：'.$message->url);
+        Text::send($message->from['UserName'], '地图链接：' . $message->url);
 
-        return '位置：'.$message;
+        return '位置：' . $message;
     }
 
     // 文字信息
@@ -116,23 +116,23 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
     // 红包信息
     if ($message instanceof RedPacket) {
         // do something to notify if you want ...
-        return $message->content.' 来自 '.$message->from['NickName'];
+        return $message->content . ' 来自 ' . $message->from['NickName'];
     }
 
     // 转账信息
     if ($message instanceof Transfer) {
         /* @var $message Transfer */
-        return $message->content.' 收到金额 '.$message->fee;
+        return $message->content . ' 收到金额 ' . $message->fee;
     }
 
     // 推荐名片信息
     if ($message instanceof Recommend) {
         /** @var $message Recommend */
         if ($message->isOfficial) {
-            return $message->from['NickName'].' 向你推荐了公众号 '.$message->province.$message->city.
+            return $message->from['NickName'] . ' 向你推荐了公众号 ' . $message->province . $message->city .
                 " {$message->info['NickName']} 公众号信息： {$message->description}";
         } else {
-            return $message->from['NickName'].' 向你推荐了 '.$message->province.$message->city.
+            return $message->from['NickName'] . ' 向你推荐了 ' . $message->province . $message->city .
                 " {$message->info['NickName']} 头像链接： {$message->bigAvatar}";
         }
     }
@@ -179,7 +179,7 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
 
     // 新增好友
     if ($message instanceof \Hanson\Vbot\Message\Entity\NewFriend) {
-        \Hanson\Vbot\Support\Console::log('新加好友：'.$message->from['NickName']);
+        \Hanson\Vbot\Support\Console::log('新加好友：' . $message->from['NickName']);
     }
 
     // 群组变动
@@ -188,7 +188,7 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
         if ($message->action === 'ADD') {
             \Hanson\Vbot\Support\Console::log('新人进群');
 
-            return '欢迎新人 '.$message->nickname;
+            return '欢迎新人 ' . $message->nickname;
         } elseif ($message->action === 'REMOVE') {
             \Hanson\Vbot\Support\Console::log('群主踢人了');
 
@@ -207,7 +207,7 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
 });
 
 $robot->server->setLoginHandler(function ($qrPath) {
-    \Hanson\Vbot\Support\Console::log('The login qrcode is: '.$qrPath);
+    \Hanson\Vbot\Support\Console::log('The login qrcode is: ' . $qrPath);
 });
 
 $robot->server->setAfterLoginHandler(function () {
