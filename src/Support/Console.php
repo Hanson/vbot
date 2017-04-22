@@ -37,9 +37,13 @@ class Console
     public static function log($str, $level = 'INFO')
     {
         if (self::$loggerHandler) {
-            call_user_func_array(self::$loggerHandler, ['info' => $str, 'level' => strtoupper($level)]);
+            call_user_func_array(self::$loggerHandler, [
+                'info' => $str,
+                'level' => strtoupper($level),
+                'session' => server()->config['session'],
+            ]);
         } else {
-            echo '['.Carbon::now()->toDateTimeString().']'."[{$level}] ".$str.PHP_EOL;
+            echo '[' . server()->config['session'] . '] [' . Carbon::now()->toDateTimeString() . ']' . "[{$level}] " . $str . PHP_EOL;
         }
     }
 
@@ -107,7 +111,6 @@ class Console
     {
         return getopt('', ['session:']);
     }
-
     public static function setLoggerHandler(\Closure $closure)
     {
         if (!$closure instanceof \Closure) {
