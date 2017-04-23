@@ -1,18 +1,14 @@
 <?php
 
-
 namespace Hanson\Vbot\Observers;
-
 
 use Hanson\Vbot\Exceptions\ArgumentException;
 use Hanson\Vbot\Exceptions\ObserverNotFoundException;
 use Hanson\Vbot\Foundation\Vbot;
-use Illuminate\Container\Container;
-use function PHPSTORM_META\type;
 
 /**
- * Class Observer
- * @package Hanson\Vbot\Observers
+ * Class Observer.
+ *
  * @method setQrCodeObserver($callback)
  * @method setLoginSuccessObserver($callback)
  */
@@ -34,8 +30,8 @@ class Observer
     {
         $args = func_get_args();
 
-        if(!isset($args[0])){
-            throw new ArgumentException("arguments error in class: ".get_class($this));
+        if (!isset($args[0])) {
+            throw new ArgumentException('arguments error in class: '.get_class($this));
         }
 
         call_user_func_array($this->getCallback(), $args);
@@ -43,7 +39,7 @@ class Observer
 
     protected function setCallback($callback)
     {
-        if(!is_callable($callback)){
+        if (!is_callable($callback)) {
             throw new ArgumentException('Argument #1 must be a callback in: '.get_class($this));
         }
 
@@ -59,7 +55,7 @@ class Observer
     {
         $observerClass = lcfirst(str_replace('set', '', $method));
 
-        if(!$observer = $this->vbot->{$observerClass}){
+        if (!$observer = $this->vbot->{$observerClass}) {
             throw new ObserverNotFoundException("Observer: {$observerClass} not found.");
         }
 

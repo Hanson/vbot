@@ -16,8 +16,6 @@ use Hanson\Vbot\Exceptions\LoginFailedException;
 use Hanson\Vbot\Exceptions\LoginTimeoutException;
 use Hanson\Vbot\Foundation\Config;
 use Hanson\Vbot\Foundation\Vbot;
-use Hanson\Vbot\Support\FileManager;
-use Hanson\Vbot\Support\Path;
 use Hanson\Vbot\Support\System;
 
 class Server
@@ -122,7 +120,7 @@ class Server
             'appid' => 'wx782c26e4c19acffb',
             'fun'   => 'new',
             'lang'  => 'zh_CN',
-            '_' => time(),
+            '_'     => time(),
         ]);
 
         preg_match('/window.QRLogin.code = (\d+); window.QRLogin.uuid = \"(\S+?)\"/', $content, $matches);
@@ -225,7 +223,7 @@ class Server
     }
 
     /**
-     * store config to cache
+     * store config to cache.
      */
     private function saveServer()
     {
@@ -236,6 +234,7 @@ class Server
      * init.
      *
      * @param bool $first
+     *
      * @throws InitException
      */
     protected function init($first = true)

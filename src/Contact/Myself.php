@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Hanson\Vbot\Contact;
-
 
 use Hanson\Vbot\Support\Content;
 
@@ -20,7 +18,7 @@ class Myself
 
     public function init($user)
     {
-//        contact()->put($user['UserName'], $user);
+        //        contact()->put($user['UserName'], $user);
         $this->nickname = Content::emojiHandle($user['NickName']);
         $this->username = $user['UserName'];
         $this->sex = $user['Sex'];

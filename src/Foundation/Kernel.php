@@ -2,7 +2,6 @@
 
 namespace Hanson\Vbot\Foundation;
 
-use Hanson\Vbot\Exceptions\ConfigErrorException;
 use Hanson\Vbot\Session\Session;
 
 class Kernel
@@ -57,7 +56,7 @@ class Kernel
      */
     private function initializeConfig()
     {
-        if(!is_dir($this->vbot->config['path'])){
+        if (!is_dir($this->vbot->config['path'])) {
             mkdir($this->vbot->config['path'], 0755, true);
         }
 
@@ -66,10 +65,10 @@ class Kernel
 
     private function initializePath()
     {
-        if(!is_dir($this->vbot->config['path'] . '/cookies')){
-            mkdir($this->vbot->config['path'] . '/cookies', 0755, true);
+        if (!is_dir($this->vbot->config['path'].'/cookies')) {
+            mkdir($this->vbot->config['path'].'/cookies', 0755, true);
         }
 
-        $this->vbot->config['cookie_file'] = $this->vbot->config['path'] . '/cookies/' . $this->vbot->config['session'];
+        $this->vbot->config['cookie_file'] = $this->vbot->config['path'].'/cookies/'.$this->vbot->config['session'];
     }
 }
