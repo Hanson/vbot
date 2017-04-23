@@ -33,6 +33,7 @@ class Session
         $has = $this->vbot->cache->has('session.'.$session);
 
         print_r($has);
+
         return $has;
     }
 }

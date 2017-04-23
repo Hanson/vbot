@@ -3,20 +3,18 @@
  * Created by PhpStorm.
  * User: Hanson
  * Date: 2016/12/9
- * Time: 21:13
+ * Time: 21:13.
  */
 
 namespace Hanson\Vbot\Support;
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Cookie\FileCookieJar;
-use GuzzleHttp\Cookie\SessionCookieJar;
 use Hanson\Vbot\Foundation\Vbot;
 
 class Http
 {
-
-    static $instance;
+    public static $instance;
 
     protected $client;
 
@@ -86,7 +84,8 @@ class Http
     /**
      * @param $url
      * @param string $method
-     * @param array $options
+     * @param array  $options
+     *
      * @return string
      */
     public function request($url, $method = 'GET', $options = [])
@@ -97,6 +96,4 @@ class Http
 
         return $response->getBody()->getContents();
     }
-
-
 }

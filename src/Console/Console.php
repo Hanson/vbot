@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Hanson\Vbot\Console;
-
 
 use Carbon\Carbon;
 use Hanson\Vbot\Foundation\Vbot;
@@ -20,7 +18,7 @@ class Console
     protected $vbot;
 
     /**
-     * console config
+     * console config.
      *
      * @var array
      */
@@ -34,7 +32,7 @@ class Console
     }
 
     /**
-     * determine the console is windows or linux
+     * determine the console is windows or linux.
      *
      * @return bool
      */
@@ -44,7 +42,7 @@ class Console
     }
 
     /**
-     * print in terminal
+     * print in terminal.
      *
      * @param $str
      * @param string $level
@@ -52,12 +50,12 @@ class Console
     public function log($str, $level = 'INFO')
     {
         if ($this->isOutput()) {
-            echo '[' . Carbon::now()->toDateTimeString() . ']' . "[{$level}] " . $str . PHP_EOL;
+            echo '['.Carbon::now()->toDateTimeString().']'."[{$level}] ".$str.PHP_EOL;
         }
     }
 
     /**
-     * print message
+     * print message.
      *
      * @param $str
      */

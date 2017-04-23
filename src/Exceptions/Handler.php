@@ -121,8 +121,8 @@ class Handler
             $e = new FatalThrowableError($e);
         }
 
-        foreach ($this->systemException as $exception){
-            if($e instanceof $exception){
+        foreach ($this->systemException as $exception) {
+            if ($e instanceof $exception) {
                 throw $e;
             }
         }

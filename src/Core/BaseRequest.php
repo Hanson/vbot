@@ -1,14 +1,11 @@
 <?php
 
-
 namespace Hanson\Vbot\Core;
-
 
 use Hanson\Vbot\Foundation\Vbot;
 
 class BaseRequest
 {
-
     public $uin;
 
     public $sid;
@@ -40,11 +37,10 @@ class BaseRequest
     public function toArray()
     {
         return [
-            'Uin' => intval($this->uin),
-            'Sid' => $this->sid,
-            'Skey' => $this->skey,
+            'Uin'      => intval($this->uin),
+            'Sid'      => $this->sid,
+            'Skey'     => $this->skey,
             'DeviceID' => $this->deviceId,
         ];
     }
-
 }

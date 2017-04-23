@@ -11,7 +11,7 @@ $path = __DIR__.'/./../tmp/';
 $robot = new Vbot([
     'path'     => $path,
     'debug'    => true,
-    /**
+    /*
      * 下载配置项
      */
     'download' => [
@@ -20,14 +20,14 @@ $robot = new Vbot([
         'video'   => true,
         'emotion' => true,
     ],
-    /**
+    /*
      * 输出配置项
      */
     'console' => [
-        'output' => true, # 是否输出
-        'message' => true, # 是否输出接收消息 （若上面为 false 此处无效）
+        'output'  => true, // 是否输出
+        'message' => true, // 是否输出接收消息 （若上面为 false 此处无效）
     ],
-    /**
+    /*
      * 日志配置项
      */
     'log'      => [
@@ -35,7 +35,7 @@ $robot = new Vbot([
         'permission' => 0777,
         'file'       => $path.'log/vbot.log',
     ],
-    /**
+    /*
      * 缓存配置项
      */
 //    'cache.default'     => 'file',
@@ -45,7 +45,7 @@ $robot = new Vbot([
 //    ],
     'cache' => [
         'default' => 'file',
-        'stores' => [
+        'stores'  => [
             'file' => [
                 'driver' => 'file',
                 'path'   => $path.'cache',
@@ -54,23 +54,23 @@ $robot = new Vbot([
                 'driver' => 'array',
             ],
             'redis' => [
-                'driver' => 'redis',
+                'driver'     => 'redis',
                 'connection' => 'default',
             ],
-        ]
+        ],
     ],
-    /**
+    /*
      * 无需配置，系统生成
      */
     'server' => [
           'uuid' => 'IeUYcTY8ZQ==',
-          'uri' => [
+          'uri'  => [
               'redirect' => '',
-              'file' => '',
-              'push' => '',
-              'base' => '',
-          ]
-    ]
+              'file'     => '',
+              'push'     => '',
+              'base'     => '',
+          ],
+    ],
 ]);
 
 //$robot->server->setMessageHandler(function($message){
@@ -78,20 +78,20 @@ $robot = new Vbot([
 //});
 
 $robot->exception->setHandler(function (Exception $e) {
-    if($e instanceof \Hanson\Vbot\Exceptions\FetchUuidException){
+    if ($e instanceof \Hanson\Vbot\Exceptions\FetchUuidException) {
         echo $e->getMessage();
-    }elseif ($e instanceof \Hanson\Vbot\Exceptions\LoginTimeoutException){
+    } elseif ($e instanceof \Hanson\Vbot\Exceptions\LoginTimeoutException) {
         echo $e->getMessage();
     }
 
     return true;
 });
 
-$robot->observer->setQrCodeObserver(function($qrCodeUrl){
+$robot->observer->setQrCodeObserver(function ($qrCodeUrl) {
     echo $qrCodeUrl;
 });
 
-$robot->observer->setLoginSuccessObserver(function(){
+$robot->observer->setLoginSuccessObserver(function () {
     echo '登录成功'.PHP_EOL;
 });
 

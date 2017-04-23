@@ -1,32 +1,31 @@
 <?php
 
-
 namespace Hanson\Vbot\Console;
 
-
+use PHPQRCode\QRcode as QrCodeConsole;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
-use PHPQRCode\QRcode as QrCodeConsole;
 
 class QrCode extends Console
 {
     /**
-     * show qrCode on console
+     * show qrCode on console.
      *
      * @param $text
+     *
      * @return bool
      */
     public function show($text)
     {
-        if(!array_get($this->config, 'qrcode', true)){
+        if (!array_get($this->config, 'qrcode', true)) {
             return false;
         }
         $output = new ConsoleOutput();
         static::initQrcodeStyle($output);
 
         $pxMap[0] = Console::isWin() ? '<whitec>mm</whitec>' : '<whitec>  </whitec>';
-        $pxMap[1] =  '<blackc>  </blackc>';
+        $pxMap[1] = '<blackc>  </blackc>';
 
         $text = QrCodeConsole::text($text);
 
@@ -44,15 +43,15 @@ class QrCode extends Console
     }
 
     /**
-     * init qrCode style
+     * init qrCode style.
      *
      * @param OutputInterface $output
      */
     private static function initQrcodeStyle(OutputInterface $output)
     {
-        $style = new OutputFormatterStyle('black', 'black', array('bold'));
+        $style = new OutputFormatterStyle('black', 'black', ['bold']);
         $output->getFormatter()->setStyle('blackc', $style);
-        $style = new OutputFormatterStyle('white', 'white', array('bold'));
+        $style = new OutputFormatterStyle('white', 'white', ['bold']);
         $output->getFormatter()->setStyle('whitec', $style);
     }
 }

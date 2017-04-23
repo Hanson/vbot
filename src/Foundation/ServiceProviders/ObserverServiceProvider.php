@@ -2,11 +2,11 @@
 
 namespace Hanson\Vbot\Foundation\ServiceProviders;
 
+use Hanson\Vbot\Foundation\ServiceProviderInterface;
 use Hanson\Vbot\Foundation\Vbot;
 use Hanson\Vbot\Observers\LoginSuccessObserver;
 use Hanson\Vbot\Observers\Observer;
 use Hanson\Vbot\Observers\QrCodeObserver;
-use Hanson\Vbot\Foundation\ServiceProviderInterface;
 
 class ObserverServiceProvider implements ServiceProviderInterface
 {
