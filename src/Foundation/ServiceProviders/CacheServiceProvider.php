@@ -14,11 +14,11 @@ class CacheServiceProvider implements ServiceProviderInterface
     {
         $vbot['files'] = new Filesystem();
 
-        $vbot->singleton('cache', function ($app) {
-            return new CacheManager($app);
+        $vbot->singleton('cache', function ($vbot) {
+            return new CacheManager($vbot);
         });
-        $vbot->singleton('cache.store', function ($app) {
-            return $app['cache']->driver();
+        $vbot->singleton('cache.store', function ($vbot) {
+            return $vbot['cache']->driver();
         });
         $vbot->singleton('memcached.connector', function () {
             return new MemcachedConnector();

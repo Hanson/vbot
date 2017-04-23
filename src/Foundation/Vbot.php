@@ -15,9 +15,18 @@ use Illuminate\Container\Container;
  * Class Vbot.
  *
  * @property \Hanson\Vbot\Core\Server $server
+ * @property \Hanson\Vbot\Contact\Myself $myself
+ * @property \Hanson\Vbot\Core\BaseRequest $baseRequest
  * @property \Hanson\Vbot\Exceptions\Handler $exception
  * @property \Hanson\Vbot\Support\Log $log
+ * @property \Hanson\Vbot\Support\Http $http
+ * @property \Hanson\Vbot\Observers\Observer $observer
+ * @property \Hanson\Vbot\Console\QrCode $qrCode
+ * @property \Hanson\Vbot\Console\Console $console
+ * @property \Hanson\Vbot\Observers\QrCodeObserver $qrCodeObserver
+ * @property \Hanson\Vbot\Observers\LoginSuccessObserver $loginSuccessObserver
  * @property \Illuminate\Config\Repository $config
+ * @property \Illuminate\Cache\CacheManager $cache
  */
 class Vbot extends Container
 {
@@ -31,6 +40,9 @@ class Vbot extends Container
         ServiceProviders\ServerServiceProvider::class,
         ServiceProviders\ExceptionServiceProvider::class,
         ServiceProviders\CacheServiceProvider::class,
+        ServiceProviders\HttpServiceProvider::class,
+        ServiceProviders\ObserverServiceProvider::class,
+        ServiceProviders\ConsoleServiceProvider::class,
     ];
 
     public function __construct(array $config)

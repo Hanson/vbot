@@ -1,7 +1,8 @@
 <?php
 
-namespace Hanson\Vbot\Console;
+namespace Hanson\Vbot\Commands;
 
+use Leo108\ConsoleQrCode\Command\ConvertCommand;
 use Symfony\Component\Console\Application;
 
 /**
@@ -14,6 +15,7 @@ class Command
         $application = new Application();
 
         $application->add(new ClearSessionCommand());
+        $application->add(new ConvertCommand());
 
         $application->run();
     }

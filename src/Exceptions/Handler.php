@@ -18,6 +18,7 @@ class Handler
 
     protected $systemException = [
         ConfigErrorException::class,
+        LoginFailedException::class,
     ];
 
     /**
@@ -118,6 +119,12 @@ class Handler
     {
         if (!$e instanceof Exception) {
             $e = new FatalThrowableError($e);
+        }
+
+        foreach ($this->systemException as $exception){
+            if($e instanceof $exception){
+                throw $e;
+            }
         }
 
         $isThrow = $this->report($e);

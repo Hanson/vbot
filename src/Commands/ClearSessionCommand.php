@@ -1,6 +1,6 @@
 <?php
 
-namespace Hanson\Vbot\Console;
+namespace Hanson\Vbot\Commands;
 
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Input\InputInterface;

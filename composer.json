@@ -24,7 +24,10 @@
         "illuminate/config": "^5.4",
         "illuminate/cache": "^5.4",
         "illuminate/filesystem": "^5.4",
-        "illuminate/container": "^5.4"
+        "illuminate/container": "^5.4",
+        "aferrandini/phpqrcode": "^1.0",
+        "leo108/php-console-qrcode": "^0.2.0",
+        "predis/predis": "^1.1"
     },
     "autoload": {
         "psr-4": {
