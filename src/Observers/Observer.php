@@ -30,10 +30,6 @@ class Observer
     {
         $args = func_get_args();
 
-        if (!isset($args[0])) {
-            throw new ArgumentException('arguments error in class: '.get_class($this));
-        }
-
         call_user_func_array($this->getCallback(), $args);
     }
 

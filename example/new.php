@@ -44,18 +44,26 @@ $robot = new Vbot([
 //        'path'   => $path.'cache',
 //    ],
     'cache' => [
-        'default' => 'file',
+        'default' => 'array',
         'stores'  => [
             'file' => [
                 'driver' => 'file',
                 'path'   => $path.'cache',
             ],
-            'array' => [
-                'driver' => 'array',
-            ],
             'redis' => [
-                'driver'     => 'redis',
+                'driver' => 'redis',
                 'connection' => 'default',
+            ],
+        ],
+    ],
+    'database' => [
+        'redis' => [
+            'client' => 'predis',
+            'default' => [
+                'host' => '127.0.0.1',
+                'password' => null,
+                'port' => 6379,
+                'database' => 13,
             ],
         ],
     ],

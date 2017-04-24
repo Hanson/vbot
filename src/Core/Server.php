@@ -76,23 +76,22 @@ class Server
     private function tryLogin(): bool
     {
         Console::isWin() ? system('cls') : system('clear');
-        dd($this->vbot->config);
-        if (is_file($this->vbot['config.cookie_file']) && $this->vbot->cache->has($this->vbot['config.session_key'])) {
-            $configs = json_decode($this->vbot->cache->get($this->vbot['config.session_key']), true);
+        if (is_file($this->vbot->config['cookie_file']) && $this->vbot->cache->has($this->vbot->config['session_key'])) {
+            $configs = json_decode($this->vbot->cache->get($this->vbot->config['session_key']), true);
 
             $this->vbot->config['server'] = $configs;
 
-            list($retCode, $selector) = (new Sync())->checkSync();
-            $result = (new MessageHandler())->handleCheckSync($retCode, $selector, true);
+//            list($retCode, $selector) = (new Sync())->checkSync();
+//            $result = (new MessageHandler())->handleCheckSync($retCode, $selector, true);
 
-            if ($result && (new Sync())->sync()) {
-                Console::log('免扫码登录成功');
-                if ($this->afterLoginHandler) {
-                    call_user_func_array($this->afterLoginHandler, []);
-                }
+//            if ($result && (new Sync())->sync()) {
+//                Console::log('免扫码登录成功');
+//                if ($this->afterLoginHandler) {
+//                    call_user_func_array($this->afterLoginHandler, []);
+//                }
 
                 return true;
-            }
+//            }
         }
 
         return false;
@@ -129,7 +128,7 @@ class Server
             throw new FetchUuidException('fetch uuid failed.');
         }
 
-        $this->vbot['config.server.uuid'] = $matches[2];
+        $this->vbot->config['server.uuid'] = $matches[2];
     }
 
     /**
@@ -137,7 +136,7 @@ class Server
      */
     public function showQrCode()
     {
-        $url = 'https://login.weixin.qq.com/l/'.$this->vbot['config.server.uuid'];
+        $url = 'https://login.weixin.qq.com/l/'.$this->vbot->config['server.uuid'];
 
         $this->vbot->qrCodeObserver->trigger($url);
 
@@ -156,7 +155,7 @@ class Server
 
         $this->vbot->console->log('please scan the qrCode with wechat.');
         while ($retryTime > 0) {
-            $url = sprintf('https://login.weixin.qq.com/cgi-bin/mmwebwx-bin/login?tip=%s&uuid=%s&_=%s', $tip, $this->vbot['config.server.uuid'], time());
+            $url = sprintf('https://login.weixin.qq.com/cgi-bin/mmwebwx-bin/login?tip=%s&uuid=%s&_=%s', $tip, $this->vbot->config['server.uuid'], time());
 
             $content = $this->vbot->http->get($url);
 
@@ -171,11 +170,11 @@ class Server
                 case '200':
                     preg_match('/window.redirect_uri="(https:\/\/(\S+?)\/\S+?)";/', $content, $matches);
 
-                    $this->vbot['config.server.uri.redirect'] = $matches[1].'&fun=new';
+                    $this->vbot->config['server.uri.redirect'] = $matches[1].'&fun=new';
                     $url = 'https://%s/cgi-bin/mmwebwx-bin';
-                    $this->vbot['config.server.uri.file'] = sprintf($url, 'file.'.$matches[2]);
-                    $this->vbot['config.server.uri.push'] = sprintf($url, 'webpush.'.$matches[2]);
-                    $this->vbot['config.server.uri.base'] = sprintf($url, $matches[2]);
+                    $this->vbot->config['server.uri.file'] = sprintf($url, 'file.'.$matches[2]);
+                    $this->vbot->config['server.uri.push'] = sprintf($url, 'webpush.'.$matches[2]);
+                    $this->vbot->config['server.uri.base'] = sprintf($url, $matches[2]);
 
                     return;
                 case '408':
@@ -202,20 +201,20 @@ class Server
      */
     private function getLogin()
     {
-        $content = $this->vbot->http->get($this->vbot['config.server.uri.redirect']);
+        $content = $this->vbot->http->get($this->vbot->config['server.uri.redirect']);
 
         $data = (array) simplexml_load_string($content, 'SimpleXMLElement', LIBXML_NOCDATA);
 
-        $this->vbot['config.server.skey'] = $data['skey'];
-        $this->vbot['config.server.sid'] = $data['wxsid'];
-        $this->vbot['config.server.uin'] = $data['wxuin'];
-        $this->vbot['config.server.passTicket'] = $data['pass_ticket'];
+        $this->vbot->config['server.skey'] = $data['skey'];
+        $this->vbot->config['server.sid'] = $data['wxsid'];
+        $this->vbot->config['server.uin'] = $data['wxuin'];
+        $this->vbot->config['server.passTicket'] = $data['pass_ticket'];
 
         if (in_array('', [$data['skey'], $data['wxsid'], $data['wxuin'], $data['pass_ticket']])) {
             throw new LoginFailedException('Login failed.');
         }
 
-        $this->vbot['config.server.deviceId'] = 'e'.substr(mt_rand().mt_rand(), 1, 15);
+        $this->vbot->config['server.deviceId'] = 'e'.substr(mt_rand().mt_rand(), 1, 15);
 
         $this->vbot->baseRequest->init();
 
@@ -227,7 +226,7 @@ class Server
      */
     private function saveServer()
     {
-        $this->vbot->cache->forever('session.'.$this->vbot->config['session'], json_encode($this->vbot['config.server']));
+        $this->vbot->cache->forever('session.'.$this->vbot->config['session'], json_encode($this->vbot->config['server']));
     }
 
     /**
@@ -239,7 +238,7 @@ class Server
      */
     protected function init($first = true)
     {
-        $url = sprintf($this->vbot['config.server.uri.base'].'/webwxinit?r=%d', time());
+        $url = sprintf($this->vbot->config['server.uri.base'].'/webwxinit?r=%d', time());
 
         $content = $this->vbot->http->json($url, [
             'BaseRequest' => $this->vbot->baseRequest->toArray(),
@@ -278,7 +277,7 @@ class Server
      */
     protected function statusNotify()
     {
-        $url = sprintf($this->baseUri.'/webwxstatusnotify?lang=zh_CN&pass_ticket=%s', $this->vbot['config.server.passTicket']);
+        $url = sprintf($this->baseUri.'/webwxstatusnotify?lang=zh_CN&pass_ticket=%s', $this->vbot->config['server.passTicket']);
 
         $this->vbot->http->json($url, [
             'BaseRequest'  => $this->vbot->baseRequest->toArray(),
@@ -291,18 +290,18 @@ class Server
 
     protected function generateSyncKey($result, $first)
     {
-        $this->vbot['config.server.syncKey'] = $result['SyncKey'];
+        $this->vbot->config['server.syncKey'] = $result['SyncKey'];
 
         $syncKey = [];
 
-        if (is_array($this->vbot['config.server.syncKey.List'])) {
-            foreach ($this->vbot['config.server.syncKey.List'] as $item) {
+        if (is_array($this->vbot->config['server.syncKey.List'])) {
+            foreach ($this->vbot->config['server.syncKey.List'] as $item) {
                 $syncKey[] = $item['Key'].'_'.$item['Val'];
             }
         } elseif ($first) {
             $this->init(false);
         }
 
-        $this->vbot['config.server.syncKeyStr'] = implode('|', $syncKey);
+        $this->vbot->config['server.syncKeyStr'] = implode('|', $syncKey);
     }
 }
