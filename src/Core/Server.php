@@ -17,7 +17,6 @@ use Hanson\Vbot\Foundation\Vbot;
 
 class Server
 {
-
     /**
      * @var Vbot
      */
