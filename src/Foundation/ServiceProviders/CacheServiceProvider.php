@@ -25,11 +25,12 @@ class CacheServiceProvider implements ServiceProviderInterface
         $vbot->singleton('memcached.connector', function () {
             return new MemcachedConnector();
         });
-        $vbot->singleton('redis', function($vbot){
+        $vbot->singleton('redis', function ($vbot) {
             $config = $vbot->config['database.redis'];
+
             return new RedisManager(array_get($config, 'client', 'predis'), $config);
         });
-        $vbot->bind('redis.connection', function($vbot){
+        $vbot->bind('redis.connection', function ($vbot) {
             return $vbot['redis']->connection();
         });
     }
