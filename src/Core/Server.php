@@ -53,6 +53,7 @@ class Server
     protected $loginHandler = null;
     protected $afterLoginHandler = null;
     protected $afterInitHandler = null;
+    protected $exitHandler = null;
 
     public function __construct($config = [])
     {
@@ -172,7 +173,7 @@ class Server
 
         if (!$matches) {
             Console::log('获取UUID失败', Console::ERROR);
-            exit;
+            $this->stop();
         }
 
         $this->uuid = $matches[2];
@@ -245,7 +246,7 @@ class Server
         }
 
         Console::log('登录超时，退出应用', Console::ERROR);
-        exit;
+        $this->stop();
     }
 
     /**
@@ -266,7 +267,7 @@ class Server
 
         if (in_array('', [$this->skey, $this->sid, $this->uin, $this->passTicket])) {
             Console::log('登录失败', Console::ERROR);
-            exit;
+            $this->stop();
         }
 
         $this->deviceId = 'e'.substr(mt_rand().mt_rand(), 1, 15);
@@ -371,7 +372,7 @@ class Server
             unlink(Path::getCurrentSessionPath().'/server.json');
             unlink(Path::getCurrentSessionPath().'/myself.json');
             Console::log('初始化失败，链接：'.$url, Console::ERROR);
-            exit;
+            $this->stop();
         }
     }
 
@@ -420,6 +421,14 @@ class Server
         $this->syncKeyStr = implode('|', $syncKey);
     }
 
+    public function stop()
+    {
+        if ($this->exitHandler) {
+            call_user_func_array($this->exitHandler, []);
+        }
+        exit();
+    }
+
     public function setMessageHandler(\Closure $closure)
     {
         MessageHandler::getInstance()->setMessageHandler($closure);
@@ -432,6 +441,10 @@ class Server
 
     public function setExitHandler(\Closure $closure)
     {
+        if ($closure instanceof \Closure) {
+            $this->exitHandler = $closure;
+        }
+
         MessageHandler::getInstance()->setExitHandler($closure);
     }
 
