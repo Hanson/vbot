@@ -15,9 +15,9 @@ class ServerServiceProvider implements ServiceProviderInterface
         $vbot->singleton('server', function () use ($vbot) {
             return new Server($vbot);
         });
-        $vbot->singleton('baseRequest', function () use ($vbot) {
-            return new BaseRequest($vbot);
-        });
+//        $vbot->singleton('baseRequest', function () use ($vbot) {
+//            return new BaseRequest($vbot);
+//        });
         $vbot['myself'] = new Myself();
     }
 }

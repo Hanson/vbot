@@ -9,42 +9,14 @@
 namespace Hanson\Vbot\Core;
 
 use Hanson\Vbot\Console\Console;
-use Hanson\Vbot\Console\QrCode;
 use Hanson\Vbot\Exceptions\FetchUuidException;
 use Hanson\Vbot\Exceptions\InitException;
 use Hanson\Vbot\Exceptions\LoginFailedException;
 use Hanson\Vbot\Exceptions\LoginTimeoutException;
-use Hanson\Vbot\Foundation\Config;
 use Hanson\Vbot\Foundation\Vbot;
-use Hanson\Vbot\Support\System;
 
 class Server
 {
-    protected $uuid;
-
-    protected $redirectUri;
-
-    public $skey;
-
-    public $sid;
-
-    public $uin;
-
-    public $passTicket;
-
-    public $deviceId;
-
-    public $baseRequest;
-
-    public $syncKey;
-
-    public $syncKeyStr;
-
-    public $baseUri = 'https://wx2.qq.com/cgi-bin/mmwebwx-bin';
-
-    public $fileUri;
-
-    public $pushUri;
 
     /**
      * @var Vbot
@@ -75,11 +47,14 @@ class Server
      */
     private function tryLogin(): bool
     {
-        Console::isWin() ? system('cls') : system('clear');
+        Console::clear();
+
         if (is_file($this->vbot->config['cookie_file']) && $this->vbot->cache->has($this->vbot->config['session_key'])) {
             $configs = json_decode($this->vbot->cache->get($this->vbot->config['session_key']), true);
 
             $this->vbot->config['server'] = $configs;
+
+            $this->vbot->reLoginSuccessObserver->trigger();
 
 //            list($retCode, $selector) = (new Sync())->checkSync();
 //            $result = (new MessageHandler())->handleCheckSync($retCode, $selector, true);
@@ -98,7 +73,7 @@ class Server
     }
 
     /**
-     * 微信登录流程.
+     * login.
      */
     public function login()
     {
@@ -216,7 +191,12 @@ class Server
 
         $this->vbot->config['server.deviceId'] = 'e'.substr(mt_rand().mt_rand(), 1, 15);
 
-        $this->vbot->baseRequest->init();
+        $this->vbot->config['server.baseRequest'] = [
+            'Uin'      => $data['wxuin'],
+            'Sid'      => $data['wxsid'],
+            'Skey'     => $data['skey'],
+            'DeviceID' => $this->vbot->config['server.deviceId'],
+        ];
 
         $this->saveServer();
     }
@@ -241,7 +221,7 @@ class Server
         $url = sprintf($this->vbot->config['server.uri.base'].'/webwxinit?r=%d', time());
 
         $content = $this->vbot->http->json($url, [
-            'BaseRequest' => $this->vbot->baseRequest->toArray(),
+            'BaseRequest' => $this->vbot->config['server.baseRequest'],
         ]);
 
         $result = json_decode($content, true);
@@ -250,37 +230,50 @@ class Server
         $this->vbot->myself->init($result['User']);
 
         if ($result['BaseResponse']['Ret'] != 0) {
+            $this->vbot->cache->forget('session.'.$this->vbot->config['session']);
             $this->vbot->log->err('Init failed.'.json_encode($result));
             throw new InitException('Init failed!');
         }
 //        $this->initContactList($result['ContactList']);
 //        $this->initContact();
+
+        $this->afterInitSuccess($content);
+    }
+
+    /**
+     * after init success.
+     *
+     * @param $content
+     */
+    private function afterInitSuccess($content)
+    {
+        $this->vbot->log->info('response:'.$content);
         $this->vbot->console->log('init success.');
-        $this->vbot->console->log('当前session：'.$this->vbot->config['session']);
+        $this->vbot->console->log('current session: '.$this->vbot->config['session']);
         $this->vbot->loginSuccessObserver->trigger();
     }
 
-    protected function initContactList($contactList)
-    {
-        if ($contactList) {
-            (new ContactFactory())->setCollections($contactList);
-        }
-    }
-
-    protected function initContact()
-    {
-        new ContactFactory();
-    }
+//    protected function initContactList($contactList)
+//    {
+//        if ($contactList) {
+//            (new ContactFactory())->setCollections($contactList);
+//        }
+//    }
+//
+//    protected function initContact()
+//    {
+//        new ContactFactory();
+//    }
 
     /**
      * open wechat status notify.
      */
     protected function statusNotify()
     {
-        $url = sprintf($this->baseUri.'/webwxstatusnotify?lang=zh_CN&pass_ticket=%s', $this->vbot->config['server.passTicket']);
+        $url = sprintf($this->vbot->config['server.uri.base'].'/webwxstatusnotify?lang=zh_CN&pass_ticket=%s', $this->vbot->config['server.passTicket']);
 
         $this->vbot->http->json($url, [
-            'BaseRequest'  => $this->vbot->baseRequest->toArray(),
+            'BaseRequest'  => $this->vbot->config['server.baseRequest'],
             'Code'         => 3,
             'FromUserName' => $this->vbot->myself->username,
             'ToUserName'   => $this->vbot->myself->username,

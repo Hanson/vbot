@@ -1,16 +1,18 @@
 <?php
 
-namespace Hanson\Vbot\Exceptions;
+namespace Hanson\Vbot\Foundation;
 
 use Closure;
 use ErrorException;
 use Exception;
-use Hanson\Vbot\Foundation\Vbot;
+use Hanson\Vbot\Exceptions\ArgumentException;
+use Hanson\Vbot\Exceptions\ConfigErrorException;
+use Hanson\Vbot\Exceptions\LoginFailedException;
 use Symfony\Component\Debug\Exception\FatalErrorException;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Throwable;
 
-class Handler
+class ExceptionHandler
 {
     protected $dontReport = [
 //        ConfigErrorException::class
@@ -79,10 +81,15 @@ class Handler
     /**
      * set a exception handler.
      *
-     * @param Closure $closure
+     * @param $closure
+     * @throws ArgumentException
      */
-    public function setHandler(Closure $closure)
+    public function setHandler($closure)
     {
+        if(!is_callable($closure)){
+            throw new ArgumentException('Argument #1 must be callable.');
+        }
+
         $this->handler = $closure;
     }
 
@@ -136,12 +143,6 @@ class Handler
         }
     }
 
-    private function errorMessage($message)
-    {
-        //        return implode("\n", $message);
-        return str_replace('#', "\n#", $message);
-    }
-
     /**
      * Handle the PHP shutdown event.
      *
@@ -152,6 +153,8 @@ class Handler
         if (!is_null($error = error_get_last()) && $this->isFatal($error['type'])) {
             $this->handleException($this->fatalExceptionFromError($error, 0));
         }
+
+
     }
 
     /**

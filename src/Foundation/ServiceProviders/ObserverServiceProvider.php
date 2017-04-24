@@ -4,9 +4,11 @@ namespace Hanson\Vbot\Foundation\ServiceProviders;
 
 use Hanson\Vbot\Foundation\ServiceProviderInterface;
 use Hanson\Vbot\Foundation\Vbot;
+use Hanson\Vbot\Observers\ExitObserver;
 use Hanson\Vbot\Observers\LoginSuccessObserver;
 use Hanson\Vbot\Observers\Observer;
 use Hanson\Vbot\Observers\QrCodeObserver;
+use Hanson\Vbot\Observers\ReLoginSuccessObserver;
 
 class ObserverServiceProvider implements ServiceProviderInterface
 {
@@ -23,6 +25,12 @@ class ObserverServiceProvider implements ServiceProviderInterface
         });
         $vbot->singleton('loginSuccessObserver', function () use ($vbot) {
             return new LoginSuccessObserver($vbot);
+        });
+        $vbot->singleton('reLoginSuccessObserver', function () use ($vbot) {
+            return new ReLoginSuccessObserver($vbot);
+        });
+        $vbot->singleton('exitObserver', function () use ($vbot) {
+            return new ExitObserver($vbot);
         });
     }
 }

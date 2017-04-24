@@ -16,8 +16,7 @@ use Illuminate\Container\Container;
  *
  * @property \Hanson\Vbot\Core\Server $server
  * @property \Hanson\Vbot\Contact\Myself $myself
- * @property \Hanson\Vbot\Core\BaseRequest $baseRequest
- * @property \Hanson\Vbot\Exceptions\Handler $exception
+ * @property \Hanson\Vbot\Foundation\ExceptionHandler $exception
  * @property \Hanson\Vbot\Support\Log $log
  * @property \Hanson\Vbot\Support\Http $http
  * @property \Hanson\Vbot\Observers\Observer $observer
@@ -25,8 +24,10 @@ use Illuminate\Container\Container;
  * @property \Hanson\Vbot\Console\Console $console
  * @property \Hanson\Vbot\Observers\QrCodeObserver $qrCodeObserver
  * @property \Hanson\Vbot\Observers\LoginSuccessObserver $loginSuccessObserver
+ * @property \Hanson\Vbot\Observers\ReLoginSuccessObserver $reLoginSuccessObserver
+ * @property \Hanson\Vbot\Observers\ExitObserver $exitObserver
  * @property \Illuminate\Config\Repository $config
- * @property \Illuminate\Cache\CacheManager $cache
+ * @property \Illuminate\Cache\Repository $cache
  */
 class Vbot extends Container
 {
