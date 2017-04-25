@@ -2,7 +2,6 @@
 
 namespace Hanson\Vbot\Commands;
 
-use Leo108\ConsoleQrCode\Command\ConvertCommand;
 use Symfony\Component\Console\Application;
 
 /**

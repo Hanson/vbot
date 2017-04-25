@@ -6,7 +6,6 @@ use Hanson\Vbot\Foundation\Vbot;
 
 class ContactFactory
 {
-
     const SPECIAL_USERS = ['newsapp', 'fmessage', 'filehelper', 'weibo', 'qqmail',
         'fmessage', 'tmessage', 'qmessage', 'qqsync', 'floatbottle',
         'lbsapp', 'shakeapp', 'medianote', 'qqfriend', 'readerapp',
@@ -14,7 +13,7 @@ class ContactFactory
         'feedsapp', 'voip', 'blogappweixin', 'weixin', 'brandsessionholder',
         'weixinreminder', 'wxid_novlwrv3lqwv11', 'gh_22b87fa7cb3c',
         'officialaccounts', 'notification_messages', 'wxid_novlwrv3lqwv11',
-        'gh_22b87fa7cb3c', 'wxitil', 'userexperience_alarm', 'notification_messages',];
+        'gh_22b87fa7cb3c', 'wxitil', 'userexperience_alarm', 'notification_messages', ];
 
     /**
      * @var Vbot
@@ -33,11 +32,11 @@ class ContactFactory
         $this->fetchGroupMembers();
 
         $this->vbot->fetchContactObserver->trigger([
-            'friends' => $this->vbot->friends,
-            'groups' => $this->vbot->groups,
+            'friends'   => $this->vbot->friends,
+            'groups'    => $this->vbot->groups,
             'officials' => $this->vbot->officials,
-            'special' => $this->vbot->specials,
-            'members' => $this->vbot->members,
+            'special'   => $this->vbot->specials,
+            'members'   => $this->vbot->members,
         ]);
     }
 
@@ -48,7 +47,7 @@ class ContactFactory
      */
     public function fetchAllContacts($seq = 0)
     {
-        $url = sprintf($this->vbot->config['server.uri.base'] . '/webwxgetcontact?pass_ticket=%s&skey=%s&r=%s&seq=%s',
+        $url = sprintf($this->vbot->config['server.uri.base'].'/webwxgetcontact?pass_ticket=%s&skey=%s&r=%s&seq=%s',
             $this->vbot->config['server.passTicket'],
             $this->vbot->config['server.skey'],
             time(),

@@ -9,14 +9,14 @@ use Hanson\Vbot\Contact\Myself;
 use Hanson\Vbot\Contact\Officials;
 use Hanson\Vbot\Contact\Specials;
 use Hanson\Vbot\Core\ContactFactory;
-use Hanson\Vbot\Foundation\Vbot;
 use Hanson\Vbot\Foundation\ServiceProviderInterface;
+use Hanson\Vbot\Foundation\Vbot;
 
 class ContactServiceProvider implements ServiceProviderInterface
 {
     public function register(Vbot $vbot)
     {
-        $vbot->bind('contactFactory', function() use ($vbot){
+        $vbot->bind('contactFactory', function () use ($vbot) {
             return new ContactFactory($vbot);
         });
         $vbot->singleton('myself', function () use ($vbot) {
