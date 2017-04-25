@@ -2,8 +2,8 @@
 
 namespace Hanson\Vbot\Example;
 
-
 use Hanson\Vbot\Foundation\Vbot;
+
 require __DIR__.'/../vendor/autoload.php';
 class Example
 {
@@ -50,18 +50,18 @@ class Example
                         'path'   => $path.'cache',
                     ],
                     'redis' => [
-                        'driver' => 'redis',
+                        'driver'     => 'redis',
                         'connection' => 'default',
                     ],
                 ],
             ],
             'database' => [
                 'redis' => [
-                    'client' => 'predis',
+                    'client'  => 'predis',
                     'default' => [
-                        'host' => '127.0.0.1',
+                        'host'     => '127.0.0.1',
                         'password' => null,
-                        'port' => 6379,
+                        'port'     => 6379,
                         'database' => 13,
                     ],
                 ],
@@ -102,7 +102,7 @@ class Example
         //$robot->qrCodeObserver->trigger('abc');
 
         $robot->server->serve();
-   }
+    }
 }
 
 $vbot = new Example();

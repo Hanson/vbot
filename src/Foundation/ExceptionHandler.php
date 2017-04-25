@@ -82,11 +82,12 @@ class ExceptionHandler
      * set a exception handler.
      *
      * @param $closure
+     *
      * @throws ArgumentException
      */
     public function setHandler($closure)
     {
-        if(!is_callable($closure)){
+        if (!is_callable($closure)) {
             throw new ArgumentException('Argument #1 must be callable.');
         }
 
@@ -153,8 +154,6 @@ class ExceptionHandler
         if (!is_null($error = error_get_last()) && $this->isFatal($error['type'])) {
             $this->handleException($this->fatalExceptionFromError($error, 0));
         }
-
-
     }
 
     /**

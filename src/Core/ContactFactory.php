@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Hanson\Vbot\Core;
-
 
 use Hanson\Vbot\Foundation\Vbot;
 
