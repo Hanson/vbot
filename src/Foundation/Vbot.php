@@ -19,20 +19,16 @@ use Illuminate\Container\Container;
  * @property \Hanson\Vbot\Foundation\ExceptionHandler $exception
  * @property \Hanson\Vbot\Support\Log $log
  * @property \Hanson\Vbot\Support\Http $http
- *
  * @property \Hanson\Vbot\Console\QrCode $qrCode
  * @property \Hanson\Vbot\Console\Console $console
- *
  * @property \Hanson\Vbot\Observers\Observer $observer
  * @property \Hanson\Vbot\Observers\QrCodeObserver $qrCodeObserver
  * @property \Hanson\Vbot\Observers\LoginSuccessObserver $loginSuccessObserver
  * @property \Hanson\Vbot\Observers\ReLoginSuccessObserver $reLoginSuccessObserver
  * @property \Hanson\Vbot\Observers\ExitObserver $exitObserver
  * @property \Hanson\Vbot\Observers\FetchContactObserver $fetchContactObserver
- *
  * @property \Illuminate\Config\Repository $config
  * @property \Illuminate\Cache\Repository $cache
- *
  * @property \Hanson\Vbot\Contact\Myself $myself
  * @property \Hanson\Vbot\Contact\Friends $friends
  * @property \Hanson\Vbot\Contact\Groups $groups

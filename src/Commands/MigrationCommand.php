@@ -2,9 +2,9 @@
 
 namespace Hanson\Vbot\Commands;
 
+use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Schema\Blueprint;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
-use Illuminate\Database\Capsule\Manager as Capsule;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -12,12 +12,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 class MigrationCommand extends SymfonyCommand
 {
     /**
-     * @var \Illuminate\Database\Capsule\Manager $capsule
+     * @var \Illuminate\Database\Capsule\Manager
      */
     public $capsule;
 
     /**
-     * @var \Illuminate\Database\Schema\Builder $capsule
+     * @var \Illuminate\Database\Schema\Builder
      */
     public $schema;
 
@@ -37,7 +37,7 @@ class MigrationCommand extends SymfonyCommand
 
         require $config;
 
-        $this->capsule = new Capsule;
+        $this->capsule = new Capsule();
         $this->capsule->addConnection([
             'driver'    => 'mysql',
             'host'      => DB_HOST,

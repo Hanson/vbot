@@ -53,7 +53,6 @@ class Server
 
             $this->vbot->config['server'] = $configs;
 
-
 //            list($retCode, $selector) = (new Sync())->checkSync();
 //            $result = (new MessageHandler())->handleCheckSync($retCode, $selector, true);
 
