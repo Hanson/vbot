@@ -53,7 +53,6 @@ class Server
 
             $this->vbot->config['server'] = $configs;
 
-            $this->vbot->reLoginSuccessObserver->trigger();
 
 //            list($retCode, $selector) = (new Sync())->checkSync();
 //            $result = (new MessageHandler())->handleCheckSync($retCode, $selector, true);
@@ -64,7 +63,9 @@ class Server
 //                    call_user_func_array($this->afterLoginHandler, []);
 //                }
 
-                return true;
+            $this->vbot->reLoginSuccessObserver->trigger();
+
+            return true;
 //            }
         }
 
@@ -233,8 +234,8 @@ class Server
             $this->vbot->log->err('Init failed.'.json_encode($result));
             throw new InitException('Init failed!');
         }
-//        $this->initContactList($result['ContactList']);
-//        $this->initContact();
+        $this->initContactList($result['ContactList']);
+        $this->initContact();
 
         $this->afterInitSuccess($content);
     }
@@ -252,17 +253,17 @@ class Server
         $this->vbot->loginSuccessObserver->trigger();
     }
 
-//    protected function initContactList($contactList)
-//    {
-//        if ($contactList) {
-//            (new ContactFactory())->setCollections($contactList);
-//        }
-//    }
-//
-//    protected function initContact()
-//    {
-//        new ContactFactory();
-//    }
+    protected function initContactList($contactList)
+    {
+        if ($contactList) {
+            $this->vbot->contactFactory->store($contactList);
+        }
+    }
+
+    protected function initContact()
+    {
+        $this->vbot->contactFactory->fetchAll();
+    }
 
     /**
      * open wechat status notify.

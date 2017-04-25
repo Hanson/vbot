@@ -23,4 +23,9 @@ class Observer
     {
         echo '退出程序'.PHP_EOL;
     }
+
+    public static function setFetchContactObserver(array $contacts)
+    {
+        print_r($contacts['groups']);
+    }
 }

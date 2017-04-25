@@ -32,6 +32,8 @@ class Example
 
         $robot->observer->setExitObserver([\Hanson\Vbot\Example\Observer::class, 'setExitObserver']);
 
+        $robot->observer->setFetchContactObserver([\Hanson\Vbot\Example\Observer::class, 'setFetchContactObserver']);
+
         //$robot->qrCodeObserver->trigger('abc');
 
         $robot->server->serve();

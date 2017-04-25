@@ -15,7 +15,7 @@ class Command
         $application = new Application();
 
         $application->add(new ClearSessionCommand());
-        $application->add(new ConvertCommand());
+        $application->add(new MigrationCommand());
 
         $application->run();
     }

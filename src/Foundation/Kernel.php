@@ -2,7 +2,7 @@
 
 namespace Hanson\Vbot\Foundation;
 
-use Hanson\Vbot\Foundation\ServiceProviders\DatabaseServiceProvider;
+use Hanson\Vbot\Foundation\ServiceProviders\ContactServiceProvider;
 use Hanson\Vbot\Session\Session;
 use Illuminate\Database\Capsule\Manager;
 
@@ -83,7 +83,7 @@ class Kernel
 
             $capsule->setAsGlobal();
 
-            (new DatabaseServiceProvider())->register($this->vbot);
+            (new ContactServiceProvider())->register($this->vbot);
         }
     }
 }

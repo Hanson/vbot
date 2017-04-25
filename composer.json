@@ -21,14 +21,13 @@
         "nesbot/carbon": "^1.21",
         "symfony/console": "3.*",
         "monolog/monolog": "^1.22",
+        "aferrandini/phpqrcode": "^1.0",
         "illuminate/config": "^5.4",
         "illuminate/cache": "^5.4",
         "illuminate/filesystem": "^5.4",
         "illuminate/container": "^5.4",
-        "aferrandini/phpqrcode": "^1.0",
         "illuminate/redis": "^5.4",
-        "illuminate/database": "^5.4",
-        "robmorgan/phinx": "0.5.*"
+        "illuminate/database": "^5.4"
     },
     "autoload": {
         "psr-4": {

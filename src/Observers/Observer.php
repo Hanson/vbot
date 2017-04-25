@@ -13,6 +13,7 @@ use Hanson\Vbot\Foundation\Vbot;
  * @method setLoginSuccessObserver($callback)
  * @method setReLoginSuccessObserver($callback)
  * @method setExitObserver($callback)
+ * @method setFetchContactObserver($callback)
  */
 class Observer
 {

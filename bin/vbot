@@ -7,6 +7,6 @@ if (PHP_SAPI !== 'cli') {
 
 require __DIR__.'/../src/bootstrap.php';
 
-$command = new \Hanson\Vbot\Console\Command();
+$command = new \Hanson\Vbot\Commands\Command();
 
 $command->run();
