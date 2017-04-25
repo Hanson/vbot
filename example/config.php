@@ -7,7 +7,7 @@ $path = __DIR__.'/./../tmp/';
 return [
     'path'     => $path,
     'debug'    => true,
-    'storage' => 'database', // 默认为 collection
+    'storage'  => 'database', // 默认为 collection
     /*
      * 下载配置项
      */

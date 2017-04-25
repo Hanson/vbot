@@ -17,6 +17,5 @@ class MigrationCommand extends SymfonyCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        
     }
 }

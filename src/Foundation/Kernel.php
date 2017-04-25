@@ -38,7 +38,7 @@ class Kernel
         $session = new Session($this->vbot);
 
         $sessionKey = $session->currentSession();
-        
+
         $this->vbot->config['session'] = $sessionKey;
         $this->vbot->config['session_key'] = 'session.'.$sessionKey;
     }
@@ -76,8 +76,8 @@ class Kernel
 
     private function setDatabase()
     {
-        if($this->vbot->config['storage'] === 'database'){
-            $capsule = new Manager;
+        if ($this->vbot->config['storage'] === 'database') {
+            $capsule = new Manager();
 
             $capsule->addConnection($this->vbot->config['database.mysql']);
 

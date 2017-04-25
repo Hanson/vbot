@@ -9,6 +9,5 @@ class DatabaseServiceProvider implements ServiceProviderInterface
 {
     public function register(Vbot $vbot)
     {
-
     }
 }
