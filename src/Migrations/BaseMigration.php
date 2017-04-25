@@ -1,11 +1,9 @@
 <?php
 
-
 namespace Hanson\Vbot\Migrations;
 
-
-use Phinx\Migration\AbstractMigration;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Phinx\Migration\AbstractMigration;
 
 class BaseMigration extends AbstractMigration
 {
@@ -16,7 +14,7 @@ class BaseMigration extends AbstractMigration
 
     public function init()
     {
-        $this->capsule = new Capsule;
+        $this->capsule = new Capsule();
         $this->capsule->addConnection([
             'driver'    => 'mysql',
             'host'      => DB_HOST,
