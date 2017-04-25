@@ -8,7 +8,7 @@ use Hanson\Vbot\Exceptions\LoginTimeoutException;
 
 class ExceptionHandler
 {
-    public function handler(Exception $e)
+    public static function handler(Exception $e)
     {
         if ($e instanceof FetchUuidException) {
             echo $e->getMessage();

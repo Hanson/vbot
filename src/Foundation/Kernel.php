@@ -2,7 +2,9 @@
 
 namespace Hanson\Vbot\Foundation;
 
+use Hanson\Vbot\Foundation\ServiceProviders\DatabaseServiceProvider;
 use Hanson\Vbot\Session\Session;
+use Illuminate\Database\Capsule\Manager;
 
 class Kernel
 {
@@ -23,6 +25,7 @@ class Kernel
         $this->initializeConfig();
         $this->prepareSession();
         $this->initializePath();
+        $this->setDatabase();
     }
 
     private function registerProviders()
@@ -35,10 +38,7 @@ class Kernel
         $session = new Session($this->vbot);
 
         $sessionKey = $session->currentSession();
-
-//        if(!$session->has($sessionKey)){
-//            $this->vbot->cache->add('session.'.$sessionKey, 'pending', 5);
-//        }
+        
         $this->vbot->config['session'] = $sessionKey;
         $this->vbot->config['session_key'] = 'session.'.$sessionKey;
     }
@@ -60,6 +60,8 @@ class Kernel
             mkdir($this->vbot->config['path'], 0755, true);
         }
 
+        $this->vbot->config['storage'] = $this->vbot->config['storage'] ?: 'collection';
+
         $this->vbot->config['path'] = realpath($this->vbot->config['path']);
     }
 
@@ -70,5 +72,18 @@ class Kernel
         }
 
         $this->vbot->config['cookie_file'] = $this->vbot->config['path'].'/cookies/'.$this->vbot->config['session'];
+    }
+
+    private function setDatabase()
+    {
+        if($this->vbot->config['storage'] === 'database'){
+            $capsule = new Manager;
+
+            $capsule->addConnection($this->vbot->config['database.mysql']);
+
+            $capsule->setAsGlobal();
+
+            (new DatabaseServiceProvider())->register($this->vbot);
+        }
     }
 }

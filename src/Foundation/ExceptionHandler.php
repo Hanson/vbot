@@ -87,8 +87,9 @@ class ExceptionHandler
      */
     public function setHandler($closure)
     {
+        print_r($closure);
         if (!is_callable($closure)) {
-            throw new ArgumentException('Argument #1 must be callable.');
+            throw new ArgumentException('Argument must be callable.');
         }
 
         $this->handler = $closure;

@@ -26,7 +26,9 @@
         "illuminate/filesystem": "^5.4",
         "illuminate/container": "^5.4",
         "aferrandini/phpqrcode": "^1.0",
-        "illuminate/redis": "^5.4"
+        "illuminate/redis": "^5.4",
+        "illuminate/database": "^5.4",
+        "robmorgan/phinx": "0.5.*"
     },
     "autoload": {
         "psr-4": {
@@ -35,7 +37,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Hanson\\Youzan\\Example\\": "example/"
+            "Hanson\\Vbot\\Example\\": "example/"
         }
     }
 }

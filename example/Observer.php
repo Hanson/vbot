@@ -4,22 +4,22 @@ namespace Hanson\Vbot\Example;
 
 class Observer
 {
-    public function setQrCodeObserver($qrCodeUrl)
+    public static function setQrCodeObserver($qrCodeUrl)
     {
         echo $qrCodeUrl;
     }
 
-    public function setLoginSuccessObserver()
+    public static function setLoginSuccessObserver()
     {
         echo '登录成功'.PHP_EOL;
     }
 
-    public function setReLoginSuccessObserver()
+    public static function setReLoginSuccessObserver()
     {
         echo '免扫码登录成功'.PHP_EOL;
     }
 
-    public function setExitObserver()
+    public static function setExitObserver()
     {
         echo '退出程序'.PHP_EOL;
     }
