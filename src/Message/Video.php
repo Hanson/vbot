@@ -8,11 +8,7 @@
 
 namespace Hanson\Vbot\Message;
 
-use Hanson\Vbot\Message\ResourceInterface;
-use Hanson\Vbot\Message\MediaTrait;
-use Hanson\Vbot\Message\MessageInterface;
 use Hanson\Vbot\Foundation\Vbot;
-use Hanson\Vbot\Message\UploadAble;
 use Hanson\Vbot\Support\Console;
 use Hanson\Vbot\Support\FileManager;
 

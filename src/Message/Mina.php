@@ -8,7 +8,6 @@
 
 namespace Hanson\Vbot\Message;
 
-use Hanson\Vbot\Message\MessageInterface;
 use Hanson\Vbot\Foundation\Vbot;
 
 class Mina extends Message implements MessageInterface
