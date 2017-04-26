@@ -12,10 +12,12 @@ use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
 
 /**
- * Class Vbot.
+ * Class Vbot.ShareFactory
  *
  * @property \Hanson\Vbot\Core\Server $server
- * @property \Hanson\Vbot\Core\MessageHandler $message
+ * @property \Hanson\Vbot\Core\MessageHandler $messageHandler
+ * @property \Hanson\Vbot\Core\MessageFactory $messageFactory
+ * @property \Hanson\Vbot\Core\ShareFactory $shareFactory
  * @property \Hanson\Vbot\Core\Sync $sync
  * @property \Hanson\Vbot\Core\ContactFactory $contactFactory
  * @property \Hanson\Vbot\Foundation\ExceptionHandler $exception

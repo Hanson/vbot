@@ -49,12 +49,41 @@ class MessageHandler
             if (!$test) {
                 $this->handlerMessage($selector);
             }
-
             return true;
         } else {
             $this->vbot->console->log('vbot exit unexpected.');
-
             return false;
+        }
+    }
+
+    /**
+     * 处理消息.
+     *
+     * @param $selector
+     */
+    private function handlerMessage($selector)
+    {
+        if ($selector === 0) {
+            return;
+        }
+
+        $message = $this->vbot->sync->sync();
+
+        if (count($message['ModContactList']) > 0) {
+            $this->vbot->contactFactory->store($message['ModContactList']);
+        }
+
+        if ($message['AddMsgList']) {
+            foreach ($message['AddMsgList'] as $msg) {
+                $content = $this->vbot->messageFactory->make($msg);
+                if ($content) {
+                    $this->debugMessage($content);
+                    $this->addToMessageCollection($content);
+                    if ($this->handler) {
+                        call_user_func_array($this->handler, [$content]);
+                    }
+                }
+            }
         }
     }
 }
