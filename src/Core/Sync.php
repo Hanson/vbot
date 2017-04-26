@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  * User: HanSon
  * Date: 2017/1/14
- * Time: 11:21
+ * Time: 11:21.
  */
 
 namespace Hanson\Vbot\Core;
-
 
 use Hanson\Vbot\Exceptions\SyncCheckException;
 use Hanson\Vbot\Exceptions\WebSyncException;
@@ -15,7 +14,6 @@ use Hanson\Vbot\Foundation\Vbot;
 
 class Sync
 {
-
     /**
      * @var Vbot
      */
@@ -29,28 +27,29 @@ class Sync
     /**
      * check if got a new message.
      *
-     * @return array
      * @throws SyncCheckException
+     *
+     * @return array
      */
     public function checkSync()
     {
-        $url = $this->vbot->config['server.uri.push'] . '/synccheck?' . http_build_query([
-                'r' => time(),
-                'sid' => $this->vbot->config['server.sid'],
-                'uin' => $this->vbot->config['server.uin'],
-                'skey' => $this->vbot->config['server.skey'],
+        $url = $this->vbot->config['server.uri.push'].'/synccheck?'.http_build_query([
+                'r'        => time(),
+                'sid'      => $this->vbot->config['server.sid'],
+                'uin'      => $this->vbot->config['server.uin'],
+                'skey'     => $this->vbot->config['server.skey'],
                 'deviceid' => $this->vbot->config['server.deviceId'],
-                'synckey' => $this->vbot->config['server.syncKeyStr'],
-                '_' => time()
+                'synckey'  => $this->vbot->config['server.syncKeyStr'],
+                '_'        => time(),
             ]);
 
-        try{
+        try {
             $content = $this->vbot->http->get($url, [], ['timeout' => 35]);
 
             preg_match('/window.synccheck=\{retcode:"(\d+)",selector:"(\d+)"\}/', $content, $matches);
 
             return [$matches[1], $matches[2]];
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             throw new SyncCheckException('sync check:'.$e->getMessage());
         }
     }
@@ -58,36 +57,37 @@ class Sync
     /**
      * get a message.
      *
-     * @return mixed|string
      * @throws WebSyncException
+     *
+     * @return mixed|string
      */
     public function sync()
     {
-        $url = sprintf($this->vbot->config['server.uri.base'] . '/webwxsync?sid=%s&skey=%s&lang=zh_CN&pass_ticket=%s',
+        $url = sprintf($this->vbot->config['server.uri.base'].'/webwxsync?sid=%s&skey=%s&lang=zh_CN&pass_ticket=%s',
             $this->vbot->config['server.sid'],
             $this->vbot->config['server.skey'],
             $this->vbot->config['server.passTicket']
         );
 
-        try{
+        try {
             $result = $this->vbot->http->json($url, [
                 'BaseRequest' => $this->vbot->config['server.baseRequest'],
-                'SyncKey' => $this->vbot->config['server.syncKey'],
-                'rr' => ~time()
+                'SyncKey'     => $this->vbot->config['server.syncKey'],
+                'rr'          => ~time(),
             ], true);
 
-            if($result['BaseResponse']['Ret'] == 0){
+            if ($result['BaseResponse']['Ret'] == 0) {
                 $this->generateSyncKey($result);
             }
 
             return $result;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             throw new WebSyncException('web sync:'.$e->getMessage());
         }
     }
 
     /**
-     * generate a sync key
+     * generate a sync key.
      *
      * @param $result
      */
@@ -97,9 +97,9 @@ class Sync
 
         $syncKey = [];
 
-        if(is_array($this->vbot->config['server.syncKey.List'])){
+        if (is_array($this->vbot->config['server.syncKey.List'])) {
             foreach ($this->vbot->config['server.syncKey.List'] as $item) {
-                $syncKey[] = $item['Key'] . '_' . $item['Val'];
+                $syncKey[] = $item['Key'].'_'.$item['Val'];
             }
         }
 

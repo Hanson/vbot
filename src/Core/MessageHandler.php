@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Hanson\Vbot\Core;
-
 
 use Carbon\Carbon;
 use Hanson\Vbot\Foundation\Vbot;
@@ -28,9 +26,8 @@ class MessageHandler
         $time = 0;
 
         while (true) {
-
             if (time() - $time > 1800) {
-                Text::send('filehelper', '心跳 ' . Carbon::now()->toDateTimeString());
+                Text::send('filehelper', '心跳 '.Carbon::now()->toDateTimeString());
                 $time = time();
             }
 
@@ -44,19 +41,20 @@ class MessageHandler
 
     public function handleCheckSync($retCode, $selector, $test = false)
     {
-        if (in_array($retCode, ['1100', '1101'])) { # 微信客户端上登出或者其他设备登录
+        if (in_array($retCode, ['1100', '1101'])) { // 微信客户端上登出或者其他设备登录
             $this->vbot->console->log('vbot exit normally.');
+
             return false;
         } elseif ($retCode == 0) {
-            if(!$test){
+            if (!$test) {
                 $this->handlerMessage($selector);
             }
+
             return true;
         } else {
             $this->vbot->console->log('vbot exit unexpected.');
+
             return false;
         }
     }
-
-
 }
