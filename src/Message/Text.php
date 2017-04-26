@@ -8,7 +8,6 @@
 
 namespace Hanson\Vbot\Message;
 
-use Hanson\Vbot\Message\MessageInterface;
 use Hanson\Vbot\Foundation\Vbot;
 use Hanson\Vbot\Support\Console;
 

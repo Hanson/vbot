@@ -4,9 +4,7 @@ namespace Hanson\Vbot\Foundation\ServiceProviders;
 
 use Hanson\Vbot\Core\MessageFactory;
 use Hanson\Vbot\Core\MessageHandler;
-use Hanson\Vbot\Core\Server;
 use Hanson\Vbot\Core\ShareFactory;
-use Hanson\Vbot\Core\Sync;
 use Hanson\Vbot\Foundation\ServiceProviderInterface;
 use Hanson\Vbot\Foundation\Vbot;
 use Hanson\Vbot\Message\Text;

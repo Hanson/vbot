@@ -49,9 +49,11 @@ class MessageHandler
             if (!$test) {
                 $this->handlerMessage($selector);
             }
+
             return true;
         } else {
             $this->vbot->console->log('vbot exit unexpected.');
+
             return false;
         }
     }

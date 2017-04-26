@@ -8,8 +8,6 @@
 
 namespace Hanson\Vbot\Message;
 
-use Hanson\Vbot\Message\MediaTrait;
-use Hanson\Vbot\Message\MessageInterface;
 use Hanson\Vbot\Foundation\Vbot;
 
 class Recall extends Message implements MessageInterface

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Hanson\Vbot\Core;
-
 
 use Hanson\Vbot\Foundation\Vbot;
 use Hanson\Vbot\Message\Emoticon;
@@ -30,6 +28,7 @@ class MessageFactory
 
     /**
      * MessageFactory constructor.
+     *
      * @param Vbot $vbot
      */
     public function __construct(Vbot $vbot)
@@ -39,6 +38,7 @@ class MessageFactory
 
     /**
      * @param $msg
+     *
      * @return Message
      */
     public function make($msg)
@@ -76,7 +76,7 @@ class MessageFactory
                 if ($msg['Status'] == 3 && $msg['FileName'] === '微信转账') {
                     return new Transfer($this->vbot, $msg);
                 } elseif ($msg['Content'] === '该类型暂不支持，请在手机上查看') {
-                    return null;
+                    return;
                 } else {
                     return $this->vbot->shareFactory->make($this->vbot, $msg);
                 }
@@ -100,5 +100,4 @@ class MessageFactory
                 break;
         }
     }
-
 }

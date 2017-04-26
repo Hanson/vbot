@@ -12,7 +12,7 @@ use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
 
 /**
- * Class Vbot.ShareFactory
+ * Class Vbot.ShareFactory.
  *
  * @property \Hanson\Vbot\Core\Server $server
  * @property \Hanson\Vbot\Core\MessageHandler $messageHandler
