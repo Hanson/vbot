@@ -3,7 +3,6 @@
 namespace Hanson\Vbot\Example;
 
 use Exception;
-use Hanson\Vbot\Exceptions\FetchUuidException;
 use Hanson\Vbot\Exceptions\LoginTimeoutException;
 use Hanson\Vbot\Exceptions\SyncCheckException;
 

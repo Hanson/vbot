@@ -10,7 +10,6 @@ namespace Hanson\Vbot\Contact;
 
 class Friends extends Contacts
 {
-
     /**
      * 根据微信号获取联系人.
      *

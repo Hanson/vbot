@@ -8,12 +8,10 @@
 
 namespace Hanson\Vbot\Contact;
 
-
 use Hanson\Vbot\Exceptions\CreateGroupException;
 
 class Groups extends Contacts
 {
-
     /**
      * 判断是否群组.
      *
@@ -189,8 +187,10 @@ class Groups extends Contacts
      * 增加群聊天到group.
      *
      * @param $username
-     * @return bool
+     *
      * @throws CreateGroupException
+     *
+     * @return bool
      */
     private function add($username)
     {

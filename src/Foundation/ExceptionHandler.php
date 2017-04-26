@@ -56,8 +56,9 @@ class ExceptionHandler
      *
      * @param Exception $e
      *
-     * @return bool
      * @throws Exception
+     *
+     * @return bool
      */
     public function report(Exception $e): bool
     {
@@ -158,9 +159,10 @@ class ExceptionHandler
     }
 
     /**
-     * Exception that make vbot couldn 't work
+     * Exception that make vbot couldn 't work.
      *
      * @param Throwable $e
+     *
      * @throws Throwable
      */
     private function throwFatalException(Throwable $e)
