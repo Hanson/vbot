@@ -10,24 +10,6 @@ namespace Hanson\Vbot\Contact;
 
 class Officials extends Contacts
 {
-    /**
-     * @var Officials
-     */
-    public static $instance = null;
-
-    /**
-     * create a single instance.
-     *
-     * @return Officials
-     */
-    public static function getInstance()
-    {
-        if (static::$instance === null) {
-            static::$instance = new self();
-        }
-
-        return static::$instance;
-    }
 
     public function isOfficial($verifyFlag)
     {

@@ -8,32 +8,11 @@
 
 namespace Hanson\Vbot\Contact;
 
-use Hanson\Vbot\Support\Console;
+
+use Hanson\Vbot\Exceptions\CreateGroupException;
 
 class Groups extends Contacts
 {
-    public static $instance = null;
-
-    /**
-     * username => id.
-     *
-     * @var array
-     */
-    public $map = [];
-
-    /**
-     * create a single instance.
-     *
-     * @return Groups
-     */
-    public static function getInstance()
-    {
-        if (static::$instance === null) {
-            static::$instance = new self();
-        }
-
-        return static::$instance;
-    }
 
     /**
      * 判断是否群组.
@@ -110,29 +89,6 @@ class Groups extends Contacts
     }
 
     /**
-     * 根据ID获取群username.
-     *
-     * @param $id
-     *
-     * @return mixed
-     */
-    public function getUsernameById($id)
-    {
-        return array_search($id, $this->map);
-    }
-
-    /**
-     * 设置map.
-     *
-     * @param $username
-     * @param $id
-     */
-    public function setMap($username, $id)
-    {
-        $this->map[$username] = $id;
-    }
-
-    /**
      * 创建群聊天.
      *
      * @param array $contacts
@@ -141,13 +97,13 @@ class Groups extends Contacts
      */
     public function create(array $contacts)
     {
-        $url = sprintf('%s/webwxcreatechatroom?lang=zh_CN&r=%s', server()->baseUri, time());
+        $url = sprintf('%s/webwxcreatechatroom?lang=zh_CN&r=%s', $this->vbot->config['server.uri.base'], time());
 
-        $result = http()->json($url, [
+        $result = $this->vbot->http->json($url, [
             'MemberCount' => count($contacts),
             'MemberList'  => $this->makeMemberList($contacts),
             'Topic'       => '',
-            'BaseRequest' => server()->baseRequest,
+            'BaseRequest' => $this->vbot->config['server.baseRequest'],
         ], true);
 
         if ($result['BaseResponse']['Ret'] != 0) {
@@ -168,8 +124,8 @@ class Groups extends Contacts
     public function deleteMember($group, $members)
     {
         $members = is_string($members) ? [$members] : $members;
-        $result = http()->json(sprintf('%s/webwxupdatechatroom?fun=delmember&pass_ticket=%s', server()->baseUri, server()->passTicket), [
-            'BaseRequest'   => server()->baseRequest,
+        $result = $this->vbot->http->json(sprintf('%s/webwxupdatechatroom?fun=delmember&pass_ticket=%s', $this->vbot->config['server.uri.base'], $this->vbot->config['server.passTicket']), [
+            'BaseRequest'   => $this->vbot->config['server.baseRequest'],
             'ChatRoomName'  => $group,
             'DelMemberList' => implode(',', $members),
         ], true);
@@ -190,7 +146,7 @@ class Groups extends Contacts
         if (!$groupUsername) {
             return false;
         }
-        $group = group()->get($groupUsername);
+        $group = $this->get($groupUsername);
 
         if (!$group) {
             return false;
@@ -200,8 +156,8 @@ class Groups extends Contacts
         list($fun, $key) = $groupCount > 40 ? ['invitemember', 'InviteMemberList'] : ['addmember', 'AddMemberList'];
         $members = is_string($members) ? [$members] : $members;
 
-        $result = http()->json(sprintf('%s/webwxupdatechatroom?fun=%s&pass_ticket=%s', server()->baseUri, $fun, server()->passTicket), [
-            'BaseRequest'  => server()->baseRequest,
+        $result = $this->vbot->http->json(sprintf('%s/webwxupdatechatroom?fun=%s&pass_ticket=%s', $this->vbot->config['server.uri.base'], $fun, $this->vbot->config['server.passTicket']), [
+            'BaseRequest'  => $this->vbot->config['server.baseRequest'],
             'ChatRoomName' => $groupUsername,
             $key           => implode(',', $members),
         ], true);
@@ -219,9 +175,9 @@ class Groups extends Contacts
      */
     public function setGroupName($group, $name)
     {
-        $result = http()->post(sprintf('%s/webwxupdatechatroom?fun=modtopic&pass_ticket=%s', server()->baseUri, server()->passTicket),
+        $result = $this->vbot->http->post(sprintf('%s/webwxupdatechatroom?fun=modtopic&pass_ticket=%s', $this->vbot->config['server.uri.base'], $this->vbot->config['server.passTicket']),
             json_encode([
-            'BaseRequest'  => server()->baseRequest,
+            'BaseRequest'  => $this->vbot->config['server.baseRequest'],
             'ChatRoomName' => $group,
             'NewTopic'     => $name,
         ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), true);
@@ -233,14 +189,14 @@ class Groups extends Contacts
      * 增加群聊天到group.
      *
      * @param $username
-     *
      * @return bool
+     * @throws CreateGroupException
      */
     private function add($username)
     {
-        $result = http()->json(sprintf('%s/webwxbatchgetcontact?type=ex&r=%s&pass_ticket=%s', server()->baseUri, time(), server()->passTicket), [
+        $result = $this->vbot->http->json(sprintf('%s/webwxbatchgetcontact?type=ex&r=%s&pass_ticket=%s', $this->vbot->config['server.uri.base'], time(), $this->vbot->config['server.passTicket']), [
             'Count'       => 1,
-            'BaseRequest' => server()->baseRequest,
+            'BaseRequest' => $this->vbot->config['server.baseRequest'],
             'List'        => [
                 [
                     'ChatRoomId' => '',
@@ -250,12 +206,10 @@ class Groups extends Contacts
         ], true);
 
         if ($result['BaseResponse']['Ret'] != 0) {
-            Console::log('增加聊天群组失败 '.$username, Console::WARNING);
-
-            return false;
+            throw new CreateGroupException('create group chat fail.');
         }
 
-        group()->put($username, $result['ContactList'][0]);
+        $this->put($username, $result['ContactList'][0]);
 
         return $result['ContactList'][0];
     }

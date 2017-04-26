@@ -4,6 +4,6 @@ namespace Hanson\Vbot\Exceptions;
 
 use Exception;
 
-class InitException extends Exception
+class InitFailException extends Exception
 {
 }

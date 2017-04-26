@@ -10,22 +10,4 @@ namespace Hanson\Vbot\Contact;
 
 class Members extends Contacts
 {
-    /**
-     * @var Members
-     */
-    public static $instance = null;
-
-    /**
-     * create a single instance.
-     *
-     * @return Members
-     */
-    public static function getInstance()
-    {
-        if (static::$instance === null) {
-            static::$instance = new self();
-        }
-
-        return static::$instance;
-    }
 }

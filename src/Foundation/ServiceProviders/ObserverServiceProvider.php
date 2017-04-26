@@ -4,6 +4,7 @@ namespace Hanson\Vbot\Foundation\ServiceProviders;
 
 use Hanson\Vbot\Foundation\ServiceProviderInterface;
 use Hanson\Vbot\Foundation\Vbot;
+use Hanson\Vbot\Observers\BeforeMessageObserver;
 use Hanson\Vbot\Observers\ExitObserver;
 use Hanson\Vbot\Observers\FetchContactObserver;
 use Hanson\Vbot\Observers\LoginSuccessObserver;
@@ -35,6 +36,9 @@ class ObserverServiceProvider implements ServiceProviderInterface
         });
         $vbot->singleton('fetchContactObserver', function () use ($vbot) {
             return new FetchContactObserver($vbot);
+        });
+        $vbot->singleton('beforeMessageObserver', function () use ($vbot) {
+            return new BeforeMessageObserver($vbot);
         });
     }
 }

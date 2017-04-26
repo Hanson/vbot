@@ -10,38 +10,6 @@ namespace Hanson\Vbot\Contact;
 
 class Friends extends Contacts
 {
-    /**
-     * @var Friends
-     */
-    public static $instance = null;
-
-    /**
-     * create a single instance.
-     *
-     * @return Friends
-     */
-    public static function getInstance()
-    {
-        if (static::$instance === null) {
-            static::$instance = new self();
-        }
-
-        return static::$instance;
-    }
-
-    /**
-     * 根据微信号获取联系人.
-     *
-     * @deprecated
-     *
-     * @param $alias
-     *
-     * @return mixed
-     */
-    public function getContactById($alias)
-    {
-        return $this->getContactByAlias($alias);
-    }
 
     /**
      * 根据微信号获取联系人.
@@ -53,20 +21,6 @@ class Friends extends Contacts
     public function getContactByAlias($alias)
     {
         return $this->getObject($alias, 'Alias', true);
-    }
-
-    /**
-     * 根据微信号获取联系username.
-     *
-     * @deprecated
-     *
-     * @param $alias
-     *
-     * @return mixed
-     */
-    public function getUsernameById($alias)
-    {
-        return $this->getUsernameByAlias($alias);
     }
 
     /**
@@ -91,13 +45,13 @@ class Friends extends Contacts
      */
     public function setRemarkName($username, $remarkName)
     {
-        $url = sprintf('%s/webwxoplog?lang=zh_CN&pass_ticket=%s', server()->baseUri, server()->passTicket);
+        $url = sprintf('%s/webwxoplog?lang=zh_CN&pass_ticket=%s', $this->vbot->config['server.uri.base'], $this->vbot->config['server.passTicket']);
 
-        $result = http()->post($url, json_encode([
+        $result = $this->vbot->http->post($url, json_encode([
             'UserName'    => $username,
             'CmdId'       => 2,
             'RemarkName'  => $remarkName,
-            'BaseRequest' => server()->baseRequest,
+            'BaseRequest' => $this->vbot->config['server.baseRequest'],
         ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), true);
 
         return $result['BaseResponse']['Ret'] == 0;
@@ -113,13 +67,13 @@ class Friends extends Contacts
      */
     public function setStick($username, $isStick = true)
     {
-        $url = sprintf('%s/webwxoplog?lang=zh_CN&pass_ticket=%s', server()->baseUri, server()->passTicket);
+        $url = sprintf('%s/webwxoplog?lang=zh_CN&pass_ticket=%s', $this->vbot->config['server.uri.base'], $this->vbot->config['server.passTicket']);
 
-        $result = http()->json($url, [
+        $result = $this->vbot->http->json($url, [
             'UserName'    => $username,
             'CmdId'       => 3,
             'OP'          => (int) $isStick,
-            'BaseRequest' => server()->baseRequest,
+            'BaseRequest' => $this->vbot->config['server.baseRequest'],
         ], true);
 
         return $result['BaseResponse']['Ret'] == 0;
@@ -146,19 +100,19 @@ class Friends extends Contacts
      */
     public function verifyUser($username, $content = null)
     {
-        $url = sprintf(server()->baseUri.'/webwxverifyuser?lang=zh_CN&r=%s', time() * 1000);
+        $url = sprintf($this->vbot->config['server.uri.base'].'/webwxverifyuser?lang=zh_CN&r=%s', time() * 1000);
         $data = [
-            'BaseRequest'        => server()->baseRequest,
+            'BaseRequest'        => $this->vbot->config['server.baseRequest'],
             'Opcode'             => 2,
             'VerifyUserListSize' => 1,
             'VerifyUserList'     => $this->verifyTicket($username),
             'VerifyContent'      => $content,
             'SceneListCount'     => 1,
             'SceneList'          => [33],
-            'skey'               => server()->skey,
+            'skey'               => $this->vbot->config['server.skey'],
         ];
 
-        $result = http()->post($url, json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), true);
+        $result = $this->vbot->http->post($url, json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), true);
 
         return $result['BaseResponse']['Ret'] == 0;
     }

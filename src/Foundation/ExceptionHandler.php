@@ -7,7 +7,11 @@ use ErrorException;
 use Exception;
 use Hanson\Vbot\Exceptions\ArgumentException;
 use Hanson\Vbot\Exceptions\ConfigErrorException;
+use Hanson\Vbot\Exceptions\CreateGroupException;
+use Hanson\Vbot\Exceptions\FetchUuidException;
 use Hanson\Vbot\Exceptions\LoginFailedException;
+use Hanson\Vbot\Exceptions\LoginTimeoutException;
+use Hanson\Vbot\Exceptions\SyncCheckException;
 use Symfony\Component\Debug\Exception\FatalErrorException;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Throwable;
@@ -16,9 +20,16 @@ class ExceptionHandler
 {
     protected $dontReport = [
 //        ConfigErrorException::class
+        CreateGroupException::class,
     ];
 
-    protected $systemException = [
+    protected $dontThrow = [
+        SyncCheckException::class,
+    ];
+
+    protected $fatalException = [
+        FetchUuidException::class,
+        LoginTimeoutException::class,
         ConfigErrorException::class,
         LoginFailedException::class,
     ];
@@ -45,9 +56,8 @@ class ExceptionHandler
      *
      * @param Exception $e
      *
+     * @return bool
      * @throws Exception
-     *
-     * @return bool|mixed
      */
     public function report(Exception $e): bool
     {
@@ -56,10 +66,8 @@ class ExceptionHandler
         }
 
         if ($this->handler) {
-            return call_user_func_array($this->handler, [$e]);
+            call_user_func_array($this->handler, [$e]);
         }
-
-        return true;
     }
 
     /**
@@ -78,6 +86,15 @@ class ExceptionHandler
         return false;
     }
 
+    protected function shouldntThrow(Exception $e)
+    {
+        foreach ($this->dontThrow as $type) {
+            return $e instanceof $type;
+        }
+
+        return false;
+    }
+
     /**
      * set a exception handler.
      *
@@ -87,7 +104,6 @@ class ExceptionHandler
      */
     public function setHandler($closure)
     {
-        print_r($closure);
         if (!is_callable($closure)) {
             throw new ArgumentException('Argument must be callable.');
         }
@@ -130,18 +146,29 @@ class ExceptionHandler
             $e = new FatalThrowableError($e);
         }
 
-        foreach ($this->systemException as $exception) {
+        $this->vbot->log->error($e->getMessage());
+
+        $this->report($e);
+
+        $this->throwFatalException($e);
+
+        if (!$this->shouldntThrow($e)) {
+            throw $e;
+        }
+    }
+
+    /**
+     * Exception that make vbot couldn 't work
+     *
+     * @param Throwable $e
+     * @throws Throwable
+     */
+    private function throwFatalException(Throwable $e)
+    {
+        foreach ($this->fatalException as $exception) {
             if ($e instanceof $exception) {
                 throw $e;
             }
-        }
-
-        $isThrow = $this->report($e);
-
-        $this->vbot->log->error($e->getMessage());
-
-        if ($isThrow) {
-            throw $e;
         }
     }
 
@@ -155,6 +182,8 @@ class ExceptionHandler
         if (!is_null($error = error_get_last()) && $this->isFatal($error['type'])) {
             $this->handleException($this->fatalExceptionFromError($error, 0));
         }
+
+        $this->vbot->exitObserver->trigger();
     }
 
     /**

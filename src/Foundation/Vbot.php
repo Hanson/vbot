@@ -15,6 +15,8 @@ use Illuminate\Container\Container;
  * Class Vbot.
  *
  * @property \Hanson\Vbot\Core\Server $server
+ * @property \Hanson\Vbot\Core\MessageHandler $message
+ * @property \Hanson\Vbot\Core\Sync $sync
  * @property \Hanson\Vbot\Core\ContactFactory $contactFactory
  * @property \Hanson\Vbot\Foundation\ExceptionHandler $exception
  * @property \Hanson\Vbot\Support\Log $log
@@ -27,6 +29,7 @@ use Illuminate\Container\Container;
  * @property \Hanson\Vbot\Observers\ReLoginSuccessObserver $reLoginSuccessObserver
  * @property \Hanson\Vbot\Observers\ExitObserver $exitObserver
  * @property \Hanson\Vbot\Observers\FetchContactObserver $fetchContactObserver
+ * @property \Hanson\Vbot\Observers\BeforeMessageObserver $beforeMessageObserver
  * @property \Illuminate\Config\Repository $config
  * @property \Illuminate\Cache\Repository $cache
  * @property \Hanson\Vbot\Contact\Myself $myself

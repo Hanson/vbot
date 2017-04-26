@@ -4,7 +4,7 @@ namespace Hanson\Vbot\Example;
 
 use Hanson\Vbot\Foundation\Vbot;
 
-require __DIR__.'/../vendor/autoload.php';
+//require __DIR__.'/../vendor/autoload.php';
 class Example
 {
     private $config;
@@ -22,17 +22,19 @@ class Example
         //    ;
         //});
 
-        $robot->exception->setHandler([\Hanson\Vbot\Example\ExceptionHandler::class, 'handler']);
+        $robot->exception->setHandler([ExceptionHandler::class, 'handler']);
 
-        $robot->observer->setQrCodeObserver([\Hanson\Vbot\Example\Observer::class, 'setQrCodeObserver']);
+        $robot->observer->setQrCodeObserver([Observer::class, 'setQrCodeObserver']);
 
-        $robot->observer->setLoginSuccessObserver([\Hanson\Vbot\Example\Observer::class, 'setLoginSuccessObserver']);
+        $robot->observer->setLoginSuccessObserver([Observer::class, 'setLoginSuccessObserver']);
 
-        $robot->observer->setReLoginSuccessObserver([\Hanson\Vbot\Example\Observer::class, 'setReLoginSuccessObserver']);
+        $robot->observer->setReLoginSuccessObserver([Observer::class, 'setReLoginSuccessObserver']);
 
-        $robot->observer->setExitObserver([\Hanson\Vbot\Example\Observer::class, 'setExitObserver']);
+        $robot->observer->setExitObserver([Observer::class, 'setExitObserver']);
 
-        $robot->observer->setFetchContactObserver([\Hanson\Vbot\Example\Observer::class, 'setFetchContactObserver']);
+        $robot->observer->setFetchContactObserver([Observer::class, 'setFetchContactObserver']);
+
+        $robot->observer->setBeforeMessageObserver([Observer::class, 'setBeforeMessageObserver']);
 
         //$robot->qrCodeObserver->trigger('abc');
 

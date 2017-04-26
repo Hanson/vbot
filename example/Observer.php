@@ -28,4 +28,9 @@ class Observer
     {
         print_r($contacts['groups']);
     }
+
+    public static function setBeforeMessageObserver()
+    {
+        echo '准备接收消息'.PHP_EOL;
+    }
 }

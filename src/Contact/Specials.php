@@ -10,19 +10,4 @@ namespace Hanson\Vbot\Contact;
 
 class Specials extends Contacts
 {
-    public static $instance = null;
-
-    /**
-     * create a single instance.
-     *
-     * @return Specials
-     */
-    public static function getInstance()
-    {
-        if (static::$instance === null) {
-            static::$instance = new self();
-        }
-
-        return static::$instance;
-    }
 }

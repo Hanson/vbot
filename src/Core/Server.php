@@ -10,7 +10,7 @@ namespace Hanson\Vbot\Core;
 
 use Hanson\Vbot\Console\Console;
 use Hanson\Vbot\Exceptions\FetchUuidException;
-use Hanson\Vbot\Exceptions\InitException;
+use Hanson\Vbot\Exceptions\InitFailException;
 use Hanson\Vbot\Exceptions\LoginFailedException;
 use Hanson\Vbot\Exceptions\LoginTimeoutException;
 use Hanson\Vbot\Foundation\Vbot;
@@ -213,7 +213,7 @@ class Server
      *
      * @param bool $first
      *
-     * @throws InitException
+     * @throws InitFailException
      */
     protected function init($first = true)
     {
@@ -231,7 +231,7 @@ class Server
         if ($result['BaseResponse']['Ret'] != 0) {
             $this->vbot->cache->forget('session.'.$this->vbot->config['session']);
             $this->vbot->log->err('Init failed.'.json_encode($result));
-            throw new InitException('Init failed!');
+            throw new InitFailException('Init failed!');
         }
         $this->initContactList($result['ContactList']);
         $this->initContact();

@@ -11,7 +11,7 @@ class Contacts extends Collection
     /**
      * @var Vbot
      */
-    private $vbot;
+    protected $vbot;
 
     public function __construct(Vbot $vbot)
     {
