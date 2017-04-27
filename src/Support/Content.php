@@ -28,7 +28,7 @@ class Content
     ];
 
     /**
-     * 格式化Content.
+     * format XML for Content.
      *
      * @param $content
      *

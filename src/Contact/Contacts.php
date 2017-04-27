@@ -101,6 +101,27 @@ class Contacts extends Collection
     }
 
     /**
+     * 根据username获取账号
+     *
+     * @param $username
+     * @return mixed
+     */
+    public function getAccount($username)
+    {
+        if(starts_with($username, '@@')){
+            return $this->vbot->groups->get($username);
+        }else{
+            $account = $this->vbot->friends->get($username, null);
+
+            $account = $account ?: $this->vbot->members->get($username, null);
+
+            $account = $account ?: $this->vbot->officials->get($username, null);
+
+            return $account ?: $this->vbot->specials->get($username, null);
+        }
+    }
+
+    /**
      * 存储时处理emoji.
      *
      * @param mixed $key

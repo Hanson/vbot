@@ -2,6 +2,7 @@
 
 namespace Hanson\Vbot\Foundation\ServiceProviders;
 
+use Hanson\Vbot\Contact\Contacts;
 use Hanson\Vbot\Contact\Friends;
 use Hanson\Vbot\Contact\Groups;
 use Hanson\Vbot\Contact\Members;
@@ -36,6 +37,9 @@ class ContactServiceProvider implements ServiceProviderInterface
         });
         $vbot->singleton('specials', function () use ($vbot) {
             return new Specials($vbot);
+        });
+        $vbot->singleton('contacts', function () use ($vbot) {
+            return new Contacts($vbot);
         });
     }
 }

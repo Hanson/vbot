@@ -60,7 +60,7 @@ class ExceptionHandler
      *
      * @return bool
      */
-    public function report(Exception $e): bool
+    public function report(Exception $e)
     {
         if ($this->shouldntReport($e)) {
             return true;

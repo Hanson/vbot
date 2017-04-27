@@ -36,6 +36,7 @@ use Illuminate\Container\Container;
  * @property \Illuminate\Cache\Repository $cache
  * @property \Hanson\Vbot\Contact\Myself $myself
  * @property \Hanson\Vbot\Contact\Friends $friends
+ * @property \Hanson\Vbot\Contact\Contacts $contacts
  * @property \Hanson\Vbot\Contact\Groups $groups
  * @property \Hanson\Vbot\Contact\Members $members
  * @property \Hanson\Vbot\Contact\Officials $officials
@@ -56,6 +57,7 @@ class Vbot extends Container
         ServiceProviders\HttpServiceProvider::class,
         ServiceProviders\ObserverServiceProvider::class,
         ServiceProviders\ConsoleServiceProvider::class,
+        ServiceProviders\MessageServiceProvider::class,
     ];
 
     public function __construct(array $config)

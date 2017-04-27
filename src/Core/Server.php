@@ -36,7 +36,7 @@ class Server
         $this->init();
         $this->statusNotify();
 
-//        $this->vbot->message->listen();
+        $this->vbot->messageHandler->listen();
     }
 
     /**
@@ -217,6 +217,7 @@ class Server
      */
     protected function init($first = true)
     {
+        $this->vbot->console->log('init begin.');
         $url = sprintf($this->vbot->config['server.uri.base'].'/webwxinit?r=%d', time());
 
         $content = $this->vbot->http->json($url, [

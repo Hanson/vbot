@@ -19,7 +19,7 @@ class Groups extends Contacts
      *
      * @return bool
      */
-    public static function isGroup($userName)
+    public function isGroup($userName)
     {
         return strstr($userName, '@@') !== false;
     }
@@ -48,6 +48,10 @@ class Groups extends Contacts
     public function getMemberByUsername($username, $memberUsername)
     {
         $members = $this->get($username)['MemberList'];
+
+        if(count($members) === 0){
+            return null;
+        }
 
         foreach ($members as $member) {
             if ($memberUsername === $member['UserName']) {

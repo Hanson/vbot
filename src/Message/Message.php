@@ -30,7 +30,7 @@ class Message
     /**
      * @var array 当from为群组时，sender为用户发送者
      */
-    public $sender;
+    public $sender = null;
 
     /**
      * @var string 经过处理的内容 （与类型相关 友好显示的文字）
@@ -62,73 +62,79 @@ class Message
      */
     protected $vbot;
 
-    public function __construct(Vbot $vbot)
+    public function __construct(Vbot $vbot, $msg)
     {
         $this->vbot = $vbot;
-    }
-
-    protected function make($msg)
-    {
         $this->raw = $msg;
 
+        $this->create();
+    }
+
+    private function create()
+    {
         $this->setFrom();
         $this->setFromType();
         $this->setMessage();
-
-        if ($this->fromType === self::FROM_TYPE_GROUP) {
-            $this->handleGroupContent($this->message);
-        }
-
-        $this->time = $msg['CreateTime'];
+        $this->setTime();
     }
 
     /**
      * 设置消息发送者.
      */
-    protected function setFrom()
+    private function setFrom()
     {
-        $this->from = $this->vb->getAccount($this->raw['FromUserName']);
+        $this->from = $this->vbot->contacts->getAccount($this->raw['FromUserName']);
     }
 
-    protected function setFromType()
+    private function setFromType()
     {
         if ($this->raw['MsgType'] == 51) {
             $this->fromType = self::FROM_TYPE_SYSTEM;
-        } elseif ($this->raw['FromUserName'] === myself()->username) {
+        } elseif ($this->raw['FromUserName'] === $this->vbot->myself->username) {
             $this->fromType = self::FROM_TYPE_SELF;
-            $this->from = account()->getAccount($this->raw['ToUserName']);
-        } elseif (substr($this->raw['FromUserName'], 0, 2) === '@@') { // group
+            $this->from = $this->vbot->friends->getAccount($this->raw['ToUserName']);
+        } elseif ($this->vbot->groups->isGroup($this->raw['FromUserName'])) { // group
             $this->fromType = self::FROM_TYPE_GROUP;
-        } elseif (contact()->get($this->raw['FromUserName'])) {
-            $this->fromType = self::FROM_TYPE_CONTACT;
-        } elseif (official()->get($this->raw['FromUserName'])) {
+        } elseif ($this->vbot->friends->get($this->raw['FromUserName'])) {
+            $this->fromType = self::FROM_TYPE_FRIEND;
+        } elseif ($this->vbot->officials->get($this->raw['FromUserName'])) {
             $this->fromType = self::FROM_TYPE_OFFICIAL;
-        } elseif (Special::getInstance()->get($this->raw['FromUserName'], false)) {
+        } elseif ($this->vbot->specials->get($this->raw['FromUserName'], false)) {
             $this->fromType = self::FROM_TYPE_SPECIAL;
         } else {
             $this->fromType = self::FROM_TYPE_UNKNOWN;
         }
     }
 
-    protected function setMessage()
+    private function setMessage()
     {
         $this->message = Content::formatContent($this->raw['Content']);
+
+        if ($this->fromType === self::FROM_TYPE_GROUP) {
+            $this->handleGroupContent();
+        }
     }
 
     /**
      * 处理群发消息的内容.
-     *
-     * @param $content string 内容
      */
-    private function handleGroupContent($content)
+    private function handleGroupContent()
     {
+        $content = $this->message;
+
         if (!$content || !str_contains($content, ":\n")) {
             return;
         }
+
         list($uid, $content) = explode(":\n", $content, 2);
 
-        $this->sender = account()->getAccount($uid) ?: group()->getMemberByUsername($this->raw['FromUserName'], $uid);
+        $this->sender = $this->vbot->contacts->getAccount($uid) ?: $this->vbot->groups->getMemberByUsername($this->raw['FromUserName'], $uid);
         $this->message = Content::replaceBr($content);
+    }
+
+    private function setTime()
+    {
+        $this->time = Carbon::createFromTimestamp($this->raw['CreateTime']);
     }
 
     public function __toString()

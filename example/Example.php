@@ -2,9 +2,10 @@
 
 namespace Hanson\Vbot\Example;
 
+use Hanson\Vbot\Example\Modules\MessageModule;
 use Hanson\Vbot\Foundation\Vbot;
 
-//require __DIR__.'/../vendor/autoload.php';
+require __DIR__.'/../vendor/autoload.php';
 class Example
 {
     private $config;
@@ -18,9 +19,7 @@ class Example
     {
         $robot = new Vbot($this->config);
 
-        //$robot->server->setMessageHandler(function($message){
-        //    ;
-        //});
+        $robot->messageHandler->setHandler([MessageModule::class, 'messageHandler']);
 
         $robot->exception->setHandler([ExceptionHandler::class, 'handler']);
 

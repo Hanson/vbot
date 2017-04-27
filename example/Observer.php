@@ -26,7 +26,8 @@ class Observer
 
     public static function setFetchContactObserver(array $contacts)
     {
-        print_r($contacts['groups']);
+        echo '获取好友成功'.PHP_EOL;
+//        print_r($contacts['groups']);
     }
 
     public static function setBeforeMessageObserver()

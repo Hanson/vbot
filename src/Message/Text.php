@@ -15,9 +15,11 @@ class Text extends Message implements MessageInterface
 {
     public $isAt;
 
-    public function __construct(Vbot $vbot)
+    public $pureMessage;
+
+    public function __construct(Vbot $vbot, $msg)
     {
-        parent::__construct($vbot);
+        parent::__construct($vbot, $msg);
 
         $this->make();
     }
@@ -30,7 +32,7 @@ class Text extends Message implements MessageInterface
      *
      * @return bool
      */
-    public static function send($username, $word)
+    public function send($username, $word)
     {
         if (!$word || !$username) {
             return false;
@@ -41,17 +43,18 @@ class Text extends Message implements MessageInterface
         $random = strval(time() * 1000).'0'.strval(rand(100, 999));
 
         $data = [
-            'BaseRequest' => server()->baseRequest,
+            'BaseRequest' => $this->vbot->config['server.baseRequest'],
             'Msg'         => [
                 'Type'         => 1,
                 'Content'      => $word,
-                'FromUserName' => myself()->username,
+                'FromUserName' => $this->vbot->myself->username,
                 'ToUserName'   => $username,
                 'LocalID'      => $random,
                 'ClientMsgId'  => $random,
             ],
             'Scene' => 0,
         ];
+        print_r($data);return;
         $result = http()->post(server()->baseUri.'/webwxsendmsg?pass_ticket='.server()->passTicket,
             json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), true
         );
@@ -67,8 +70,17 @@ class Text extends Message implements MessageInterface
 
     public function make()
     {
-        $this->content = $this->message;
+        $this->isAt();
+        $this->parseToContent();
+    }
 
-        $this->isAt = str_contains($this->content, '@'.myself()->nickname);
+    private function isAt()
+    {
+        $this->isAt = str_contains($this->content, '@'.$this->vbot->myself->nickname);
+    }
+
+    public function parseToContent()
+    {
+        $this->content = $this->message;
     }
 }
