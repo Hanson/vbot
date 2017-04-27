@@ -101,16 +101,17 @@ class Contacts extends Collection
     }
 
     /**
-     * 根据username获取账号
+     * 根据username获取账号.
      *
      * @param $username
+     *
      * @return mixed
      */
     public function getAccount($username)
     {
-        if(starts_with($username, '@@')){
+        if (starts_with($username, '@@')) {
             return $this->vbot->groups->get($username);
-        }else{
+        } else {
             $account = $this->vbot->friends->get($username, null);
 
             $account = $account ?: $this->vbot->members->get($username, null);

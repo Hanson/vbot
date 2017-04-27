@@ -49,8 +49,8 @@ class Groups extends Contacts
     {
         $members = $this->get($username)['MemberList'];
 
-        if(count($members) === 0){
-            return null;
+        if (count($members) === 0) {
+            return;
         }
 
         foreach ($members as $member) {

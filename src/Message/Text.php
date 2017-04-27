@@ -54,7 +54,9 @@ class Text extends Message implements MessageInterface
             ],
             'Scene' => 0,
         ];
-        print_r($data);return;
+        print_r($data);
+
+        return;
         $result = http()->post(server()->baseUri.'/webwxsendmsg?pass_ticket='.server()->passTicket,
             json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), true
         );

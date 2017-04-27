@@ -46,9 +46,9 @@ class MessageFactory
         switch ($msg['MsgType']) {
             case 1: //文本消息
                 if (Location::isLocation($msg)) {
-//                    return new Location($this->vbot, $msg);
+                    //                    return new Location($this->vbot, $msg);
                 } elseif ($this->vbot->friends->get($msg['FromUserName']) && str_contains($msg['Content'], '过了你的朋友验证请求')) {
-//                    return new NewFriend($this->vbot, $msg);
+                    //                    return new NewFriend($this->vbot, $msg);
                 } else {
                     return new Text($this->vbot, $msg);
                 }
