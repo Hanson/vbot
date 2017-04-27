@@ -28,7 +28,7 @@ class MessageHandler
 
         while (true) {
             if (time() - $time > 1800) {
-//                Text::send('filehelper', '心跳 '.Carbon::now()->toDateTimeString());
+                //                Text::send('filehelper', '心跳 '.Carbon::now()->toDateTimeString());
                 $time = time();
             }
 
@@ -80,7 +80,7 @@ class MessageHandler
             foreach ($message['AddMsgList'] as $msg) {
                 $content = $this->vbot->messageFactory->make($msg);
                 if ($content) {
-//                    $this->debugMessage($content);
+                    //                    $this->debugMessage($content);
 //                    $this->addToMessageCollection($content);
                     if ($this->handler) {
                         call_user_func_array($this->handler, [$content]);
@@ -92,7 +92,7 @@ class MessageHandler
 
     public function setHandler($callback)
     {
-        if(!is_callable($callback)){
+        if (!is_callable($callback)) {
             throw new ArgumentException('Argument must be callable in '.get_class());
         }
 
