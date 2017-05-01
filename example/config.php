@@ -28,9 +28,9 @@ return [
      * 日志配置项
      */
     'log'      => [
-        'level'      => 'debug',
-        'permission' => 0777,
-        'system'       => $path.'log/vbot.log',
+        'level'         => 'debug',
+        'permission'    => 0777,
+        'system'        => $path.'log/vbot.log',
         'message'       => $path.'log/message.log',
     ],
     /*

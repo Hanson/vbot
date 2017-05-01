@@ -39,7 +39,7 @@ class Myself
     {
         $path = vbot('config')['user_path'];
 
-        vbot('config')['user_path'] = $path . $this->uin . DIRECTORY_SEPARATOR;
+        vbot('config')['user_path'] = $path.$this->uin.DIRECTORY_SEPARATOR;
 
         if (!is_dir(vbot('config')['user_path']) && $this->uin) {
             mkdir(vbot('config')['user_path'], 0755, true);

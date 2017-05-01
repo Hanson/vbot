@@ -8,7 +8,6 @@
 
 namespace Hanson\Vbot\Message;
 
-
 class Location extends Message implements MessageInterface
 {
     const TYPE = 'location';

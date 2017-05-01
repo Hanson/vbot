@@ -11,7 +11,6 @@ namespace Hanson\Vbot\Message;
 use Hanson\Vbot\Foundation\Vbot;
 use Hanson\Vbot\Message\Traits\Multimedia;
 use Hanson\Vbot\Message\Traits\SendAble;
-use Hanson\Vbot\Support\FileManager;
 
 class Voice extends Message implements MessageInterface
 {

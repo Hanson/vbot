@@ -12,23 +12,23 @@ class MessageModule
 {
     public static function messageHandler(Collection $message)
     {
-        if($message['from']['NickName'] === 'HanSon'){
-            if($message['type'] === 'text' && $message['content'] === 'hi'){
+        if ($message['from']['NickName'] === 'HanSon') {
+            if ($message['type'] === 'text' && $message['content'] === 'hi') {
                 Text::send($message['from']['UserName'], 'hi');
             }
 
-            if($message['type'] === 'location'){
+            if ($message['type'] === 'location') {
                 Text::send($message['from']['UserName'], $message['content']);
                 Text::send($message['from']['UserName'], $message['url']);
             }
 
-            if($message['type'] === 'new_friend'){
+            if ($message['type'] === 'new_friend') {
                 Text::send($message['from']['UserName'], $message['content']);
             }
 
-            if($message['type'] === 'image'){
+            if ($message['type'] === 'image') {
                 Image::download($message);
-                Image::download($message, function($resource){
+                Image::download($message, function ($resource) {
                     file_put_contents(__DIR__.'/test1.jpg', $resource);
                 });
                 Image::send($message['from']['UserName'], $message);
@@ -36,25 +36,23 @@ class MessageModule
             }
 
             // todo
-            if($message['type'] === 'voice'){
+            if ($message['type'] === 'voice') {
                 Voice::download($message);
-                Voice::download($message, function($resource){
+                Voice::download($message, function ($resource) {
                     file_put_contents(__DIR__.'/test1.mp3', $resource);
                 });
                 Voice::send($message['from']['UserName'], $message);
                 Voice::send($message['from']['UserName'], __DIR__.'/test1.mp3');
             }
 
-            if($message['type'] === 'video'){
-//                Video::download($message);
+            if ($message['type'] === 'video') {
+                //                Video::download($message);
 //                Video::download($message, function($resource){
 //                    file_put_contents(__DIR__.'/test1.mp4', $resource);
 //                });
                 Video::send($message['from']['UserName'], $message);
 //                Video::send($message['from']['UserName'], __DIR__.'/test1.mp4');
             }
-
         }
-
     }
 }
