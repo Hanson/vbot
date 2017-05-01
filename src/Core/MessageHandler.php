@@ -28,7 +28,6 @@ class MessageHandler
         $time = 0;
 
         while (true) {
-
             $time = $this->heartbeat($time);
 
             list($retCode, $selector) = $this->checkSync();
@@ -43,12 +42,14 @@ class MessageHandler
      * make a heartbeat every 30 minutes.
      *
      * @param $time
+     *
      * @return int
      */
     private function heartbeat($time)
     {
         if (time() - $time > 1800) {
             Text::send('filehelper', 'heart beat '.Carbon::now()->toDateTimeString());
+
             return time();
         }
 
@@ -66,6 +67,7 @@ class MessageHandler
      * @param $retCode
      * @param $selector
      * @param bool $test
+     *
      * @return bool
      */
     public function handleCheckSync($retCode, $selector, $test = false)
@@ -75,21 +77,16 @@ class MessageHandler
             $this->vbot->console->log('vbot exit normally.');
 
             return false;
-
         } elseif ($retCode == 0) {
-
             if (!$test) {
                 $this->handleMessage($selector);
             }
 
             return true;
-
         } else {
-
             $this->vbot->console->log('vbot exit unexpected.');
 
             return false;
-
         }
     }
 
@@ -114,7 +111,7 @@ class MessageHandler
             foreach ($message['AddMsgList'] as $msg) {
                 $content = $this->vbot->messageFactory->make($msg);
                 if ($content) {
-//                    $this->addToMessageCollection($content);
+                    //                    $this->addToMessageCollection($content);
                     $this->cache($msg);
                     if ($this->handler) {
                         call_user_func_array($this->handler, [$content]);
@@ -131,7 +128,7 @@ class MessageHandler
      */
     private function log($message)
     {
-        if($this->vbot->messageLog && ($message['ModContactList'] || $message['AddMsgList'])){
+        if ($this->vbot->messageLog && ($message['ModContactList'] || $message['AddMsgList'])) {
             $this->vbot->messageLog->info(json_encode($message));
         }
     }
@@ -152,6 +149,7 @@ class MessageHandler
      * set a message handler.
      *
      * @param $callback
+     *
      * @throws ArgumentException
      */
     public function setHandler($callback)

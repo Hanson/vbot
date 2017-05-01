@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Hanson\Vbot\Message\Traits;
-
 
 use Hanson\Vbot\Core\ApiExceptionHandler;
 use Hanson\Vbot\Exceptions\ArgumentException;
@@ -11,17 +9,17 @@ use Hanson\Vbot\Support\File;
 
 trait Multimedia
 {
-
     private static $file;
 
     public static function download($message, $callback = null)
     {
-        if(!$callback){
+        if (!$callback) {
             static::autoDownload($message['raw'], true);
+
             return true;
         }
 
-        if($callback && !is_callable($callback)){
+        if ($callback && !is_callable($callback)) {
             throw new ArgumentException();
         }
 
@@ -32,18 +30,20 @@ trait Multimedia
      * get a resource through api.
      *
      * @param $message
-     * @return mixed
+     *
      * @throws DownloadException
+     *
+     * @return mixed
      */
     private static function getResource($message)
     {
         $serverConfig = vbot('config')['server'];
 
-        $url = $serverConfig['uri']['base'] . DIRECTORY_SEPARATOR . static::DOWNLOAD_API . "{$message['MsgId']}&skey={$serverConfig['skey']}";
+        $url = $serverConfig['uri']['base'].DIRECTORY_SEPARATOR.static::DOWNLOAD_API."{$message['MsgId']}&skey={$serverConfig['skey']}";
 
         $content = vbot('http')->get($url, static::getDownloadOption());
 
-        if(!$content){
+        if (!$content) {
             throw new DownloadException();
         }
 
@@ -63,20 +63,20 @@ trait Multimedia
      */
     protected static function autoDownload($message, $force = false)
     {
-        $isDownload = vbot('config')['download.' . static::TYPE];
+        $isDownload = vbot('config')['download.'.static::TYPE];
 
         if ($isDownload || $force) {
             $resource = static::getResource($message);
 
-            File::saveTo(vbot('config')['user_path'] . static::TYPE . DIRECTORY_SEPARATOR .
-                $message['MsgId'] . static::EXT, $resource);
+            File::saveTo(vbot('config')['user_path'].static::TYPE.DIRECTORY_SEPARATOR.
+                $message['MsgId'].static::EXT, $resource);
         }
     }
 
     protected static function getDefaultFile($message)
     {
-        return vbot('config')['user_path'] . static::TYPE . DIRECTORY_SEPARATOR .
-            $message['MsgId'] . static::EXT;
+        return vbot('config')['user_path'].static::TYPE.DIRECTORY_SEPARATOR.
+            $message['MsgId'].static::EXT;
     }
 
     /**
@@ -187,5 +187,4 @@ trait Multimedia
 
         return $result;
     }
-
 }

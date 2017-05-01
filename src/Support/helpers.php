@@ -2,12 +2,13 @@
 
 use Hanson\Vbot\Foundation\Vbot;
 
-if (! function_exists('app')) {
+if (!function_exists('app')) {
     /**
      * Get the available container instance.
      *
-     * @param  string  $abstract
-     * @param  array   $parameters
+     * @param string $abstract
+     * @param array  $parameters
+     *
      * @return mixed|Vbot
      */
     function vbot($abstract = null, array $parameters = [])

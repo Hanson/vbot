@@ -24,7 +24,7 @@ class LogServiceProvider implements ServiceProviderInterface
             return $log;
         });
 
-        if($vbot->config['log.message']){
+        if ($vbot->config['log.message']) {
             $vbot->singleton('messageLog', function () use ($vbot) {
                 $log = new Log('message');
 

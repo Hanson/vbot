@@ -213,7 +213,7 @@ class Server
     protected function init($first = true)
     {
         $this->vbot->console->log('init begin.');
-        $url = $this->vbot->config['server.uri.base'].'/webwxinit?r='. time();
+        $url = $this->vbot->config['server.uri.base'].'/webwxinit?r='.time();
 
         $result = $this->vbot->http->post($url, json_encode([
             'BaseRequest' => $this->vbot->config['server.baseRequest'],
@@ -223,7 +223,7 @@ class Server
 
         $this->vbot->myself->init($result['User']);
 
-        ApiExceptionHandler::handle($result, function($result){
+        ApiExceptionHandler::handle($result, function ($result) {
             $this->vbot->cache->forget('session.'.$this->vbot->config['session']);
             $this->vbot->log->error('Init failed.'.json_encode($result));
         });

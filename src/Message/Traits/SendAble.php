@@ -1,23 +1,20 @@
 <?php
 
-
 namespace Hanson\Vbot\Message\Traits;
 
 use Hanson\Vbot\Core\ApiExceptionHandler;
 
 /**
- * Trait SendAble
- * @package Hanson\Vbot\Message\Traits
+ * Trait SendAble.
  */
 trait SendAble
 {
-
     protected static function sendMsg($msg)
     {
         $data = [
             'BaseRequest' => vbot('config')['server.baseRequest'],
             'Msg'         => $msg,
-            'Scene' => 0,
+            'Scene'       => 0,
         ];
 
         $result = vbot('http')->post(static::getUrl(),
@@ -29,7 +26,6 @@ trait SendAble
 
     private static function getUrl()
     {
-        return vbot('config')['server.uri.base'].DIRECTORY_SEPARATOR . static::API .'pass_ticket='.vbot('config')['server.passTicket'];
+        return vbot('config')['server.uri.base'].DIRECTORY_SEPARATOR.static::API.'pass_ticket='.vbot('config')['server.passTicket'];
     }
-
 }

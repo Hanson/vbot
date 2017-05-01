@@ -8,7 +8,6 @@
 
 namespace Hanson\Vbot\Message;
 
-
 class NewFriend extends Message implements MessageInterface
 {
     const TYPE = 'new_friend';

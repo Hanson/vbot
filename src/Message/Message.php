@@ -68,7 +68,7 @@ abstract class Message
         $this->setTime();
 
         return ['raw' => $this->raw, 'from' => $this->from, 'fromType' => $this->fromType, 'sender' => $this->sender,
-            'message' => $this->message, 'time' => $this->time];
+            'message' => $this->message, 'time' => $this->time, ];
     }
 
     /**
@@ -136,11 +136,10 @@ abstract class Message
 
         $result = array_merge($origin, [
             'content' => $this->parseToContent(),
-            'type' => $type
+            'type'    => $type,
         ], $this->getExpand());
 
-        return (new Collection($result));
-
+        return new Collection($result);
     }
 
     protected function getExpand():array
@@ -148,7 +147,7 @@ abstract class Message
         return [];
     }
 
-    abstract protected function parseToContent():string ;
+    abstract protected function parseToContent():string;
 
     public function __toString()
     {

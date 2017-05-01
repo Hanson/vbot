@@ -92,7 +92,7 @@ class ExceptionHandler
     protected function shouldntThrow(Exception $e)
     {
         foreach ($this->dontThrow as $type) {
-            if($e instanceof $type){
+            if ($e instanceof $type) {
                 return true;
             }
         }
