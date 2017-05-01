@@ -15,7 +15,7 @@ class LogServiceProvider implements ServiceProviderInterface
             $log = new Log('vbot');
 
             $log->pushHandler(new StreamHandler(
-                $vbot['config']['log.file'],
+                $vbot['config']['log.system'],
                 $vbot['config']['log.level'],
                 true,
                 $vbot['config']['log.permission']
@@ -23,5 +23,20 @@ class LogServiceProvider implements ServiceProviderInterface
 
             return $log;
         });
+
+        if($vbot->config['log.message']){
+            $vbot->singleton('messageLog', function () use ($vbot) {
+                $log = new Log('message');
+
+                $log->pushHandler(new StreamHandler(
+                    $vbot['config']['log.message'],
+                    $vbot['config']['log.level'],
+                    true,
+                    $vbot['config']['log.permission']
+                ));
+
+                return $log;
+            });
+        }
     }
 }

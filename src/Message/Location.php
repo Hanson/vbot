@@ -8,21 +8,10 @@
 
 namespace Hanson\Vbot\Message;
 
-use Hanson\Vbot\Foundation\Vbot;
 
 class Location extends Message implements MessageInterface
 {
-    /**
-     * @var string 位置链接
-     */
-    public $url;
-
-    public function __construct(Vbot $vbot)
-    {
-        parent::__construct($vbot);
-
-        $this->make();
-    }
+    const TYPE = 'location';
 
     /**
      * 判断是否位置消息.
@@ -36,18 +25,23 @@ class Location extends Message implements MessageInterface
         return str_contains($content['Content'], 'webwxgetpubliclinkimg') && $content['Url'];
     }
 
-    /**
-     * 设置位置文字信息.
-     */
-    private function setLocationText()
+    private function locationUrl()
     {
-        $this->content = current(explode(":\n", $this->message));
-
-        $this->url = $this->raw['Url'];
+        return $this->raw['Url'];
     }
 
-    public function make()
+    public function make($msg)
     {
-        $this->setLocationText();
+        return $this->getCollection($msg, static::TYPE);
+    }
+
+    protected function parseToContent():string
+    {
+        return current(explode(":\n", $this->message));
+    }
+
+    protected function getExpand(): array
+    {
+        return ['url' => $this->locationUrl()];
     }
 }

@@ -9,75 +9,45 @@
 namespace Hanson\Vbot\Message;
 
 use Hanson\Vbot\Foundation\Vbot;
+use Hanson\Vbot\Message\Traits\Multimedia;
+use Hanson\Vbot\Message\Traits\SendAble;
 use Hanson\Vbot\Support\Console;
 use Hanson\Vbot\Support\FileManager;
 
-class Image extends Message implements MessageInterface, ResourceInterface
+class Image extends Message implements MessageInterface
 {
-    use UploadAble, MediaTrait;
+    use Multimedia, SendAble;
 
-    public static $folder = 'jpg';
+    const API = 'webwxsendmsgimg?fun=async&f=json&';
+    const DOWNLOAD_API = 'webwxgetmsgimg?&MsgID=';
+    const EXT = '.jpg';
+    const TYPE = 'image';
 
-    public function __construct(Vbot $vbot)
+    public function make($msg)
     {
-        parent::__construct($vbot);
+        static::autoDownload($msg);
 
-        $this->make();
+        return $this->getCollection($msg, static::TYPE);
     }
 
-    public static function sendByMsgId($username, $msgId)
+    protected function parseToContent(): string
     {
-        $path = static::getPath(static::$folder);
-
-        static::send($username, $path.$msgId.'.jpg');
+        return '[图片]';
     }
 
-    public static function send($username, $file)
+    public static function send($username, $mix)
     {
+        $file = is_string($mix) ? $mix : static::getDefaultFile($mix['raw']);
+
         $response = static::uploadMedia($username, $file);
 
-        if (!$response) {
-            Console::log("图片 {$file} 上传失败", Console::WARNING);
-
-            return false;
-        }
-
-        $mediaId = $response['MediaId'];
-
-        $url = sprintf(server()->baseUri.'/webwxsendmsgimg?fun=async&f=json&pass_ticket=%s', server()->passTicket);
-        $data = [
-            'BaseRequest' => server()->baseRequest,
-            'Msg'         => [
-                'Type'         => 3,
-                'MediaId'      => $mediaId,
-                'FromUserName' => myself()->username,
-                'ToUserName'   => $username,
-                'LocalID'      => time() * 1e4,
-                'ClientMsgId'  => time() * 1e4,
-            ],
-        ];
-        $result = http()->json($url, $data, true);
-
-        if ($result['BaseResponse']['Ret'] != 0) {
-            Console::log('发送图片失败', Console::WARNING);
-
-            return false;
-        }
-
-        return true;
-    }
-
-    public function make()
-    {
-        $this->download();
-
-        $this->content = '[图片]';
-    }
-
-    public function download()
-    {
-        $url = server()->baseUri.sprintf('/webwxgetmsgimg?MsgID=%s&skey=%s', $this->raw['MsgId'], server()->skey);
-        $content = http()->get($url);
-        FileManager::saveToUserPath(static::$folder.DIRECTORY_SEPARATOR.$this->raw['MsgId'].'.jpg', $content);
+        return static::sendMsg([
+            'Type'         => 3,
+            'MediaId'      => $response['MediaId'],
+            'FromUserName' => vbot('myself')->username,
+            'ToUserName'   => $username,
+            'LocalID'      => time() * 1e4,
+            'ClientMsgId'  => time() * 1e4,
+        ]);
     }
 }

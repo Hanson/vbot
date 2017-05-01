@@ -30,6 +30,9 @@
         "illuminate/database": "^5.4"
     },
     "autoload": {
+        "files": [
+            "src/Support/helpers.php"
+        ],
         "psr-4": {
             "Hanson\\Vbot\\": "src/"
         }

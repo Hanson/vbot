@@ -53,19 +53,14 @@ class Server
 
             $this->vbot->config['server'] = $configs;
 
-//            list($retCode, $selector) = (new Sync())->checkSync();
-//            $result = (new MessageHandler())->handleCheckSync($retCode, $selector, true);
+            list($retCode, $selector) = $this->vbot->sync->checkSync();
+            $result = $this->vbot->messageHandler->handleCheckSync($retCode, $selector, true);
 
-//            if ($result && (new Sync())->sync()) {
-//                Console::log('免扫码登录成功');
-//                if ($this->afterLoginHandler) {
-//                    call_user_func_array($this->afterLoginHandler, []);
-//                }
+            if ($result && $this->vbot->sync->sync()) {
+                $this->vbot->reLoginSuccessObserver->trigger();
 
-            $this->vbot->reLoginSuccessObserver->trigger();
-
-            return true;
-//            }
+                return true;
+            }
         }
 
         return false;
@@ -89,12 +84,12 @@ class Server
      */
     protected function getUuid()
     {
-        $content = $this->vbot->http->get('https://login.weixin.qq.com/jslogin', [
+        $content = $this->vbot->http->get('https://login.weixin.qq.com/jslogin', ['query' => [
             'appid' => 'wx782c26e4c19acffb',
             'fun'   => 'new',
             'lang'  => 'zh_CN',
             '_'     => time(),
-        ]);
+        ]]);
 
         preg_match('/window.QRLogin.code = (\d+); window.QRLogin.uuid = \"(\S+?)\"/', $content, $matches);
 
@@ -184,7 +179,7 @@ class Server
         $this->vbot->config['server.uin'] = $data['wxuin'];
         $this->vbot->config['server.passTicket'] = $data['pass_ticket'];
 
-        if (in_array('', [$data['skey'], $data['wxsid'], $data['wxuin'], $data['pass_ticket']])) {
+        if (in_array('', [$data['wxsid'], $data['wxuin'], $data['pass_ticket']])) {
             throw new LoginFailedException('Login failed.');
         }
 
@@ -218,26 +213,25 @@ class Server
     protected function init($first = true)
     {
         $this->vbot->console->log('init begin.');
-        $url = sprintf($this->vbot->config['server.uri.base'].'/webwxinit?r=%d', time());
+        $url = $this->vbot->config['server.uri.base'].'/webwxinit?r='. time();
 
-        $content = $this->vbot->http->json($url, [
+        $result = $this->vbot->http->post($url, json_encode([
             'BaseRequest' => $this->vbot->config['server.baseRequest'],
-        ]);
+        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), true);
 
-        $result = json_decode($content, true);
         $this->generateSyncKey($result, $first);
 
         $this->vbot->myself->init($result['User']);
 
-        if ($result['BaseResponse']['Ret'] != 0) {
+        ApiExceptionHandler::handle($result, function($result){
             $this->vbot->cache->forget('session.'.$this->vbot->config['session']);
-            $this->vbot->log->err('Init failed.'.json_encode($result));
-            throw new InitFailException('Init failed!');
-        }
+            $this->vbot->log->error('Init failed.'.json_encode($result));
+        });
+
         $this->initContactList($result['ContactList']);
         $this->initContact();
 
-        $this->afterInitSuccess($content);
+        $this->afterInitSuccess($result);
     }
 
     /**
@@ -247,7 +241,7 @@ class Server
      */
     private function afterInitSuccess($content)
     {
-        $this->vbot->log->info('response:'.$content);
+        $this->vbot->log->info('response:'.json_encode($content));
         $this->vbot->console->log('init success.');
         $this->vbot->console->log('current session: '.$this->vbot->config['session']);
         $this->vbot->loginSuccessObserver->trigger();

@@ -5,6 +5,7 @@ namespace Hanson\Vbot\Core;
 use Carbon\Carbon;
 use Hanson\Vbot\Exceptions\ArgumentException;
 use Hanson\Vbot\Foundation\Vbot;
+use Hanson\Vbot\Message\Text;
 
 class MessageHandler
 {
@@ -27,12 +28,10 @@ class MessageHandler
         $time = 0;
 
         while (true) {
-            if (time() - $time > 1800) {
-                //                Text::send('filehelper', '心跳 '.Carbon::now()->toDateTimeString());
-                $time = time();
-            }
 
-            list($retCode, $selector) = $this->vbot->sync->checkSync();
+            $time = $this->heartbeat($time);
+
+            list($retCode, $selector) = $this->checkSync();
 
             if (!$this->handleCheckSync($retCode, $selector)) {
                 break;
@@ -40,22 +39,57 @@ class MessageHandler
         }
     }
 
+    /**
+     * make a heartbeat every 30 minutes.
+     *
+     * @param $time
+     * @return int
+     */
+    private function heartbeat($time)
+    {
+        if (time() - $time > 1800) {
+            Text::send('filehelper', 'heart beat '.Carbon::now()->toDateTimeString());
+            return time();
+        }
+
+        return $time;
+    }
+
+    private function checkSync()
+    {
+        return $this->vbot->sync->checkSync();
+    }
+
+    /**
+     * handle a sync from wechat.
+     *
+     * @param $retCode
+     * @param $selector
+     * @param bool $test
+     * @return bool
+     */
     public function handleCheckSync($retCode, $selector, $test = false)
     {
         if (in_array($retCode, ['1100', '1101'])) { // 微信客户端上登出或者其他设备登录
+
             $this->vbot->console->log('vbot exit normally.');
 
             return false;
+
         } elseif ($retCode == 0) {
+
             if (!$test) {
-                $this->handlerMessage($selector);
+                $this->handleMessage($selector);
             }
 
             return true;
+
         } else {
+
             $this->vbot->console->log('vbot exit unexpected.');
 
             return false;
+
         }
     }
 
@@ -64,7 +98,7 @@ class MessageHandler
      *
      * @param $selector
      */
-    private function handlerMessage($selector)
+    private function handleMessage($selector)
     {
         if ($selector === 0) {
             return;
@@ -72,16 +106,16 @@ class MessageHandler
 
         $message = $this->vbot->sync->sync();
 
-        if (count($message['ModContactList']) > 0) {
-            $this->vbot->contactFactory->store($message['ModContactList']);
-        }
+        $this->log($message);
+
+        $this->storeContactsFromMessage($message);
 
         if ($message['AddMsgList']) {
             foreach ($message['AddMsgList'] as $msg) {
                 $content = $this->vbot->messageFactory->make($msg);
                 if ($content) {
-                    //                    $this->debugMessage($content);
 //                    $this->addToMessageCollection($content);
+                    $this->cache($msg);
                     if ($this->handler) {
                         call_user_func_array($this->handler, [$content]);
                     }
@@ -90,6 +124,36 @@ class MessageHandler
         }
     }
 
+    /**
+     * log the message.
+     *
+     * @param $message
+     */
+    private function log($message)
+    {
+        if($this->vbot->messageLog && ($message['ModContactList'] || $message['AddMsgList'])){
+            $this->vbot->messageLog->info(json_encode($message));
+        }
+    }
+
+    private function storeContactsFromMessage($message)
+    {
+        if (count($message['ModContactList']) > 0) {
+            $this->vbot->contactFactory->store($message['ModContactList']);
+        }
+    }
+
+    private function cache($msg)
+    {
+        $this->vbot->cache->put($msg['MsgId'], $msg, 2);
+    }
+
+    /**
+     * set a message handler.
+     *
+     * @param $callback
+     * @throws ArgumentException
+     */
     public function setHandler($callback)
     {
         if (!is_callable($callback)) {

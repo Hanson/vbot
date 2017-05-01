@@ -10,5 +10,5 @@ namespace Hanson\Vbot\Message;
 
 interface MessageInterface
 {
-    public function make();
+    public function make($msg);
 }

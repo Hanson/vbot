@@ -9,96 +9,51 @@
 namespace Hanson\Vbot\Message;
 
 use Hanson\Vbot\Foundation\Vbot;
+use Hanson\Vbot\Message\Traits\Multimedia;
+use Hanson\Vbot\Message\Traits\SendAble;
 use Hanson\Vbot\Support\Console;
 use Hanson\Vbot\Support\FileManager;
 
-class Video extends Message implements MessageInterface, ResourceInterface
+class Video extends Message implements MessageInterface
 {
-    use UploadAble, MediaTrait;
+    use SendAble, Multimedia;
 
-    public static $folder = 'mp4';
+    const API = 'webwxsendvideomsg?fun=async&f=json&';
+    const DOWNLOAD_API = 'webwxgetvideo?msgid=';
+    const EXT = '.mp4';
+    const TYPE = 'video';
 
-    public function __construct(Vbot $vbot)
+    public function make($msg)
     {
-        parent::__construct($vbot);
+        static::autoDownload($msg);
 
-        $this->make();
+        return $this->getCollection($msg, static::TYPE);
     }
 
-    public static function send($username, $file)
+    protected function parseToContent(): string
     {
+        return '[视频]';
+    }
+
+    public static function send($username, $mix)
+    {
+        $file = is_string($mix) ? $mix : static::getDefaultFile($mix['raw']);
+
         $response = static::uploadMedia($username, $file);
 
-        if (!$response) {
-            Console::log("视频 {$file} 上传失败", Console::WARNING);
-
-            return false;
-        }
-
-        $mediaId = $response['MediaId'];
-
-        $url = sprintf(server()->baseUri.'/webwxsendvideomsg?fun=async&f=json&pass_ticket=%s', server()->passTicket);
-        $data = [
-            'BaseRequest' => server()->baseRequest,
-            'Msg'         => [
-                'Type'         => 43,
-                'MediaId'      => $mediaId,
-                'FromUserName' => myself()->username,
-                'ToUserName'   => $username,
-                'LocalID'      => time() * 1e4,
-                'ClientMsgId'  => time() * 1e4,
-            ],
-        ];
-        $result = http()->json($url, $data, true);
-
-        if ($result['BaseResponse']['Ret'] != 0) {
-            Console::log('发送视频失败', Console::WARNING);
-
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * 根据MsgID发送文件.
-     *
-     * @param $username
-     * @param $msgId
-     *
-     * @return mixed
-     */
-    public static function sendByMsgId($username, $msgId)
-    {
-        $path = static::getPath(static::$folder);
-
-        static::send($username, $path.$msgId.'.mp4');
-    }
-
-    /**
-     * 下载文件.
-     *
-     * @return mixed
-     */
-    public function download()
-    {
-        $url = server()->baseUri.sprintf('/webwxgetvideo?msgid=%s&skey=%s', $this->raw['MsgId'], server()->skey);
-        $content = http()->request($url, 'get', [
-            'headers' => [
-                'Range' => 'bytes=0-',
-            ],
+        return static::sendMsg([
+            'Type'         => 43,
+            'MediaId'      => $response['MediaId'],
+            'FromUserName' => vbot('myself')->username,
+            'ToUserName'   => $username,
+            'LocalID'      => time() * 1e4,
+            'ClientMsgId'  => time() * 1e4,
         ]);
-        if (strlen($content) === 0) {
-            Console::log('下载视频失败', Console::WARNING);
-            Console::log('url:'.$url);
-        } else {
-            FileManager::saveToUserPath(static::$folder.DIRECTORY_SEPARATOR.$this->raw['MsgId'].'.mp4', $content);
-        }
     }
 
-    public function make()
+    protected static function getDownloadOption()
     {
-        $this->download();
-        $this->content = '[视频]';
+        return ['headers' => ['Range' => 'bytes=0-']];
     }
+
 }

@@ -71,7 +71,12 @@ class Kernel
             mkdir($this->vbot->config['path'].'/cookies', 0755, true);
         }
 
+        if (!is_dir($this->vbot->config['path'].'/users')) {
+            mkdir($this->vbot->config['path'].'/users', 0755, true);
+        }
+
         $this->vbot->config['cookie_file'] = $this->vbot->config['path'].'/cookies/'.$this->vbot->config['session'];
+        $this->vbot->config['user_path'] = $this->vbot->config['path'].'/users/';
     }
 
     private function setDatabase()

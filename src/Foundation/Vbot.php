@@ -18,10 +18,12 @@ use Illuminate\Container\Container;
  * @property \Hanson\Vbot\Core\MessageHandler $messageHandler
  * @property \Hanson\Vbot\Core\MessageFactory $messageFactory
  * @property \Hanson\Vbot\Core\ShareFactory $shareFactory
+ * @property \Hanson\Vbot\Message\Text $text
  * @property \Hanson\Vbot\Core\Sync $sync
  * @property \Hanson\Vbot\Core\ContactFactory $contactFactory
  * @property \Hanson\Vbot\Foundation\ExceptionHandler $exception
  * @property \Hanson\Vbot\Support\Log $log
+ * @property \Hanson\Vbot\Support\Log $messageLog
  * @property \Hanson\Vbot\Support\Http $http
  * @property \Hanson\Vbot\Console\QrCode $qrCode
  * @property \Hanson\Vbot\Console\Console $console
@@ -65,6 +67,8 @@ class Vbot extends Container
         $this->initializeConfig($config);
 
         (new Kernel($this))->bootstrap();
+
+        static::$instance = $this;
     }
 
     private function initializeConfig(array $config)

@@ -44,7 +44,7 @@ class Sync
             ]);
 
         try {
-            $content = $this->vbot->http->get($url, [], ['timeout' => 35]);
+            $content = $this->vbot->http->get($url, ['timeout' => 35]);
 
             preg_match('/window.synccheck=\{retcode:"(\d+)",selector:"(\d+)"\}/', $content, $matches);
 

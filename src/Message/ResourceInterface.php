@@ -15,5 +15,5 @@ interface ResourceInterface
      *
      * @return mixed
      */
-    public function download();
+    public static function download();
 }

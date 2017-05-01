@@ -4,9 +4,11 @@ namespace Hanson\Vbot\Example;
 
 use Hanson\Vbot\Example\Modules\MessageModule;
 use Hanson\Vbot\Foundation\Vbot;
+use Hanson\Vbot\Message\Text;
+use Illuminate\Support\Collection;
 
 require __DIR__.'/../vendor/autoload.php';
-class Example
+class example
 {
     private $config;
 
@@ -20,6 +22,13 @@ class Example
         $robot = new Vbot($this->config);
 
         $robot->messageHandler->setHandler([MessageModule::class, 'messageHandler']);
+
+//        $robot->messageHandler->setHandler(function(Collection $message){
+//            if($message['type'] === 'text' && $message['content'] === 'hi'){
+//                Text::send($message['from']['UserName'], 'hi');
+////                Text::send('hanson1994', '<msg  username=\'imkuqin\' nickname=\'程序猿\'/>', 42);
+//            }
+//        });
 
         $robot->exception->setHandler([ExceptionHandler::class, 'handler']);
 
@@ -41,6 +50,6 @@ class Example
     }
 }
 
-$vbot = new Example();
+$vbot = new example();
 
 $vbot->run();

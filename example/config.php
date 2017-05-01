@@ -30,7 +30,8 @@ return [
     'log'      => [
         'level'      => 'debug',
         'permission' => 0777,
-        'file'       => $path.'log/vbot.log',
+        'system'       => $path.'log/vbot.log',
+        'message'       => $path.'log/message.log',
     ],
     /*
      * 缓存配置项

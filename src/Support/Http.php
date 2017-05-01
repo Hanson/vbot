@@ -35,13 +35,9 @@ class Http
         $this->client = new HttpClient(['cookies' => $this->cookieJar]);
     }
 
-    public function get($url, array $query = [], array $options = [])
+    public function get($url, array $options = [])
     {
-        if ($query) {
-            $options['query'] = $query;
-        }
-
-        $options['connect_timeout'] = 60;
+        $options['timeout'] = 35;
 
         return $this->request($url, 'GET', $options);
     }
@@ -90,6 +86,8 @@ class Http
      */
     public function request($url, $method = 'GET', $options = [])
     {
+        print_r($url);
+        print_r($options);
         $response = $this->getClient()->request($method, $url, $options);
 
         $this->cookieJar->save($this->vbot->config['cookie_file']);

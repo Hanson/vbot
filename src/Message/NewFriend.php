@@ -8,21 +8,25 @@
 
 namespace Hanson\Vbot\Message;
 
-use Hanson\Vbot\Foundation\Vbot;
 
 class NewFriend extends Message implements MessageInterface
 {
-    public function __construct(Vbot $vbot)
+    const TYPE = 'new_friend';
+
+    public function make($msg)
     {
-        contact()->update($msg['FromUserName']);
+        vbot('friends')->update($msg['FromUserName']);
 
-        parent::__construct($vbot);
-
-        $this->make();
+        return $this->getCollection($msg, static::TYPE);
     }
 
-    public function make()
+    protected function parseToContent(): string
     {
-        $this->content = $this->message;
+        return $this->message;
+    }
+
+    protected function getExpand(): array
+    {
+        return [];
     }
 }

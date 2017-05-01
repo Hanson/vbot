@@ -8,81 +8,61 @@
 
 namespace Hanson\Vbot\Message;
 
-use Hanson\Vbot\Foundation\Vbot;
-use Hanson\Vbot\Support\Console;
+use Hanson\Vbot\Message\Traits\SendAble;
 
 class Text extends Message implements MessageInterface
 {
-    public $isAt;
+    use SendAble;
 
-    public $pureMessage;
+    const TYPE = 'text';
+    const API = 'webwxsendmsg?';
 
-    public function __construct(Vbot $vbot, $msg)
+    public function make($msg)
     {
-        parent::__construct($vbot, $msg);
-
-        $this->make();
+        return $this->getCollection($msg, static::TYPE);
     }
 
     /**
-     * 发送消息.
-     *
-     * @param $word string|Text 消息内容
-     * @param $username string 目标username
+     * the message is at robot.
      *
      * @return bool
      */
-    public function send($username, $word)
+    private function isAt()
+    {
+        return  str_contains($this->content, '@'.\vbot('myself')->nickname);
+    }
+
+    protected function getExpand(): array
+    {
+        return ['isAt' => $this->isAt()];
+    }
+
+    protected function parseToContent():string
+    {
+        return $this->message;
+    }
+
+    /**
+     * send a text message.
+     *
+     * @param $word string
+     * @param $username string
+     *
+     * @return bool|mixed
+     */
+    public static function send($username, $word)
     {
         if (!$word || !$username) {
             return false;
         }
 
-        $word = is_string($word) ? $word : $word->content;
-
-        $random = strval(time() * 1000).'0'.strval(rand(100, 999));
-
-        $data = [
-            'BaseRequest' => $this->vbot->config['server.baseRequest'],
-            'Msg'         => [
-                'Type'         => 1,
-                'Content'      => $word,
-                'FromUserName' => $this->vbot->myself->username,
-                'ToUserName'   => $username,
-                'LocalID'      => $random,
-                'ClientMsgId'  => $random,
-            ],
-            'Scene' => 0,
-        ];
-        print_r($data);
-
-        return;
-        $result = http()->post(server()->baseUri.'/webwxsendmsg?pass_ticket='.server()->passTicket,
-            json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), true
-        );
-
-        if ($result['BaseResponse']['Ret'] != 0) {
-            Console::log('发送消息失败 '.time(), Console::WARNING);
-
-            return false;
-        }
-
-        return true;
-    }
-
-    public function make()
-    {
-        $this->isAt();
-        $this->parseToContent();
-    }
-
-    private function isAt()
-    {
-        $this->isAt = str_contains($this->content, '@'.$this->vbot->myself->nickname);
-    }
-
-    public function parseToContent()
-    {
-        $this->content = $this->message;
+        return static::sendMsg([
+            'Type'         => 1,
+            'Content'      => $word,
+            'FromUserName' => vbot('myself')->username,
+            'ToUserName'   => $username,
+            'LocalID'      => time() * 1e4,
+            'ClientMsgId'  => time() * 1e4,
+        ]);
     }
 }

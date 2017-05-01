@@ -11,8 +11,9 @@ namespace Hanson\Vbot\Message;
 use Carbon\Carbon;
 use Hanson\Vbot\Foundation\Vbot;
 use Hanson\Vbot\Support\Content;
+use Illuminate\Support\Collection;
 
-class Message
+abstract class Message
 {
     const FROM_TYPE_SYSTEM = 'System';
     const FROM_TYPE_SELF = 'Self';
@@ -57,25 +58,17 @@ class Message
      */
     public $raw;
 
-    /**
-     * @var Vbot
-     */
-    protected $vbot;
-
-    public function __construct(Vbot $vbot, $msg)
+    protected function create($msg):array
     {
-        $this->vbot = $vbot;
         $this->raw = $msg;
 
-        $this->create();
-    }
-
-    private function create()
-    {
         $this->setFrom();
         $this->setFromType();
         $this->setMessage();
         $this->setTime();
+
+        return ['raw' => $this->raw, 'from' => $this->from, 'fromType' => $this->fromType, 'sender' => $this->sender,
+            'message' => $this->message, 'time' => $this->time];
     }
 
     /**
@@ -83,23 +76,23 @@ class Message
      */
     private function setFrom()
     {
-        $this->from = $this->vbot->contacts->getAccount($this->raw['FromUserName']);
+        $this->from = vbot('contacts')->getAccount($this->raw['FromUserName']);
     }
 
     private function setFromType()
     {
         if ($this->raw['MsgType'] == 51) {
             $this->fromType = self::FROM_TYPE_SYSTEM;
-        } elseif ($this->raw['FromUserName'] === $this->vbot->myself->username) {
+        } elseif ($this->raw['FromUserName'] === vbot('myself')->username) {
             $this->fromType = self::FROM_TYPE_SELF;
-            $this->from = $this->vbot->friends->getAccount($this->raw['ToUserName']);
-        } elseif ($this->vbot->groups->isGroup($this->raw['FromUserName'])) { // group
+            $this->from = vbot('friends')->getAccount($this->raw['ToUserName']);
+        } elseif (vbot('groups')->isGroup($this->raw['FromUserName'])) { // group
             $this->fromType = self::FROM_TYPE_GROUP;
-        } elseif ($this->vbot->friends->get($this->raw['FromUserName'])) {
+        } elseif (vbot('friends')->get($this->raw['FromUserName'])) {
             $this->fromType = self::FROM_TYPE_FRIEND;
-        } elseif ($this->vbot->officials->get($this->raw['FromUserName'])) {
+        } elseif (vbot('officials')->get($this->raw['FromUserName'])) {
             $this->fromType = self::FROM_TYPE_OFFICIAL;
-        } elseif ($this->vbot->specials->get($this->raw['FromUserName'], false)) {
+        } elseif (vbot('specials')->get($this->raw['FromUserName'], false)) {
             $this->fromType = self::FROM_TYPE_SPECIAL;
         } else {
             $this->fromType = self::FROM_TYPE_UNKNOWN;
@@ -128,7 +121,7 @@ class Message
 
         list($uid, $content) = explode(":\n", $content, 2);
 
-        $this->sender = $this->vbot->contacts->getAccount($uid) ?: $this->vbot->groups->getMemberByUsername($this->raw['FromUserName'], $uid);
+        $this->sender = vbot('contacts')->getAccount($uid) ?: vbot('groups')->getMemberByUsername($this->raw['FromUserName'], $uid);
         $this->message = Content::replaceBr($content);
     }
 
@@ -136,6 +129,26 @@ class Message
     {
         $this->time = Carbon::createFromTimestamp($this->raw['CreateTime']);
     }
+
+    protected function getCollection($msg, $type)
+    {
+        $origin = $this->create($msg);
+
+        $result = array_merge($origin, [
+            'content' => $this->parseToContent(),
+            'type' => $type
+        ], $this->getExpand());
+
+        return (new Collection($result));
+
+    }
+
+    protected function getExpand():array
+    {
+        return [];
+    }
+
+    abstract protected function parseToContent():string ;
 
     public function __toString()
     {

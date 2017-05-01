@@ -8,6 +8,7 @@ use Exception;
 use Hanson\Vbot\Exceptions\ArgumentException;
 use Hanson\Vbot\Exceptions\ConfigErrorException;
 use Hanson\Vbot\Exceptions\CreateGroupException;
+use Hanson\Vbot\Exceptions\DownloadException;
 use Hanson\Vbot\Exceptions\FetchUuidException;
 use Hanson\Vbot\Exceptions\LoginFailedException;
 use Hanson\Vbot\Exceptions\LoginTimeoutException;
@@ -25,6 +26,7 @@ class ExceptionHandler
 
     protected $dontThrow = [
         SyncCheckException::class,
+        DownloadException::class,
     ];
 
     protected $fatalException = [
@@ -90,7 +92,9 @@ class ExceptionHandler
     protected function shouldntThrow(Exception $e)
     {
         foreach ($this->dontThrow as $type) {
-            return $e instanceof $type;
+            if($e instanceof $type){
+                return true;
+            }
         }
 
         return false;
@@ -139,7 +143,7 @@ class ExceptionHandler
      * @throws FatalThrowableError
      * @throws Throwable
      *
-     * @return void
+     * @return bool
      */
     public function handleException(Throwable $e)
     {
@@ -156,6 +160,8 @@ class ExceptionHandler
         if (!$this->shouldntThrow($e)) {
             throw $e;
         }
+
+        return false;
     }
 
     /**
