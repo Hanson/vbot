@@ -7,7 +7,6 @@ use Hanson\Vbot\Message\Emoticon;
 use Hanson\Vbot\Message\GroupChange;
 use Hanson\Vbot\Message\Image;
 use Hanson\Vbot\Message\Location;
-use Hanson\Vbot\Message\Message;
 use Hanson\Vbot\Message\NewFriend;
 use Hanson\Vbot\Message\Recall;
 use Hanson\Vbot\Message\Recommend;
@@ -65,7 +64,7 @@ class MessageFactory
 //                return (new Recall())->make($msg);
             case 10000:
                 if (str_contains($msg['Content'], '利是') || str_contains($msg['Content'], '红包')) {
-//                    return (new RedPacket())->make($msg);
+                    //                    return (new RedPacket())->make($msg);
                 } elseif (str_contains($msg['Content'], '添加') || str_contains($msg['Content'], '打招呼')) {
                     // 添加好友
                     return (new NewFriend())->make($msg);

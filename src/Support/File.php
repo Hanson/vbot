@@ -1,12 +1,9 @@
 <?php
 
-
 namespace Hanson\Vbot\Support;
-
 
 class File
 {
-
     public static function saveTo(string $file, $data)
     {
         $path = dirname($file);
@@ -17,5 +14,4 @@ class File
 
         file_put_contents($file, $data);
     }
-
 }
