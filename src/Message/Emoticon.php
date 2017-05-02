@@ -56,12 +56,14 @@ class Emoticon extends Message implements MessageInterface
      * 从本地表情库随机发送一个.
      *
      * @param $username
+     *
      * @return bool
      */
     public static function sendRandom($username)
     {
-        if(!is_dir($path = vbot('config')['download.emoticon_path'])){
+        if (!is_dir($path = vbot('config')['download.emoticon_path'])) {
             vbot('console')->log('emoticon path not set.', Console::WARNING);
+
             return false;
         }
 
@@ -71,49 +73,49 @@ class Emoticon extends Message implements MessageInterface
         if (count($files)) {
             $msgId = $files[array_rand($files)];
 
-            static::send($username, $path . DIRECTORY_SEPARATOR . $msgId);
+            static::send($username, $path.DIRECTORY_SEPARATOR.$msgId);
         }
     }
 
     private static function downloadToLibrary($message)
     {
-        if(!vbot('config')['download.emoticon_path']){
+        if (!vbot('config')['download.emoticon_path']) {
             return false;
         }
 
-        if(is_file($path = vbot('config')['user_path'] . static::TYPE . DIRECTORY_SEPARATOR . $message['MsgId'] . static::EXT)){
+        if (is_file($path = vbot('config')['user_path'].static::TYPE.DIRECTORY_SEPARATOR.$message['MsgId'].static::EXT)) {
             static::copyFromEmoticon($path);
-        }else{
+        } else {
             static::saveFromApi($message);
         }
     }
 
     private static function copyFromEmoticon($path)
     {
-        $target = vbot('config')['download.emoticon_path'] . DIRECTORY_SEPARATOR;
+        $target = vbot('config')['download.emoticon_path'].DIRECTORY_SEPARATOR;
 
-        if(!static::isExist($md5 = md5_file($path))){
-            copy($path, $target . $md5 . static::EXT);
+        if (!static::isExist($md5 = md5_file($path))) {
+            copy($path, $target.$md5.static::EXT);
         }
     }
 
     private static function saveFromApi($message)
     {
-        $target = vbot('config')['download.emoticon_path'] . DIRECTORY_SEPARATOR;
+        $target = vbot('config')['download.emoticon_path'].DIRECTORY_SEPARATOR;
 
         $resource = static::getResource($message);
 
-        $fileName = $target . 'tmp-' . time() . rand() . static::EXT;
+        $fileName = $target.'tmp-'.time().rand().static::EXT;
 
         File::saveTo($fileName, $resource);
 
         $md5 = md5_file($fileName);
-        copy($fileName, $target . $md5 . static::EXT);
+        copy($fileName, $target.$md5.static::EXT);
         unlink($fileName);
     }
 
     private static function isExist($md5)
     {
-        return is_file(vbot('config')['download.emoticon_path'] . DIRECTORY_SEPARATOR . $md5 . static::EXT);
+        return is_file(vbot('config')['download.emoticon_path'].DIRECTORY_SEPARATOR.$md5.static::EXT);
     }
 }

@@ -12,11 +12,11 @@ return [
      * 下载配置项
      */
     'download' => [
-        'image'   => true,
-        'voice'   => true,
-        'video'   => true,
-        'emoticon' => true,
-        'emoticon_path' => $path . 'emoticons',
+        'image'         => true,
+        'voice'         => true,
+        'video'         => true,
+        'emoticon'      => true,
+        'emoticon_path' => $path.'emoticons',
     ],
     /*
      * 输出配置项

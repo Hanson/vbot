@@ -48,4 +48,3 @@ class Vbot
         $robot->server->serve();
     }
 }
-
