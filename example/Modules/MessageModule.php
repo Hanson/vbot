@@ -55,15 +55,14 @@ class MessageModule
 //                Video::send($message['from']['UserName'], __DIR__.'/test1.mp4');
             }
 
-            if($message['type'] === 'emoticon'){
-//                Emoticon::download($message);
+            if ($message['type'] === 'emoticon') {
+                //                Emoticon::download($message);
 //                Video::download($message, function($resource){
 //                    file_put_contents(__DIR__.'/test1.mp4', $resource);
 //                });
                 Emoticon::send($message['from']['UserName'], $message);
                 Emoticon::sendRandom($message['from']['UserName']);
             }
-
         }
     }
 }

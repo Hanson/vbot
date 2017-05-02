@@ -2,7 +2,6 @@
 
 namespace Hanson\Vbot\Message\Traits;
 
-
 use Hanson\Vbot\Console\Console;
 use Hanson\Vbot\Core\ApiExceptionHandler;
 use Hanson\Vbot\Exceptions\ArgumentException;
@@ -17,8 +16,10 @@ trait Multimedia
      *
      * @param $message
      * @param null $callback
-     * @return bool
+     *
      * @throws ArgumentException
+     *
+     * @return bool
      */
     public static function download($message, $callback = null)
     {
@@ -41,6 +42,7 @@ trait Multimedia
      * get a resource through api.
      *
      * @param $message
+     *
      * @return mixed
      */
     private static function getResource($message)
@@ -53,7 +55,7 @@ trait Multimedia
 
         if (!$content) {
             vbot('console')->log('download file failed.', Console::WARNING);
-        }else{
+        } else {
             return $content;
         }
     }
