@@ -86,8 +86,6 @@ class Http
      */
     public function request($url, $method = 'GET', $options = [])
     {
-        print_r($url);
-        print_r($options);
         $response = $this->getClient()->request($method, $url, $options);
 
         $this->cookieJar->save($this->vbot->config['cookie_file']);

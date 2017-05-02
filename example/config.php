@@ -15,7 +15,8 @@ return [
         'image'   => true,
         'voice'   => true,
         'video'   => true,
-        'emotion' => true,
+        'emoticon' => true,
+        'emoticon_path' => $path . 'emoticons',
     ],
     /*
      * 输出配置项

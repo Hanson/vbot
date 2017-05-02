@@ -2,6 +2,7 @@
 
 namespace Hanson\Vbot\Example\Modules;
 
+use Hanson\Vbot\Message\Emoticon;
 use Hanson\Vbot\Message\Image;
 use Hanson\Vbot\Message\Text;
 use Hanson\Vbot\Message\Video;
@@ -32,7 +33,7 @@ class MessageModule
                     file_put_contents(__DIR__.'/test1.jpg', $resource);
                 });
                 Image::send($message['from']['UserName'], $message);
-                Image::send($message['from']['UserName'], __DIR__.'/test1.jpg');
+//                Image::send($message['from']['UserName'], __DIR__.'/test1.jpg');
             }
 
             // todo
@@ -52,6 +53,15 @@ class MessageModule
 //                });
                 Video::send($message['from']['UserName'], $message);
 //                Video::send($message['from']['UserName'], __DIR__.'/test1.mp4');
+            }
+
+            if($message['type'] === 'emoticon'){
+//                Emoticon::download($message);
+//                Video::download($message, function($resource){
+//                    file_put_contents(__DIR__.'/test1.mp4', $resource);
+//                });
+                Emoticon::send($message['from']['UserName'], $message);
+                Emoticon::sendRandom($message['from']['UserName']);
             }
 
         }

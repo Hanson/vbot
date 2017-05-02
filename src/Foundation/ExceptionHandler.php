@@ -8,7 +8,6 @@ use Exception;
 use Hanson\Vbot\Exceptions\ArgumentException;
 use Hanson\Vbot\Exceptions\ConfigErrorException;
 use Hanson\Vbot\Exceptions\CreateGroupException;
-use Hanson\Vbot\Exceptions\DownloadException;
 use Hanson\Vbot\Exceptions\FetchUuidException;
 use Hanson\Vbot\Exceptions\LoginFailedException;
 use Hanson\Vbot\Exceptions\LoginTimeoutException;
@@ -26,7 +25,6 @@ class ExceptionHandler
 
     protected $dontThrow = [
         SyncCheckException::class,
-        DownloadException::class,
     ];
 
     protected $fatalException = [

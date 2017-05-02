@@ -59,8 +59,8 @@ class MessageFactory
                 return (new Voice())->make($msg);
             case 43: // 视频
                 return (new Video())->make($msg);
-//            case 47: // 动画表情
-//                return (new Emoticon())->make($msg);
+            case 47: // 动画表情
+                return (new Emoticon())->make($msg);
 //            case 10002:
 //                return (new Recall())->make($msg);
             case 10000:

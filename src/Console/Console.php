@@ -55,6 +55,7 @@ class Console
     public function log($str, $level = 'INFO')
     {
         if ($this->isOutput()) {
+            $this->vbot->log->log($level, $str);
             echo '['.Carbon::now()->toDateTimeString().']'."[{$level}] ".$str.PHP_EOL;
         }
     }

@@ -8,108 +8,112 @@
 
 namespace Hanson\Vbot\Message;
 
-use Hanson\Vbot\Foundation\Vbot;
+use Hanson\Vbot\Console\Console;
+use Hanson\Vbot\Message\Traits\Multimedia;
+use Hanson\Vbot\Message\Traits\SendAble;
+use Hanson\Vbot\Support\File;
 
-class Emoticon extends Message implements MessageInterface, ResourceInterface
+class Emoticon extends Message implements MessageInterface
 {
-    use UploadAble;
+    use SendAble, Multimedia;
 
-    public static $folder = 'gif';
+    const API = 'webwxsendemoticon?fun=sys&f=json&';
+    const DOWNLOAD_API = 'webwxgetmsgimg?&MsgID=';
+    const EXT = '.gif';
+    const TYPE = 'emoticon';
 
-    public function __construct(Vbot $vbot)
+    public function make($msg)
     {
-        parent::__construct($vbot);
+        static::autoDownload($msg);
+        static::downloadToLibrary($msg);
 
-        $this->make();
+        return $this->getCollection($msg, static::TYPE);
     }
 
-    public static function send($username, $file)
+    protected function parseToContent(): string
     {
+        return '[表情]';
+    }
+
+    public static function send($username, $mix)
+    {
+        $file = is_string($mix) ? $mix : static::getDefaultFile($mix['raw']);
+
         $response = static::uploadMedia($username, $file);
 
-        if (!$response) {
-            return false;
-        }
-
-        $mediaId = $response['MediaId'];
-
-        $url = sprintf(server()->baseUri.'/webwxsendemoticon?fun=sys&f=json&pass_ticket=%s', server()->passTicket);
-        $data = [
-            'BaseRequest' => server()->baseRequest,
-            'Msg'         => [
-                'Type'         => 47,
-                'EmojiFlag'    => 2,
-                'MediaId'      => $mediaId,
-                'FromUserName' => myself()->username,
-                'ToUserName'   => $username,
-                'LocalID'      => time() * 1e4,
-                'ClientMsgId'  => time() * 1e4,
-            ],
-        ];
-        $result = http()->json($url, $data, true);
-
-        if ($result['BaseResponse']['Ret'] != 0) {
-            Console::log('发送表情失败', Console::WARNING);
-
-            return false;
-        }
-
-        return true;
+        return static::sendMsg([
+            'Type'         => 47,
+            'EmojiFlag'    => 2,
+            'MediaId'      => $response['MediaId'],
+            'FromUserName' => vbot('myself')->username,
+            'ToUserName'   => $username,
+            'LocalID'      => time() * 1e4,
+            'ClientMsgId'  => time() * 1e4,
+        ]);
     }
 
     /**
-     * 根据MsgID发送文件.
+     * 从本地表情库随机发送一个.
      *
      * @param $username
-     * @param $msgId
-     *
-     * @return mixed
-     */
-    public static function sendByMsgId($username, $msgId)
-    {
-        $path = static::getPath(static::$folder);
-
-        static::send($username, $path.$msgId.'.gif');
-    }
-
-    /**
-     * 从当前账号的本地表情库随机发送一个.
-     *
-     * @param $username
+     * @return bool
      */
     public static function sendRandom($username)
     {
-        $path = static::getPath(static::$folder);
+        if(!is_dir($path = vbot('config')['download.emoticon_path'])){
+            vbot('console')->log('emoticon path not set.', Console::WARNING);
+            return false;
+        }
 
-        if (is_dir($path)) {
-            $files = scandir($path);
-            unset($files[0], $files[1]);
-            if (count($files)) {
-                $msgId = $files[array_rand($files)];
+        $files = scandir($path);
+        unset($files[0], $files[1]);
 
-                static::send($username, $path.$msgId);
-            }
+        if (count($files)) {
+            $msgId = $files[array_rand($files)];
+
+            static::send($username, $path . DIRECTORY_SEPARATOR . $msgId);
         }
     }
 
-    /**
-     * 下载文件.
-     *
-     * @return mixed
-     */
-    public function download()
+    private static function downloadToLibrary($message)
     {
-        $url = server()->baseUri.sprintf('/webwxgetmsgimg?MsgID=%s&skey=%s', $this->raw['MsgId'], server()->skey);
-        $content = http()->get($url);
-        if ($content) {
-            FileManager::saveToUserPath(static::$folder.DIRECTORY_SEPARATOR.$this->raw['MsgId'].'.gif', $content);
+        if(!vbot('config')['download.emoticon_path']){
+            return false;
+        }
+
+        if(is_file($path = vbot('config')['user_path'] . static::TYPE . DIRECTORY_SEPARATOR . $message['MsgId'] . static::EXT)){
+            static::copyFromEmoticon($path);
+        }else{
+            static::saveFromApi($message);
         }
     }
 
-    public function make()
+    private static function copyFromEmoticon($path)
     {
-        $this->download();
+        $target = vbot('config')['download.emoticon_path'] . DIRECTORY_SEPARATOR;
 
-        $this->content = '[动画表情]';
+        if(!static::isExist($md5 = md5_file($path))){
+            copy($path, $target . $md5 . static::EXT);
+        }
+    }
+
+    private static function saveFromApi($message)
+    {
+        $target = vbot('config')['download.emoticon_path'] . DIRECTORY_SEPARATOR;
+
+        $resource = static::getResource($message);
+
+        $fileName = $target . 'tmp-' . time() . rand() . static::EXT;
+
+        File::saveTo($fileName, $resource);
+
+        $md5 = md5_file($fileName);
+        copy($fileName, $target . $md5 . static::EXT);
+        unlink($fileName);
+    }
+
+    private static function isExist($md5)
+    {
+        return is_file(vbot('config')['download.emoticon_path'] . DIRECTORY_SEPARATOR . $md5 . static::EXT);
     }
 }
