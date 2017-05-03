@@ -24,6 +24,7 @@ use Hanson\Vbot\Message\Entity\Transfer;
 use Hanson\Vbot\Message\Entity\Video;
 use Hanson\Vbot\Message\Entity\Voice;
 use Hanson\Vbot\Message\ShareFactory;
+use Hanson\Vbot\Support\FileManager;
 
 class MessageFactory
 {
