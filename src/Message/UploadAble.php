@@ -88,7 +88,8 @@ trait UploadAble
 
         $mediaId = $response['MediaId'];
 
-        $url = server()->baseUri . '/webwxsendappmsg?fun=async&f=json&pass_ticket=' . server()->passTicket;$explode = explode('.', $file);
+        $url = server()->baseUri.'/webwxsendappmsg?fun=async&f=json&pass_ticket='.server()->passTicket;
+        $explode = explode('.', $file);
         $fileName = end($explode);
         $data = [
             'BaseRequest'=> server()->baseRequest,
