@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Hanson\Vbot\Exceptions\ArgumentException;
 use Hanson\Vbot\Foundation\Vbot;
 use Hanson\Vbot\Message\Text;
+use Illuminate\Support\Collection;
 
 class MessageHandler
 {
@@ -109,12 +110,12 @@ class MessageHandler
 
         if ($message['AddMsgList']) {
             foreach ($message['AddMsgList'] as $msg) {
-                $content = $this->vbot->messageFactory->make($msg);
-                if ($content) {
+                $collection = $this->vbot->messageFactory->make($msg);
+                if ($collection) {
                     //                    $this->addToMessageCollection($content);
-                    $this->cache($msg);
+                    $this->cache($msg, $collection);
                     if ($this->handler) {
-                        call_user_func_array($this->handler, [$content]);
+                        call_user_func_array($this->handler, [$collection]);
                     }
                 }
             }
@@ -140,9 +141,9 @@ class MessageHandler
         }
     }
 
-    private function cache($msg)
+    private function cache($msg,Collection $collection)
     {
-        $this->vbot->cache->put($msg['MsgId'], $msg, 2);
+        $this->vbot->cache->put('msg-'.$msg['MsgId'], $collection->toArray(), 2);
     }
 
     /**

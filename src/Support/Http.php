@@ -37,8 +37,6 @@ class Http
 
     public function get($url, array $options = [])
     {
-        $options['timeout'] = 35;
-
         return $this->request($url, 'GET', $options);
     }
 

@@ -60,16 +60,16 @@ class MessageFactory
                 return (new Video())->make($msg);
             case 47: // 动画表情
                 return (new Emoticon())->make($msg);
-//            case 10002:
-//                return (new Recall())->make($msg);
+            case 10002:
+                return (new Recall())->make($msg);
             case 10000:
                 if (str_contains($msg['Content'], '利是') || str_contains($msg['Content'], '红包')) {
-                    //                    return (new RedPacket())->make($msg);
+                    return (new RedPacket())->make($msg);
                 } elseif (str_contains($msg['Content'], '添加') || str_contains($msg['Content'], '打招呼')) {
                     // 添加好友
                     return (new NewFriend())->make($msg);
-//                } elseif (str_contains($msg['Content'], '加入了群聊') || str_contains($msg['Content'], '移出了群聊') || str_contains($msg['Content'], '改群名为') || str_contains($msg['Content'], '移出群聊') || str_contains($msg['Content'], '邀请你') || str_contains($msg['Content'], '分享的二维码加入群聊')) {
-//                    return (new GroupChange())->make($msg);
+                } elseif (str_contains($msg['Content'], '加入了群聊') || str_contains($msg['Content'], '移出了群聊') || str_contains($msg['Content'], '改群名为') || str_contains($msg['Content'], '移出群聊') || str_contains($msg['Content'], '邀请你') || str_contains($msg['Content'], '分享的二维码加入群聊')) {
+                    return (new GroupChange())->make($msg);
                 }
                 break;
 //            case 49:

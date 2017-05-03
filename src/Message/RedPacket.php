@@ -8,19 +8,19 @@
 
 namespace Hanson\Vbot\Message;
 
-use Hanson\Vbot\Foundation\Vbot;
 
 class RedPacket extends Message implements MessageInterface
 {
-    public function __construct(Vbot $vbot)
-    {
-        parent::__construct($vbot);
 
-        $this->make();
+    const TYPE = 'red_packet';
+
+    public function make($msg)
+    {
+        return $this->getCollection($msg, static::TYPE);
     }
 
-    public function make()
+    protected function parseToContent(): string
     {
-        $this->content = $this->message;
+        return $this->message;
     }
 }

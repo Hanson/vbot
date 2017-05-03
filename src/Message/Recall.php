@@ -8,27 +8,36 @@
 
 namespace Hanson\Vbot\Message;
 
-use Hanson\Vbot\Foundation\Vbot;
-
 class Recall extends Message implements MessageInterface
 {
-    use MediaTrait;
 
-    /**
-     * @var Message 上一条撤回的消息
-     */
-    public $origin;
+    const TYPE = 'recall';
+    
+    private $nickname;
+    
+    private $origin;
 
-    /**
-     * @var string 撤回者昵称
-     */
-    public $nickname;
-
-    public function __construct(Vbot $vbot)
+    public function make($msg)
     {
-        parent::__construct($vbot);
+        return $this->getCollection($msg, static::TYPE);
+    }
 
-        $this->make();
+    protected function afterCreate()
+    {
+        $msgId = $this->parseMsgId($this->message);
+
+        $this->origin = vbot('cache')->get('msg-'.$msgId);
+
+        if($this->origin){
+            $this->nickname = $this->origin['sender'] ?
+                $this->origin['sender']['NickName'] :
+                vbot('contacts')->getAccount($this->origin['raw']['FromUserName'])['NickName'];
+        }
+    }
+
+    protected function getExpand():array
+    {
+        return ['origin' => $this->origin, 'nickname' => $this->nickname];
     }
 
     /**
@@ -45,21 +54,8 @@ class Recall extends Message implements MessageInterface
         return $matches[1];
     }
 
-    public function make()
+    protected function parseToContent(): string
     {
-        $msgId = $this->parseMsgId($this->message);
-
-        /* @var Message $message */
-        $this->origin = message()->get($msgId, null);
-
-        if ($this->origin) {
-            $this->nickname = $this->origin->sender ? $this->origin->sender['NickName'] : account()->getAccount($this->origin->raw['FromUserName'])['NickName'];
-            $this->setContent();
-        }
-    }
-
-    private function setContent()
-    {
-        $this->content = "{$this->nickname} 刚撤回了消息";
+        return $this->nickname . ' 刚撤回了消息';
     }
 }

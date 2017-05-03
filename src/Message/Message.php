@@ -134,12 +134,19 @@ abstract class Message
     {
         $origin = $this->create($msg);
 
+        $this->afterCreate();
+
         $result = array_merge($origin, [
             'content' => $this->parseToContent(),
             'type'    => $type,
         ], $this->getExpand());
 
         return new Collection($result);
+    }
+
+    protected function afterCreate()
+    {
+
     }
 
     protected function getExpand():array
