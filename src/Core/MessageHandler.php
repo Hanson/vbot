@@ -141,7 +141,7 @@ class MessageHandler
         }
     }
 
-    private function cache($msg,Collection $collection)
+    private function cache($msg, Collection $collection)
     {
         $this->vbot->cache->put('msg-'.$msg['MsgId'], $collection->toArray(), 2);
     }
