@@ -61,7 +61,7 @@ function isAdmin($message)
 
 $groupMap = [
     [
-        'nickname' => 'vbot 测试群',
+        'nickname' => 'Vbot 体验群',
         'id'       => 1,
     ],
 ];
@@ -111,7 +111,6 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
         if ($message->fromType === Message::FROM_TYPE_CONTACT) {
             if ($message->content === '拉我') {
                 $username = group()->getUsernameById(1);
-
                 group()->addMember($username, $message->from['UserName']);
 
                 return false;
@@ -174,7 +173,7 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
     }
 
     // 表情信息 返回接收到的表情
-    if ($message instanceof Emoticon && random_int(0, 1) && random_int(0, 1)) {
+    if ($message instanceof Emoticon && random_int(0, 1)) {
         Emoticon::sendRandom($message->from['UserName']);
     }
 
@@ -192,6 +191,7 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
             Video::sendByMsgId($message->raw['FromUserName'], $message->origin->raw['MsgId']);
         } elseif ($message->origin instanceof Voice) {
             Text::send($message->raw['FromUserName'], "{$message->nickname} 撤回了一条语音");
+            \Hanson\Vbot\Message\Entity\File::send($message->raw['FromUserName'], Voice::getPath(Voice::$folder).$message->origin->raw['MsgId'].'.mp3');
         } else {
             Text::send($message->raw['FromUserName'], "{$message->nickname} 撤回了一条信息 \"{$message->origin->content}\"");
         }
@@ -223,9 +223,8 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
     // 请求添加信息
     if ($message instanceof RequestFriend) {
         /** @var $message RequestFriend */
-        if ($message->info['Content'] === '上山打老虎') {
+        if (in_array($message->info['Content'], ['echo', 'var_dump', 'print', 'print_r', 'sprintf'])) {
             $message->verifyUser($message::VIA);
-        } else {
         }
     }
 
@@ -235,6 +234,10 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
         $reply = "收到分享\n标题：{$message->title}\n描述：{$message->description}\n链接：{$message->url}";
         if ($message->app) {
             $reply .= "\n来源APP：{$message->app}";
+        }
+
+        if (str_contains($message->url, 'meituan.com') && !($message->from['NickName'] !== '三年二班')) {
+            Text::send(group()->getUsernameByNickname('三年二班'), '收到美团红包：'.$message->url);
         }
 
         return $reply;
@@ -273,8 +276,8 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
             return $message->content;
         } elseif ($message->action === 'RENAME') {
             //            \Hanson\Vbot\Support\Console::log($message->from['NickName'] . ' 改名为 ' . $message->rename);
-            if (group()->getUsernameById(1) == $message->from['UserName'] && $message->rename !== 'vbot 测试群') {
-                group()->setGroupName($message->from['UserName'], 'vbot 测试群');
+            if (group()->getUsernameById(1) == $message->from['UserName'] && $message->rename !== 'Vbot 体验群') {
+                group()->setGroupName($message->from['UserName'], 'Vbot 体验群');
 
                 return '行不改名,坐不改姓！';
             }

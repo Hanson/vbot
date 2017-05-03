@@ -88,19 +88,21 @@ trait UploadAble
 
         $mediaId = $response['MediaId'];
 
-        $url = sprintf(server()->baseUri.'/webwxsendappmsg?fun=async&f=json', server()->passTicket);
+        $url = server()->baseUri.'/webwxsendappmsg?fun=async&f=json&pass_ticket='.server()->passTicket;
+        $explode = explode('.', $file);
+        $fileName = end($explode);
         $data = [
             'BaseRequest'=> server()->baseRequest,
             'Msg'        => [
                 'Type'        => 6,
-                'Content'     => sprintf("<appmsg appid='wxeb7ec651dd0aefa9' sdkver=''><title>%s</title><des></des><action></action><type>6</type><content></content><url></url><lowurl></lowurl><appattach><totallen>%s</totallen><attachid>%s</attachid><fileext>%s</fileext></appattach><extinfo></extinfo></appmsg>", basename($file), filesize($file), $mediaId, end(explode('.', $file))),
+                'Content'     => sprintf("<appmsg appid='wxeb7ec651dd0aefa9' sdkver=''><title>%s</title><des></des><action></action><type>6</type><content></content><url></url><lowurl></lowurl><appattach><totallen>%s</totallen><attachid>%s</attachid><fileext>%s</fileext></appattach><extinfo></extinfo></appmsg>", basename($file), filesize($file), $mediaId, $fileName),
                 'FromUserName'=> myself()->username,
                 'ToUserName'  => $username,
                 'LocalID'     => time() * 1e4,
                 'ClientMsgId' => time() * 1e4,
             ],
         ];
-        $result = http()->json($url, $data, true);
+        $result = http()->post($url, json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), true);
 
         if ($result['BaseResponse']['Ret'] != 0) {
             Console::log('发送文件失败', Console::WARNING);
