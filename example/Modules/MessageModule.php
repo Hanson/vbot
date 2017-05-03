@@ -37,7 +37,7 @@ class MessageModule
             }
 
             if ($message['type'] === 'voice') {
-//                Voice::download($message);
+                //                Voice::download($message);
 //                Voice::download($message, function ($resource) {
 //                    file_put_contents(__DIR__.'/test1.mp3', $resource);
 //                });
@@ -46,7 +46,7 @@ class MessageModule
             }
 
             if ($message['type'] === 'video') {
-//                Video::download($message);
+                //                Video::download($message);
 //                Video::download($message, function($resource){
 //                    file_put_contents(__DIR__.'/test1.mp4', $resource);
 //                });
@@ -63,16 +63,15 @@ class MessageModule
                 Emoticon::sendRandom($message['from']['UserName']);
             }
 
-            if($message['type'] === 'recall'){
+            if ($message['type'] === 'recall') {
                 Text::send($message['from']['UserName'], $message['content']);
                 Text::send($message['from']['UserName'], $message['origin']['content']);
             }
 
             // todo test
-            if($message['type'] === 'red_packet'){
+            if ($message['type'] === 'red_packet') {
                 Text::send($message['from']['UserName'], $message['content']);
             }
-
         }
     }
 }
