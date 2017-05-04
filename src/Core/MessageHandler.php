@@ -207,7 +207,7 @@ class MessageHandler
 
         $message = $this->sync->sync();
 
-        if(!$message){
+        if (!$message) {
             return;
         }
 

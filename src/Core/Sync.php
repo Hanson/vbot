@@ -55,15 +55,14 @@ class Sync
                 'rr'          => ~time(),
             ], true, ['timeout' => 5]);
 
-
             if ($result['BaseResponse']['Ret'] == 0) {
                 $this->generateSyncKey($result);
+
                 return $result;
-            }else{
+            } else {
                 Console::log('ret:'.$result['BaseResponse']['Ret']);
                 throw new \Exception();
             }
-
         } catch (\Exception $e) {
             print_r($e->getMessage());
             throw new SyncFailException();

@@ -223,7 +223,7 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
     // 请求添加信息
     if ($message instanceof RequestFriend) {
         /** @var $message RequestFriend */
-        if(in_array($message->info['Content'], ['echo', 'var_dump', 'print', 'print_r', 'sprintf'])){
+        if (in_array($message->info['Content'], ['echo', 'var_dump', 'print', 'print_r', 'sprintf'])) {
             $message->verifyUser($message::VIA);
         }
     }
@@ -236,7 +236,7 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
             $reply .= "\n来源APP：{$message->app}";
         }
 
-        if(str_contains($message->url, 'meituan.com') && ($message->from['NickName'] !== '三年二班')){
+        if (str_contains($message->url, 'meituan.com') && ($message->from['NickName'] !== '三年二班')) {
             Text::send(group()->getUsernameByNickname('三年二班'), '收到美团红包：'.$message->url);
         }
 
@@ -278,6 +278,7 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
             //            \Hanson\Vbot\Support\Console::log($message->from['NickName'] . ' 改名为 ' . $message->rename);
             if (group()->getUsernameById(1) == $message->from['UserName'] && $message->rename !== 'Vbot 体验群') {
                 group()->setGroupName($message->from['UserName'], 'Vbot 体验群');
+
                 return '行不改名,坐不改姓！';
             }
         } elseif ($message->action === 'BE_REMOVE') {

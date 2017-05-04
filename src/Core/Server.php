@@ -118,7 +118,7 @@ class Server
                 $this->{$key} = $config;
             }
 
-            try{
+            try {
                 list($retCode, $selector) = (new Sync())->checkSync();
                 $result = (new MessageHandler())->handleCheckSync($retCode, $selector, true);
 
@@ -130,7 +130,7 @@ class Server
 
                     return true;
                 }
-            }catch (\Exception $e){
+            } catch (\Exception $e) {
                 return false;
             }
         }
