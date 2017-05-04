@@ -10,6 +10,7 @@ namespace Hanson\Vbot\Core;
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Cookie\FileCookieJar;
+use Hanson\Vbot\Support\Console;
 use Hanson\Vbot\Support\Path;
 
 class Http

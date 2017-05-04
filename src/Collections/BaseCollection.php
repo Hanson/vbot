@@ -143,7 +143,7 @@ class BaseCollection extends Collection
             $username = [$username];
         }
 
-        $url = server()->baseUri.'/webwxbatchgetcontact?type=ex&r='.time();
+        $url = server()->baseUri.'/webwxbatchgetcontact?type=ex&r='.time().'&pass_ticket='.server()->passTicket;
 
         $data = [
             'BaseRequest' => server()->baseRequest,

@@ -8,11 +8,14 @@
 
 namespace Hanson\Vbot\Foundation;
 
+use ErrorException;
 use Hanson\Vbot\Core\Server;
 use Hanson\Vbot\Support\Console;
 use Hanson\Vbot\Support\Path;
 use Illuminate\Support\Collection;
 use Pimple\Container;
+use Symfony\Component\Debug\Exception\FatalThrowableError;
+use Throwable;
 
 /**
  * Class Robot.
@@ -35,6 +38,8 @@ class Vbot extends Container
         parent::__construct();
 
         $this->setConfig($config);
+        
+        $this->exceptionHandler();
 
         $this->registerProviders();
     }
@@ -77,6 +82,27 @@ class Vbot extends Container
         foreach ($this->providers as $provider) {
             $this->register(new $provider());
         }
+    }
+
+    private function exceptionHandler()
+    {
+        set_error_handler([$this, 'handleError']);
+        set_exception_handler([$this, 'handleException']);
+    }
+
+    public function handleError($level, $message, $file = '', $line = 0)
+    {
+        if (error_reporting() & $level) {
+            throw new ErrorException($message, 0, $level, $file, $line);
+        }
+    }
+
+    public function handleException(Throwable $e)
+    {
+        Console::log('异常：' . get_class($e) . $e->getMessage());
+//        if ($e instanceof SyncFailException) {
+            server()->run();
+//        }
     }
 
     /**

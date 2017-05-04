@@ -118,16 +118,20 @@ class Server
                 $this->{$key} = $config;
             }
 
-            list($retCode, $selector) = (new Sync())->checkSync();
-            $result = (new MessageHandler())->handleCheckSync($retCode, $selector, true);
+            try{
+                list($retCode, $selector) = (new Sync())->checkSync();
+                $result = (new MessageHandler())->handleCheckSync($retCode, $selector, true);
 
-            if ($result && (new Sync())->sync()) {
-                Console::log('免扫码登录成功');
-                if ($this->afterLoginHandler) {
-                    call_user_func_array($this->afterLoginHandler, []);
+                if ($result && (new Sync())->sync()) {
+                    Console::log('免扫码登录成功');
+                    if ($this->afterLoginHandler) {
+                        call_user_func_array($this->afterLoginHandler, []);
+                    }
+
+                    return true;
                 }
-
-                return true;
+            }catch (\Exception $e){
+                return false;
             }
         }
 

@@ -46,13 +46,13 @@ function reply($str)
 // 设置管理员
 function isAdmin($message)
 {
-    $adminAlias = 'hanson1994';
+    $nickname = 'HanSon';
 
     if (in_array($message->fromType, [Message::FROM_TYPE_CONTACT, Message::FROM_TYPE_GROUP])) {
         if ($message->fromType === Message::FROM_TYPE_CONTACT) {
-            return $message->from['Alias'] === $adminAlias;
+            return $message->from['NickName'] === $nickname;
         } else {
-            return isset($message->sender['Alias']) && $message->sender['Alias'] === $adminAlias;
+            return isset($message->sender['NickName']) && $message->sender['NickName'] === $nickname;
         }
     }
 
@@ -236,7 +236,7 @@ $robot->server->setMessageHandler(function ($message) use ($path) {
             $reply .= "\n来源APP：{$message->app}";
         }
 
-        if(str_contains($message->url, 'meituan.com') && !($message->from['NickName'] !== '三年二班')){
+        if(str_contains($message->url, 'meituan.com') && ($message->from['NickName'] !== '三年二班')){
             Text::send(group()->getUsernameByNickname('三年二班'), '收到美团红包：'.$message->url);
         }
 

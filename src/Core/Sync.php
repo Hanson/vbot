@@ -8,6 +8,7 @@
 
 namespace Hanson\Vbot\Core;
 
+use Hanson\Vbot\Foundation\SyncFailException;
 use Hanson\Vbot\Support\Console;
 
 class Sync
@@ -38,13 +39,8 @@ class Sync
 
             return [$matches[1], $matches[2]];
         } catch (\Exception $e) {
-            if ($retry == 5) {
-                Console::log('synccheck 请求错误：'.$e->getMessage());
-
-                return [-1, -1];
-            }
-
-            return $this->checkSync($retry + 1);
+            print_r($e->getMessage());
+            throw new SyncFailException();
         }
     }
 
@@ -57,21 +53,20 @@ class Sync
                 'BaseRequest' => server()->baseRequest,
                 'SyncKey'     => server()->syncKey,
                 'rr'          => ~time(),
-            ], true);
+            ], true, ['timeout' => 5]);
+
 
             if ($result['BaseResponse']['Ret'] == 0) {
                 $this->generateSyncKey($result);
+                return $result;
+            }else{
+                Console::log('ret:'.$result['BaseResponse']['Ret']);
+                throw new \Exception();
             }
 
-            return $result;
         } catch (\Exception $e) {
-            if ($retry == 5) {
-                Console::log('webwxsync 请求错误：'.$e->getMessage());
-
-                return false;
-            }
-
-            return $this->sync($retry + 1);
+            print_r($e->getMessage());
+            throw new SyncFailException();
         }
     }
 

@@ -207,6 +207,10 @@ class MessageHandler
 
         $message = $this->sync->sync();
 
+        if(!$message){
+            return;
+        }
+
         if (count($message['ModContactList']) > 0) {
             foreach ($message['ModContactList'] as $contact) {
                 if (str_contains($contact['UserName'], '@@')) {
