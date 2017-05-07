@@ -158,13 +158,13 @@ vbot 已实现以及待实现的功能列表 [点击查看](https://github.com/H
 
 ## 相似项目
 
-[Chatie/wechaty](https://github.com/Chatie/wechaty) nodejs
-
-[lbbniu/WebWechat](https://github.com/lbbniu/WebWechat) php
-
 [littlecodersh/ItChat](https://github.com/littlecodersh/ItChat) python
 
+[Wechaty - A Javascript Implementation of Wechat Bot Framework](https://github.com/Chatie/wechaty)
+
 [liuwons/wxBot](https://github.com/liuwons/wxBot) python
+
+[lbbniu/WebWechat](https://github.com/lbbniu/WebWechat) php
 
 ## 贡献者
 
