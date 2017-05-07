@@ -215,9 +215,9 @@ class Server
         $this->vbot->console->log('init begin.');
         $url = $this->vbot->config['server.uri.base'].'/webwxinit?r='.time();
 
-        $result = $this->vbot->http->post($url, json_encode([
+        $result = $this->vbot->http->json($url, [
             'BaseRequest' => $this->vbot->config['server.baseRequest'],
-        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), true);
+        ], true);
 
         $this->generateSyncKey($result, $first);
 

@@ -29,7 +29,7 @@ class Sync
      *
      * @throws SyncCheckException
      *
-     * @return array
+     * @return array|bool
      */
     public function checkSync()
     {
@@ -50,7 +50,7 @@ class Sync
 
             return [$matches[1], $matches[2]];
         } catch (\Exception $e) {
-            throw new SyncCheckException('sync check:'.$e->getMessage());
+            return false;
         }
     }
 
@@ -82,7 +82,7 @@ class Sync
 
             return $result;
         } catch (\Exception $e) {
-            throw new WebSyncException('web sync:'.$e->getMessage());
+            return false;
         }
     }
 

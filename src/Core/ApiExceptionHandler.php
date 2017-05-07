@@ -2,6 +2,7 @@
 
 namespace Hanson\Vbot\Core;
 
+use Hanson\Vbot\Console\Console;
 use Hanson\Vbot\Exceptions\ArgumentException;
 
 class ApiExceptionHandler
@@ -12,30 +13,34 @@ class ApiExceptionHandler
             throw new ArgumentException();
         }
 
-        if ($callback && $bag['BaseResponse']['Ret'] != 0) {
-            call_user_func_array($callback, $bag);
+        if($bag['BaseResponse']['Ret'] != 0){
+            print_r($bag);
+            if ($callback) {
+                call_user_func_array($callback, $bag);
+            }
         }
 
         switch ($bag['BaseResponse']['Ret']) {
             case 1:
-                vbot('log')->error('Argument pass error.');
+                vbot('console')->log('Argument pass error.', Console::WARNING);
                 break;
             case -14:
-                vbot('log')->error('Ticket error.');
+                vbot('console')->log('Ticket error.', Console::WARNING);
                 break;
             case 1100:
-                vbot('log')->error('Logout.');
+                vbot('console')->log('Logout.', Console::WARNING);
                 break;
             case 1101:
-                vbot('log')->error('Logout.');
+                vbot('console')->log('Logout.', Console::WARNING);
                 break;
             case 1102:
-                vbot('log')->error('Cookies invalid.');
+                vbot('console')->log('Cookies invalid.', Console::WARNING);
                 break;
             case 1105:
-                vbot('log')->error('Api frequency.');
+                vbot('console')->log('Api frequency.', Console::WARNING);
                 break;
         }
+
 
         return $bag;
     }

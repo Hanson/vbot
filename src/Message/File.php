@@ -9,47 +9,90 @@
 namespace Hanson\Vbot\Message;
 
 use Hanson\Vbot\Foundation\Vbot;
+use Hanson\Vbot\Message\Traits\Multimedia;
+use Hanson\Vbot\Message\Traits\SendAble;
 use Hanson\Vbot\Support\FileManager;
 
-class File extends Message implements MessageInterface, ResourceInterface
+class File extends Message implements MessageInterface
 {
-    use UploadAble;
+    use Multimedia, SendAble;
 
-    public $title;
+    const API = 'webwxsendappmsg?fun=async&f=json&';
+    const DOWNLOAD_API = 'webwxgetmedia';
+    const TYPE = 'file';
 
-    public static $folder = 'file';
+    private $title;
 
-    public function __construct(Vbot $vbot)
+    public function make($msg)
     {
-        parent::__construct($vbot);
+        static::autoDownload($msg);
 
-        $this->make();
+        return $this->getCollection($msg, static::TYPE);
     }
 
-    public function make()
+    protected function getExpand():array
+    {
+        return ['title' => $this->title];
+    }
+
+    protected function afterCreate()
     {
         $array = (array) simplexml_load_string($this->message, 'SimpleXMLElement', LIBXML_NOCDATA);
 
         $info = (array) $array['appmsg'];
 
         $this->title = $info['title'];
-
-        $this->download();
     }
 
-    public function download()
+    public static function send($username, $mix)
     {
-        $url = server()->fileUri.'/webwxgetmedia';
-        $content = http()->get($url, [
-            'sender'            => $this->raw['FromUserName'],
-            'mediaid'           => $this->raw['MediaId'],
-            'filename'          => $this->raw['FileName'],
-            'fromuser'          => myself()->username,
-            'pass_ticket'       => server()->passTicket,
-            'webwx_data_ticket' => static::getTicket(),
-        ]);
-        FileManager::saveToUserPath(static::$folder.DIRECTORY_SEPARATOR.$this->raw['FileName'], $content);
+        $file = is_string($mix) ? $mix : static::getDefaultFile($mix['raw']);
 
-        $this->content = '[文件]';
+        $response = static::uploadMedia($username, $file);
+
+        $mediaId = $response['MediaId'];
+
+        $explode = explode('.', $file);
+        $fileName = end($explode);
+
+        return static::sendMsg([
+            'Type'        => 6,
+            'Content'     => sprintf("<appmsg appid='wxeb7ec651dd0aefa9' sdkver=''><title>%s</title><des></des><action></action><type>6</type><content></content><url></url><lowurl></lowurl><appattach><totallen>%s</totallen><attachid>%s</attachid><fileext>%s</fileext></appattach><extinfo></extinfo></appmsg>", basename($file), filesize($file), $mediaId, $fileName),
+            'FromUserName'=> vbot('myself')->username,
+            'ToUserName'  => $username,
+            'LocalID'     => time() * 1e4,
+            'ClientMsgId' => time() * 1e4,
+        ]);
+    }
+
+    protected static function getDownloadUrl($message)
+    {
+        $serverConfig = vbot('config')['server'];
+
+        return $serverConfig['uri']['file'].DIRECTORY_SEPARATOR.static::DOWNLOAD_API;
+    }
+
+    protected static function getDownloadOption($msg)
+    {
+        return ['query' =>
+            [
+                'sender'            => $msg['FromUserName'],
+                'mediaid'           => $msg['MediaId'],
+                'filename'          => $msg['FileName'],
+                'fromuser'          => vbot('myself')->username,
+                'pass_ticket'       => vbot('config')['server.passTicket'],
+                'webwx_data_ticket' => static::getTicket(),
+            ]
+        ];
+    }
+
+    protected static function fileName($message)
+    {
+        return $message['FileName'];
+    }
+
+    protected function parseToContent(): string
+    {
+        return '[文件]' . $this->title;
     }
 }

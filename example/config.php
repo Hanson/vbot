@@ -16,6 +16,7 @@ return [
         'voice'         => true,
         'video'         => true,
         'emoticon'      => true,
+        'file'          => true,
         'emoticon_path' => $path.'emoticons',
     ],
     /*

@@ -8,26 +8,25 @@
 
 namespace Hanson\Vbot\Message;
 
-use Hanson\Vbot\Foundation\Vbot;
 
 class Official extends Message implements MessageInterface
 {
-    public $title;
+    const TYPE = 'official';
 
-    public $description;
+    private $title;
 
-    public $url;
+    private $description;
 
-    public $app;
+    private $url;
 
-    public function __construct(Vbot $vbot)
+    private $app;
+
+    public function make($msg)
     {
-        parent::__construct($vbot);
-
-        $this->make();
+        return $this->getCollection($msg, static::TYPE);
     }
 
-    public function make()
+    protected function afterCreate()
     {
         $array = (array) simplexml_load_string($this->message, 'SimpleXMLElement', LIBXML_NOCDATA);
 
@@ -41,7 +40,15 @@ class Official extends Message implements MessageInterface
         $this->app = $appInfo['appname'];
 
         $this->url = $this->raw['Url'];
+    }
 
-        $this->content = '[公众号推送]';
+    protected function getExpand():array
+    {
+        return ['title' => $this->title, 'description' => $this->description, 'app' => $this->app, 'url' => $this->url];
+    }
+
+    protected function parseToContent(): string
+    {
+        return '[公众号消息]';
     }
 }

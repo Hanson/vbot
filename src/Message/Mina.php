@@ -8,22 +8,21 @@
 
 namespace Hanson\Vbot\Message;
 
-use Hanson\Vbot\Foundation\Vbot;
 
 class Mina extends Message implements MessageInterface
 {
-    public $title;
+    const TYPE = 'mina';
 
-    public $url;
+    private $title;
 
-    public function __construct(Vbot $vbot)
+    private $url;
+
+    public function make($msg)
     {
-        parent::__construct($vbot);
-
-        $this->make();
+        return $this->getCollection($msg, static::TYPE);
     }
 
-    public function make()
+    protected function afterCreate()
     {
         $array = (array) simplexml_load_string($this->message, 'SimpleXMLElement', LIBXML_NOCDATA);
 
@@ -31,7 +30,15 @@ class Mina extends Message implements MessageInterface
 
         $this->title = $info['title'];
         $this->url = $info['url'];
+    }
 
-        $this->content = '[小程序]';
+    protected function getExpand():array
+    {
+        return ['title' => $this->title, 'url' => $this->url];
+    }
+
+    protected function parseToContent(): string
+    {
+        return '[小程序]';
     }
 }

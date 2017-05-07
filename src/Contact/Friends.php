@@ -8,6 +8,8 @@
 
 namespace Hanson\Vbot\Contact;
 
+use Hanson\Vbot\Core\ApiExceptionHandler;
+
 class Friends extends Contacts
 {
     /**
@@ -86,25 +88,41 @@ class Friends extends Contacts
      */
     public function add($username, $content = null)
     {
-        $this->verifyUser($username, $content);
+        $this->verifyUser(2, [
+            'Value'            => $username,
+            'VerifyUserTicket' => '',
+        ], $content);
+    }
+
+    /**
+     * 通过好友申请
+     *
+     * @param $message
+     */
+    public function approve($message)
+    {
+        $this->verifyUser(3, [
+            'Value'            => $message['info']['UserName'],
+            'VerifyUserTicket' => $message['info']['Ticket'],
+        ]);
     }
 
     /**
      * 验证通过好友.
      *
-     * @param $username
+     * @param $code
+     * @param $userList
      * @param null $content
-     *
      * @return bool
      */
-    public function verifyUser($username, $content = null)
+    public function verifyUser($code, $userList, $content = null)
     {
-        $url = sprintf($this->vbot->config['server.uri.base'].'/webwxverifyuser?lang=zh_CN&r=%s', time() * 1000);
+        $url = sprintf($this->vbot->config['server.uri.base'].'/webwxverifyuser?lang=zh_CN&r=%s&pass_ticket=%s', time() * 1000, $this->vbot->config['server.passTicket']);
         $data = [
             'BaseRequest'        => $this->vbot->config['server.baseRequest'],
-            'Opcode'             => 2,
+            'Opcode'             => $code,
             'VerifyUserListSize' => 1,
-            'VerifyUserList'     => $this->verifyTicket($username),
+            'VerifyUserList'     => $userList,
             'VerifyContent'      => $content,
             'SceneListCount'     => 1,
             'SceneList'          => [33],
@@ -113,22 +131,7 @@ class Friends extends Contacts
 
         $result = $this->vbot->http->post($url, json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), true);
 
-        return $result['BaseResponse']['Ret'] == 0;
-    }
-
-    /**
-     * 返回通过好友申请所需的数组.
-     *
-     * @param null $username
-     *
-     * @return array
-     */
-    public function verifyTicket($username)
-    {
-        return [
-            'Value'            => $username,
-            'VerifyUserTicket' => '',
-        ];
+        return ApiExceptionHandler::handle($result);
     }
 
     /**

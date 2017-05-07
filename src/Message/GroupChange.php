@@ -8,25 +8,12 @@
 
 namespace Hanson\Vbot\Message;
 
-use Hanson\Vbot\Foundation\Vbot;
-
 class GroupChange extends Message implements MessageInterface
 {
+
+    const TYPE = 'group_change';
+
     public $action;
-
-    /**
-     * 群名重命名的名称.
-     *
-     * @var
-     */
-    public $rename;
-
-    /**
-     * 被踢出群时的群信息.
-     *
-     * @var
-     */
-    public $group;
 
     /**
      * 新人进群的昵称（可能单个可能多个）.
@@ -35,14 +22,12 @@ class GroupChange extends Message implements MessageInterface
      */
     public $nickname;
 
-    public function __construct(Vbot $vbot)
+    public function make($msg)
     {
-        parent::__construct($vbot);
-
-        $this->make();
+        return $this->getCollection($msg, static::TYPE);
     }
 
-    public function make()
+    protected function afterCreate()
     {
         if (str_contains($this->message, '邀请你')) {
             $this->action = 'INVITE';
@@ -53,25 +38,25 @@ class GroupChange extends Message implements MessageInterface
             }
             $this->action = 'ADD';
             $this->nickname = $match[1];
-            group()->update($this->raw['FromUserName']);
+//            vbot('groups')->update($this->raw['FromUserName']);
         } elseif (str_contains($this->message, '移出了群聊')) {
             $this->action = 'REMOVE';
         } elseif (str_contains($this->message, '改群名为')) {
             $this->action = 'RENAME';
-            preg_match('/改群名为“(.+)”/', $this->message, $match);
-            $this->updateGroupName($match[1]);
         } elseif (str_contains($this->message, '移出群聊')) {
             $this->action = 'BE_REMOVE';
-            $this->group = group()->pull($this->from['UserName']);
+//            vbot('groups')->pull($this->from['UserName']);
         }
 
-        $this->content = $this->message;
     }
 
-    private function updateGroupName($name)
+    protected function getExpand():array
     {
-        $group = group()->get($this->from['UserName']);
-        $group['NickName'] = $this->rename = $name;
-        group()->put($group['UserName'], $group);
+        return ['action' => $this->action, 'nickname' => $this->nickname];
+    }
+
+    protected function parseToContent(): string
+    {
+        return $this->message;
     }
 }

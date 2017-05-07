@@ -8,35 +8,26 @@
 
 namespace Hanson\Vbot\Message;
 
-use Hanson\Vbot\Foundation\Vbot;
 
 class RequestFriend extends Message implements MessageInterface
 {
+    const TYPE = 'request_friend';
+
     /**
      * @var array 信息
      */
-    public $info;
+    private $info;
 
-    public $avatar;
+    private $avatar;
 
-    const ADD = 2;
-    const VIA = 3;
-
-    public function __construct(Vbot $vbot)
+    public function make($msg)
     {
-        parent::__construct($vbot);
-
-        $this->make();
+        return $this->getCollection($msg, static::TYPE);
     }
 
-    public function make()
+    protected function afterCreate()
     {
         $this->info = $this->raw['RecommendInfo'];
-        $this->parseContent();
-    }
-
-    private function parseContent()
-    {
         $isMatch = preg_match('/bigheadimgurl="(.+?)"/', $this->message, $matches);
 
         if ($isMatch) {
@@ -44,43 +35,13 @@ class RequestFriend extends Message implements MessageInterface
         }
     }
 
-    /**
-     * 验证通过好友.
-     *
-     * @param $code
-     * @param null $ticket
-     *
-     * @return bool
-     */
-    public function verifyUser($code, $ticket = null)
+    protected function getExpand():array
     {
-        $url = sprintf(server()->baseUri.'/webwxverifyuser?lang=zh_CN&r=%s&pass_ticket=%s', time() * 1000, server()->passTicket);
-        $data = [
-            'BaseRequest'        => server()->baseRequest,
-            'Opcode'             => $code,
-            'VerifyUserListSize' => 1,
-            'VerifyUserList'     => [$ticket ?: $this->verifyTicket()],
-            'VerifyContent'      => '',
-            'SceneListCount'     => 1,
-            'SceneList'          => [33],
-            'skey'               => server()->skey,
-        ];
-
-        $result = http()->json($url, $data, true);
-
-        return $result['BaseResponse']['Ret'] == 0;
+        return ['info' => $this->info, 'avatar' => $this->avatar];
     }
 
-    /**
-     * 返回通过好友申请所需的数组.
-     *
-     * @return array
-     */
-    public function verifyTicket()
+    protected function parseToContent(): string
     {
-        return [
-            'Value'            => $this->info['UserName'],
-            'VerifyUserTicket' => $this->info['Ticket'],
-        ];
+        return '[请求添加好友]';
     }
 }

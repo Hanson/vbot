@@ -47,11 +47,9 @@ trait Multimedia
      */
     private static function getResource($message)
     {
-        $serverConfig = vbot('config')['server'];
+        $url = static::getDownloadUrl($message);
 
-        $url = $serverConfig['uri']['base'].DIRECTORY_SEPARATOR.static::DOWNLOAD_API."{$message['MsgId']}&skey={$serverConfig['skey']}";
-
-        $content = vbot('http')->get($url, static::getDownloadOption());
+        $content = vbot('http')->get($url, static::getDownloadOption($message));
 
         if (!$content) {
             vbot('console')->log('download file failed.', Console::WARNING);
@@ -60,7 +58,14 @@ trait Multimedia
         }
     }
 
-    protected static function getDownloadOption()
+    protected static function getDownloadUrl($message)
+    {
+        $serverConfig = vbot('config')['server'];
+
+        return $serverConfig['uri']['base'].DIRECTORY_SEPARATOR.static::DOWNLOAD_API."{$message['MsgId']}&skey={$serverConfig['skey']}";
+    }
+
+    protected static function getDownloadOption($message)
     {
         return [];
     }
@@ -79,14 +84,18 @@ trait Multimedia
             $resource = static::getResource($message);
 
             File::saveTo(vbot('config')['user_path'].static::TYPE.DIRECTORY_SEPARATOR.
-                $message['MsgId'].static::EXT, $resource);
+                static::fileName($message), $resource);
         }
+    }
+
+    protected static function fileName($message)
+    {
+        return $message['MsgId'].static::EXT;
     }
 
     protected static function getDefaultFile($message)
     {
-        return vbot('config')['user_path'].static::TYPE.DIRECTORY_SEPARATOR.
-            $message['MsgId'].static::EXT;
+        return vbot('config')['user_path'].static::TYPE.DIRECTORY_SEPARATOR. static::fileName($message);
     }
 
     /**
@@ -95,7 +104,7 @@ trait Multimedia
      *
      * @return bool|mixed|string
      */
-    protected static function uploadMedia($username, $file)
+    public static function uploadMedia($username, $file)
     {
         if (!is_file($file)) {
             return false;

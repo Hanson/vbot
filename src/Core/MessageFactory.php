@@ -9,7 +9,7 @@ use Hanson\Vbot\Message\Image;
 use Hanson\Vbot\Message\Location;
 use Hanson\Vbot\Message\NewFriend;
 use Hanson\Vbot\Message\Recall;
-use Hanson\Vbot\Message\Recommend;
+use Hanson\Vbot\Message\Card;
 use Hanson\Vbot\Message\RedPacket;
 use Hanson\Vbot\Message\RequestFriend;
 use Hanson\Vbot\Message\Text;
@@ -72,26 +72,26 @@ class MessageFactory
                     return (new GroupChange())->make($msg);
                 }
                 break;
-//            case 49:
-//                if ($msg['Status'] == 3 && $msg['FileName'] === '微信转账') {
-//                    return (new Transfer())->make($msg);
-//                } elseif ($msg['Content'] === '该类型暂不支持，请在手机上查看') {
-//                    return;
-//                } else {
-//                    return $this->vbot->shareFactory->make())->make($msg);
-//                }
-//            case 37: // 好友验证
-//                return (new RequestFriend())->make($msg);
-//            case 42: //共享名片
-//                return (new Recommend())->make($msg);
+            case 49:
+                if ($msg['Status'] == 3 && $msg['FileName'] === '微信转账') {
+                    return (new Transfer())->make($msg);
+                } elseif ($msg['Content'] === '该类型暂不支持，请在手机上查看') {
+                    return;
+                } else {
+                    return $this->vbot->shareFactory->make($msg);
+                }
+            case 37: // 好友验证
+                return (new RequestFriend())->make($msg);
+            case 42: //共享名片
+                return (new Card())->make($msg);
 //            case 62:
 //                //Video
 //                break;
-//            case 51:
-//                if ($msg['ToUserName'] === $msg['StatusNotifyUserName']) {
-//                    return (new Touch())->make($msg);
-//                }
-//                break;
+            case 51:
+                if ($msg['ToUserName'] === $msg['StatusNotifyUserName']) {
+                    return (new Touch())->make($msg);
+                }
+                break;
 //            case 53:
 //                //VideoCall
 //                break;

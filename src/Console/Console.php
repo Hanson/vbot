@@ -76,4 +76,9 @@ class Console
     {
         return array_get($this->config, 'output', true);
     }
+
+    public static function __callStatic($method, $args)
+    {
+
+    }
 }

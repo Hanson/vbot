@@ -8,19 +8,18 @@
 
 namespace Hanson\Vbot\Message;
 
-use Hanson\Vbot\Foundation\Vbot;
 
 class Touch extends Message implements MessageInterface
 {
-    public function __construct(Vbot $vbot)
-    {
-        parent::__construct($vbot);
+    const TYPE = 'touch';
 
-        $this->make();
+    public function make($msg)
+    {
+        return $this->getCollection($msg, static::TYPE);
     }
 
-    public function make()
+    protected function parseToContent(): string
     {
-        $this->content = '[点击事件]';
+        return '[点击事件]';
     }
 }
