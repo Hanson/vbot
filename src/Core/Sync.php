@@ -18,7 +18,7 @@ class Sync
      *
      * @param int $retry
      *
-     * @return array
+     * @return array|bool
      */
     public function checkSync($retry = 0)
     {
@@ -39,8 +39,7 @@ class Sync
 
             return [$matches[1], $matches[2]];
         } catch (\Exception $e) {
-            print_r($e->getMessage());
-            throw new SyncFailException();
+            return false;
         }
     }
 
@@ -65,8 +64,7 @@ class Sync
             }
 
         } catch (\Exception $e) {
-            print_r($e->getMessage());
-            throw new SyncFailException();
+            return false;
         }
     }
 

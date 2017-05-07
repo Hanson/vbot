@@ -160,11 +160,15 @@ class MessageHandler
                 $time = time();
             }
 
-            list($retCode, $selector) = $this->sync->checkSync();
+            $checkSync = (new Sync())->checkSync();
 
-            if (!$this->handleCheckSync($retCode, $selector)) {
-                break;
+            if($checkSync !== false){
+                list($retCode, $selector) = $checkSync;
+                if (!$this->handleCheckSync($retCode, $selector)) {
+                    break;
+                }
             }
+
         }
         Console::log('程序结束');
     }
