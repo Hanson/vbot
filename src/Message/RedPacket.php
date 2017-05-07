@@ -8,10 +8,8 @@
 
 namespace Hanson\Vbot\Message;
 
-
 class RedPacket extends Message implements MessageInterface
 {
-
     const TYPE = 'red_packet';
 
     public function make($msg)

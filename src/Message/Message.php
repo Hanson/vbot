@@ -146,7 +146,6 @@ abstract class Message
 
     protected function afterCreate()
     {
-
     }
 
     protected function getExpand():array

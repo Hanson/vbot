@@ -10,11 +10,10 @@ namespace Hanson\Vbot\Message;
 
 class Recall extends Message implements MessageInterface
 {
-
     const TYPE = 'recall';
-    
+
     private $nickname;
-    
+
     private $origin;
 
     public function make($msg)
@@ -28,7 +27,7 @@ class Recall extends Message implements MessageInterface
 
         $this->origin = vbot('cache')->get('msg-'.$msgId);
 
-        if($this->origin){
+        if ($this->origin) {
             $this->nickname = $this->origin['sender'] ?
                 $this->origin['sender']['NickName'] :
                 vbot('contacts')->getAccount($this->origin['raw']['FromUserName'])['NickName'];
@@ -56,6 +55,6 @@ class Recall extends Message implements MessageInterface
 
     protected function parseToContent(): string
     {
-        return $this->nickname . ' 刚撤回了消息';
+        return $this->nickname.' 刚撤回了消息';
     }
 }
