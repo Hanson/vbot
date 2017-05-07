@@ -187,6 +187,10 @@ class MessageHandler
         } else {
             Console::log('微信客户端异常退出');
             if ($this->exceptionHandler) {
+                call_user_func_array($this->exceptionHandler, []);
+            }
+
+            if ($this->exitHandler) {
                 call_user_func_array($this->exitHandler, []);
             }
 

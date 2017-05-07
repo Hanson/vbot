@@ -356,9 +356,11 @@ class Server
     {
         $url = sprintf($this->baseUri.'/webwxinit?r=%d', time());
 
-        $result = http()->post($url, json_encode([
+        $content = http()->json($url, [
             'BaseRequest' => $this->baseRequest,
-        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), true);
+        ]);
+
+        $result = json_decode($content, true);
 
         $this->generateSyncKey($result, $first);
 
