@@ -14,7 +14,6 @@ use Hanson\Vbot\Support\Console;
 use Hanson\Vbot\Support\Path;
 use Illuminate\Support\Collection;
 use Pimple\Container;
-use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Throwable;
 
 /**
@@ -38,7 +37,7 @@ class Vbot extends Container
         parent::__construct();
 
         $this->setConfig($config);
-        
+
         $this->exceptionHandler();
 
         $this->registerProviders();
@@ -99,7 +98,7 @@ class Vbot extends Container
 
     public function handleException(Throwable $e)
     {
-        Console::log('异常：' . get_class($e) . $e->getMessage());
+        Console::log('异常：'.get_class($e).$e->getMessage());
 //        if ($e instanceof SyncFailException) {
             server()->run();
 //        }
