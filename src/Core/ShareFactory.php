@@ -17,7 +17,6 @@ use Hanson\Vbot\Support\Content;
 
 class ShareFactory
 {
-
     public $type;
     /**
      * @var Vbot
@@ -36,13 +35,13 @@ class ShareFactory
         $this->parse($xml);
 
         if ($this->type == 6) {
-            return (new File)->make($msg);
+            return (new File())->make($msg);
         } elseif ($this->vbot->officials->get($msg['FromUserName'])) {
-            return (new Official)->make($msg);
+            return (new Official())->make($msg);
         } elseif ($this->type == 33) {
-            return (new Mina)->make($msg);
+            return (new Mina())->make($msg);
         } else {
-            return (new Share)->make($msg);
+            return (new Share())->make($msg);
         }
     }
 

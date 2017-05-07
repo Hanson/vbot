@@ -13,7 +13,7 @@ class ApiExceptionHandler
             throw new ArgumentException();
         }
 
-        if($bag['BaseResponse']['Ret'] != 0){
+        if ($bag['BaseResponse']['Ret'] != 0) {
             print_r($bag);
             if ($callback) {
                 call_user_func_array($callback, $bag);
@@ -40,7 +40,6 @@ class ApiExceptionHandler
                 vbot('console')->log('Api frequency.', Console::WARNING);
                 break;
         }
-
 
         return $bag;
     }

@@ -11,7 +11,6 @@ namespace Hanson\Vbot\Message;
 use Hanson\Vbot\Foundation\Vbot;
 use Hanson\Vbot\Message\Traits\Multimedia;
 use Hanson\Vbot\Message\Traits\SendAble;
-use Hanson\Vbot\Support\FileManager;
 
 class File extends Message implements MessageInterface
 {
@@ -74,15 +73,14 @@ class File extends Message implements MessageInterface
 
     protected static function getDownloadOption($msg)
     {
-        return ['query' =>
-            [
+        return ['query' => [
                 'sender'            => $msg['FromUserName'],
                 'mediaid'           => $msg['MediaId'],
                 'filename'          => $msg['FileName'],
                 'fromuser'          => vbot('myself')->username,
                 'pass_ticket'       => vbot('config')['server.passTicket'],
                 'webwx_data_ticket' => static::getTicket(),
-            ]
+            ],
         ];
     }
 
@@ -93,6 +91,6 @@ class File extends Message implements MessageInterface
 
     protected function parseToContent(): string
     {
-        return '[文件]' . $this->title;
+        return '[文件]'.$this->title;
     }
 }

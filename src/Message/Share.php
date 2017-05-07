@@ -8,7 +8,6 @@
 
 namespace Hanson\Vbot\Message;
 
-
 class Share extends Message implements MessageInterface
 {
     const TYPE = 'share';
@@ -36,7 +35,7 @@ class Share extends Message implements MessageInterface
         $this->description = $info['des'];
 
         $appInfo = (array) $array['appinfo'];
-        $this->app = (string)$appInfo['appname'];
+        $this->app = (string) $appInfo['appname'];
 
         $this->url = $this->raw['Url'];
     }

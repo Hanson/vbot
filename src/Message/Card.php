@@ -8,7 +8,6 @@
 
 namespace Hanson\Vbot\Message;
 
-
 use Hanson\Vbot\Message\Traits\SendAble;
 
 class Card extends Message implements MessageInterface
@@ -53,9 +52,9 @@ class Card extends Message implements MessageInterface
     protected function getExpand():array
     {
         return [
-            'info' => $this->info, 'avatar' => $this->bigAvatar, 'small_avatar' => $this->smallAvatar,
-            'province' => $this->province, 'city' => $this->city, 'description' => $this->description,
-            'is_official' => $this->isOfficial
+            'info'        => $this->info, 'avatar' => $this->bigAvatar, 'small_avatar' => $this->smallAvatar,
+            'province'    => $this->province, 'city' => $this->city, 'description' => $this->description,
+            'is_official' => $this->isOfficial,
         ];
     }
 

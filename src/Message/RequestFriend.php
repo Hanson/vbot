@@ -8,7 +8,6 @@
 
 namespace Hanson\Vbot\Message;
 
-
 class RequestFriend extends Message implements MessageInterface
 {
     const TYPE = 'request_friend';

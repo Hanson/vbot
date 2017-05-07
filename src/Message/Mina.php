@@ -8,7 +8,6 @@
 
 namespace Hanson\Vbot\Message;
 
-
 class Mina extends Message implements MessageInterface
 {
     const TYPE = 'mina';

@@ -3,13 +3,13 @@
 namespace Hanson\Vbot\Core;
 
 use Hanson\Vbot\Foundation\Vbot;
+use Hanson\Vbot\Message\Card;
 use Hanson\Vbot\Message\Emoticon;
 use Hanson\Vbot\Message\GroupChange;
 use Hanson\Vbot\Message\Image;
 use Hanson\Vbot\Message\Location;
 use Hanson\Vbot\Message\NewFriend;
 use Hanson\Vbot\Message\Recall;
-use Hanson\Vbot\Message\Card;
 use Hanson\Vbot\Message\RedPacket;
 use Hanson\Vbot\Message\RequestFriend;
 use Hanson\Vbot\Message\Text;
