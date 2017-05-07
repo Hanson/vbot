@@ -8,7 +8,6 @@
 
 namespace Hanson\Vbot\Core;
 
-use Hanson\Vbot\Foundation\SyncFailException;
 use Hanson\Vbot\Support\Console;
 
 class Sync
@@ -54,15 +53,14 @@ class Sync
                 'rr'          => ~time(),
             ], true, ['timeout' => 5]);
 
-
             if ($result['BaseResponse']['Ret'] == 0) {
                 $this->generateSyncKey($result);
+
                 return $result;
-            }else{
+            } else {
                 Console::log('ret:'.$result['BaseResponse']['Ret']);
                 throw new \Exception();
             }
-
         } catch (\Exception $e) {
             return false;
         }
