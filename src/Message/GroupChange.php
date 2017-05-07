@@ -10,7 +10,6 @@ namespace Hanson\Vbot\Message;
 
 class GroupChange extends Message implements MessageInterface
 {
-
     const TYPE = 'group_change';
 
     public $action;
@@ -47,7 +46,6 @@ class GroupChange extends Message implements MessageInterface
             $this->action = 'BE_REMOVE';
 //            vbot('groups')->pull($this->from['UserName']);
         }
-
     }
 
     protected function getExpand():array

@@ -8,14 +8,11 @@
 
 namespace Hanson\Vbot\Message;
 
-use Hanson\Vbot\Foundation\Vbot;
-
 /**
  * Class Transfer.
  */
 class Transfer extends Message implements MessageInterface
 {
-
     const TYPE = 'transfer';
 
     /**

@@ -8,7 +8,6 @@
 
 namespace Hanson\Vbot\Message;
 
-
 class Touch extends Message implements MessageInterface
 {
     const TYPE = 'touch';

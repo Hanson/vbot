@@ -95,7 +95,7 @@ trait Multimedia
 
     protected static function getDefaultFile($message)
     {
-        return vbot('config')['user_path'].static::TYPE.DIRECTORY_SEPARATOR. static::fileName($message);
+        return vbot('config')['user_path'].static::TYPE.DIRECTORY_SEPARATOR.static::fileName($message);
     }
 
     /**

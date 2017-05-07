@@ -8,7 +8,6 @@
 
 namespace Hanson\Vbot\Message;
 
-
 class Official extends Message implements MessageInterface
 {
     const TYPE = 'official';

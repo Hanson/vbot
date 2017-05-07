@@ -79,6 +79,5 @@ class Console
 
     public static function __callStatic($method, $args)
     {
-
     }
 }

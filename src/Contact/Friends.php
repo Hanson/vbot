@@ -95,7 +95,7 @@ class Friends extends Contacts
     }
 
     /**
-     * 通过好友申请
+     * 通过好友申请.
      *
      * @param $message
      */
@@ -113,6 +113,7 @@ class Friends extends Contacts
      * @param $code
      * @param $userList
      * @param null $content
+     *
      * @return bool
      */
     public function verifyUser($code, $userList, $content = null)
