@@ -156,15 +156,15 @@ $robot->server->run();
 
 vbot 已实现以及待实现的功能列表 [点击查看](https://github.com/HanSon/vbot/wiki/todolist)
 
-## 参考项目
+## 相似项目
 
-[lbbniu/WebWechat](https://github.com/lbbniu/WebWechat)
+[Chatie/wechaty](https://github.com/Chatie/wechaty) nodejs
 
-[littlecodersh/ItChat](https://github.com/littlecodersh/ItChat) 
+[lbbniu/WebWechat](https://github.com/lbbniu/WebWechat) php
 
-感谢楼上两位作者曾对本人耐心解答
+[littlecodersh/ItChat](https://github.com/littlecodersh/ItChat) python
 
-[liuwons/wxBot](https://github.com/liuwons/wxBot) 参考了整个微信的登录流程与消息处理
+[liuwons/wxBot](https://github.com/liuwons/wxBot) python
 
 ## 贡献者
 
