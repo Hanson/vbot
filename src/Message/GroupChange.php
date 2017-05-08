@@ -37,14 +37,12 @@ class GroupChange extends Message implements MessageInterface
             }
             $this->action = 'ADD';
             $this->nickname = $match[1];
-//            vbot('groups')->update($this->raw['FromUserName']);
         } elseif (str_contains($this->message, '移出了群聊')) {
             $this->action = 'REMOVE';
         } elseif (str_contains($this->message, '改群名为')) {
             $this->action = 'RENAME';
         } elseif (str_contains($this->message, '移出群聊')) {
             $this->action = 'BE_REMOVE';
-//            vbot('groups')->pull($this->from['UserName']);
         }
     }
 

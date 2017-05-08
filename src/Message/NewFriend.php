@@ -14,8 +14,6 @@ class NewFriend extends Message implements MessageInterface
 
     public function make($msg)
     {
-        vbot('friends')->update($msg['FromUserName']);
-
         return $this->getCollection($msg, static::TYPE);
     }
 

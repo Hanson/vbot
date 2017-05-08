@@ -10,6 +10,7 @@ namespace Hanson\Vbot\Support;
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Cookie\FileCookieJar;
+use Hanson\Vbot\Console\Console;
 use Hanson\Vbot\Foundation\Vbot;
 
 class Http
@@ -84,10 +85,18 @@ class Http
      */
     public function request($url, $method = 'GET', $options = [])
     {
-        $response = $this->getClient()->request($method, $url, $options);
+        try{
+            $response = $this->getClient()->request($method, $url, $options);
 
-        $this->cookieJar->save($this->vbot->config['cookie_file']);
+            $this->cookieJar->save($this->vbot->config['cookie_file']);
 
-        return $response->getBody()->getContents();
+            return $response->getBody()->getContents();
+
+        }catch (\Exception $e){
+
+            $this->vbot->console->log($e->getMessage(), Console::ERROR);
+
+            return false;
+        }
     }
 }

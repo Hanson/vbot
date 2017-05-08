@@ -43,15 +43,15 @@ class Sync
                 '_'        => time(),
             ]);
 
-        try {
-            $content = $this->vbot->http->get($url, ['timeout' => 35]);
+        $content = $this->vbot->http->get($url, ['timeout' => 35]);
 
-            preg_match('/window.synccheck=\{retcode:"(\d+)",selector:"(\d+)"\}/', $content, $matches);
-
-            return [$matches[1], $matches[2]];
-        } catch (\Exception $e) {
+        if(!$content){
             return false;
         }
+
+        preg_match('/window.synccheck=\{retcode:"(\d+)",selector:"(\d+)"\}/', $content, $matches);
+
+        return [$matches[1], $matches[2]];
     }
 
     /**
@@ -69,21 +69,17 @@ class Sync
             $this->vbot->config['server.passTicket']
         );
 
-        try {
-            $result = $this->vbot->http->json($url, [
-                'BaseRequest' => $this->vbot->config['server.baseRequest'],
-                'SyncKey'     => $this->vbot->config['server.syncKey'],
-                'rr'          => ~time(),
-            ], true);
+        $result = $this->vbot->http->json($url, [
+            'BaseRequest' => $this->vbot->config['server.baseRequest'],
+            'SyncKey'     => $this->vbot->config['server.syncKey'],
+            'rr'          => ~time(),
+        ], true);
 
-            if ($result['BaseResponse']['Ret'] == 0) {
-                $this->generateSyncKey($result);
-            }
-
-            return $result;
-        } catch (\Exception $e) {
-            return false;
+        if ($result && $result['BaseResponse']['Ret'] == 0) {
+            $this->generateSyncKey($result);
         }
+
+        return $result;
     }
 
     /**

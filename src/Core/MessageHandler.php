@@ -31,9 +31,11 @@ class MessageHandler
         while (true) {
             $time = $this->heartbeat($time);
 
-            list($retCode, $selector) = $this->checkSync();
+            if($checkSync = $this->checkSync()){
+                continue;
+            }
 
-            if (!$this->handleCheckSync($retCode, $selector)) {
+            if (!$this->handleCheckSync($checkSync[0], $checkSync[1])) {
                 break;
             }
         }
@@ -79,6 +81,7 @@ class MessageHandler
 
             return false;
         } elseif ($retCode == 0) {
+
             if (!$test) {
                 $this->handleMessage($selector);
             }
@@ -112,7 +115,6 @@ class MessageHandler
             foreach ($message['AddMsgList'] as $msg) {
                 $collection = $this->vbot->messageFactory->make($msg);
                 if ($collection) {
-                    //                    $this->addToMessageCollection($content);
                     $this->cache($msg, $collection);
                     if ($this->handler) {
                         call_user_func_array($this->handler, [$collection]);

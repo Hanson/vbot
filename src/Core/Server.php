@@ -46,17 +46,18 @@ class Server
      */
     private function tryLogin(): bool
     {
-        Console::clear();
-
         if (is_file($this->vbot->config['cookie_file']) && $this->vbot->cache->has($this->vbot->config['session_key'])) {
             $configs = json_decode($this->vbot->cache->get($this->vbot->config['session_key']), true);
 
             $this->vbot->config['server'] = $configs;
 
-            list($retCode, $selector) = $this->vbot->sync->checkSync();
-            $result = $this->vbot->messageHandler->handleCheckSync($retCode, $selector, true);
+            if(!($checkSync = $this->vbot->sync->checkSync())){
+                return false;
+            }
 
-            if ($result && $this->vbot->sync->sync()) {
+            $result = $this->vbot->messageHandler->handleCheckSync($checkSync[0], $checkSync[1], true);
+
+            if ($result) {
                 $this->vbot->reLoginSuccessObserver->trigger();
 
                 return true;
@@ -71,6 +72,7 @@ class Server
      */
     public function login()
     {
+        Console::clear();
         $this->getUuid();
         $this->showQrCode();
         $this->waitForLogin();
