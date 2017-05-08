@@ -111,7 +111,7 @@ class MessageModule
             }
         }
 
-        if($message['type'] === 'text' && $message['content'] === '报名'){
+        if ($message['type'] === 'text' && $message['content'] === '报名') {
             $username = $groups->getUsernameByNickname('vbot 反馈群');
             $groups->addMember($username, $message['from']['UserName']);
         }
@@ -121,7 +121,7 @@ class MessageModule
             去到 vbot 的 github 网站，clone 下来，然后 git checkout v2.0 即可。运行命令为 php example.php --session=vbot';
             $rule = '反馈群群规：
                 首先感谢大家对vbot的支持，大家来这里是测试体验2.0版本的代码，所以需要大家拥有基础的编程技能。这里可以询问新代码的事情，但不要问低级的问题。因为还在测试中，代码随时会更新，更新后我会提醒大家有新代码，以便更新。谢谢配合。';
-            if($message['type'] === 'text' && $message['content'] === '体验'){
+            if ($message['type'] === 'text' && $message['content'] === '体验') {
                 Text::send($message['from']['UserName'], $experience);
             }
 
@@ -130,7 +130,7 @@ class MessageModule
             }
 
             if ($message['type'] === 'group_change') {
-                if($message['action'] === 'ADD'){
+                if ($message['action'] === 'ADD') {
                     Text::send($message['from']['UserName'], $experience);
                     Text::send($message['from']['UserName'], $rule);
                 }
@@ -174,14 +174,14 @@ class MessageModule
             }
         }
 
-        if($message['type'] === 'text' && $message['content'] === '拉我'){
+        if ($message['type'] === 'text' && $message['content'] === '拉我') {
             $username = $groups->getUsernameByNickname('Vbot 体验群');
             $groups->addMember($username, $message['from']['UserName']);
         }
 
-        if($message['type'] === 'text' && $message['content'] === '头像'){
+        if ($message['type'] === 'text' && $message['content'] === '头像') {
             $avatar = $friends->getAvatar($message['from']['UserName']);
-            \Hanson\Vbot\Support\File::saveTo(vbot('config')['user_path'].'avatar/'.$message['from']['UserName'] . '.jpg', $avatar);
+            \Hanson\Vbot\Support\File::saveTo(vbot('config')['user_path'].'avatar/'.$message['from']['UserName'].'.jpg', $avatar);
         }
 
         // @todo
