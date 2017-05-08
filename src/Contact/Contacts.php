@@ -122,6 +122,20 @@ class Contacts extends Collection
         }
     }
 
+    public function getAvatar($username)
+    {
+        $params = [
+            'userName' => $username,
+            'type' => 'big'
+        ];
+
+        $api = $this->vbot->groups->isGroup($username) ? '/webwxgetheadimg' : '/webwxgeticon';
+
+        echo $this->vbot->config['server.uri.base'];
+
+        return $this->vbot->http->get($this->vbot->config['server.uri.base'] . $api, ['query' => $params]);
+    }
+
     /**
      * 存储时处理emoji.
      *

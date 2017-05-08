@@ -31,7 +31,7 @@ class MessageHandler
         while (true) {
             $time = $this->heartbeat($time);
 
-            if ($checkSync = $this->checkSync()) {
+            if (!($checkSync = $this->checkSync())) {
                 continue;
             }
 
@@ -115,6 +115,7 @@ class MessageHandler
                 $collection = $this->vbot->messageFactory->make($msg);
                 if ($collection) {
                     $this->cache($msg, $collection);
+                    $this->console($collection);
                     if ($this->handler) {
                         call_user_func_array($this->handler, [$collection]);
                     }
@@ -133,6 +134,11 @@ class MessageHandler
         if ($this->vbot->messageLog && ($message['ModContactList'] || $message['AddMsgList'])) {
             $this->vbot->messageLog->info(json_encode($message));
         }
+    }
+
+    private function console(Collection $collection)
+    {
+        $this->vbot->console->log($collection['content']);
     }
 
     private function storeContactsFromMessage($message)

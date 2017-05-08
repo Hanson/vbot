@@ -33,21 +33,21 @@ class Sync
      */
     public function checkSync()
     {
-        $url = $this->vbot->config['server.uri.push'].'/synccheck?'.http_build_query([
-                'r'        => time(),
-                'sid'      => $this->vbot->config['server.sid'],
-                'uin'      => $this->vbot->config['server.uin'],
-                'skey'     => $this->vbot->config['server.skey'],
-                'deviceid' => $this->vbot->config['server.deviceId'],
-                'synckey'  => $this->vbot->config['server.syncKeyStr'],
-                '_'        => time(),
-            ]);
-
-        $content = $this->vbot->http->get($url, ['timeout' => 35]);
+        $content = $this->vbot->http->get($this->vbot->config['server.uri.push'].'/synccheck', ['timeout' => 35, 'query' => [
+            'r'        => time(),
+            'sid'      => $this->vbot->config['server.sid'],
+            'uin'      => $this->vbot->config['server.uin'],
+            'skey'     => $this->vbot->config['server.skey'],
+            'deviceid' => $this->vbot->config['server.deviceId'],
+            'synckey'  => $this->vbot->config['server.syncKeyStr'],
+            '_'        => time(),
+        ]]);
 
         if (!$content) {
             return false;
         }
+
+        $this->vbot->console->log($content);
 
         preg_match('/window.synccheck=\{retcode:"(\d+)",selector:"(\d+)"\}/', $content, $matches);
 
@@ -78,6 +78,7 @@ class Sync
         if ($result && $result['BaseResponse']['Ret'] == 0) {
             $this->generateSyncKey($result);
         }
+        $this->vbot->console->log('ret:'. $result['BaseResponse']['Ret']);
 
         return $result;
     }
