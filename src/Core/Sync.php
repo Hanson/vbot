@@ -45,7 +45,7 @@ class Sync
 
         $content = $this->vbot->http->get($url, ['timeout' => 35]);
 
-        if(!$content){
+        if (!$content) {
             return false;
         }
 

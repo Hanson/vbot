@@ -51,7 +51,7 @@ class Server
 
             $this->vbot->config['server'] = $configs;
 
-            if(!($checkSync = $this->vbot->sync->checkSync())){
+            if (!($checkSync = $this->vbot->sync->checkSync())) {
                 return false;
             }
 
