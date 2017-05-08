@@ -78,7 +78,7 @@ class Sync
         if ($result && $result['BaseResponse']['Ret'] == 0) {
             $this->generateSyncKey($result);
         }
-        $this->vbot->console->log('ret:'. $result['BaseResponse']['Ret']);
+        $this->vbot->console->log('ret:'.$result['BaseResponse']['Ret']);
 
         return $result;
     }

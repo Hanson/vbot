@@ -126,14 +126,14 @@ class Contacts extends Collection
     {
         $params = [
             'userName' => $username,
-            'type' => 'big'
+            'type'     => 'big',
         ];
 
         $api = $this->vbot->groups->isGroup($username) ? '/webwxgetheadimg' : '/webwxgeticon';
 
         echo $this->vbot->config['server.uri.base'];
 
-        return $this->vbot->http->get($this->vbot->config['server.uri.base'] . $api, ['query' => $params]);
+        return $this->vbot->http->get($this->vbot->config['server.uri.base'].$api, ['query' => $params]);
     }
 
     /**
