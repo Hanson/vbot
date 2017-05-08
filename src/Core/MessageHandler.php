@@ -31,7 +31,7 @@ class MessageHandler
         while (true) {
             $time = $this->heartbeat($time);
 
-            if($checkSync = $this->checkSync()){
+            if ($checkSync = $this->checkSync()) {
                 continue;
             }
 
@@ -81,7 +81,6 @@ class MessageHandler
 
             return false;
         } elseif ($retCode == 0) {
-
             if (!$test) {
                 $this->handleMessage($selector);
             }
