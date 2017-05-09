@@ -128,7 +128,7 @@ class Server
         while ($retryTime > 0) {
             $url = sprintf('https://login.weixin.qq.com/cgi-bin/mmwebwx-bin/login?tip=%s&uuid=%s&_=%s', $tip, $this->vbot->config['server.uuid'], time());
 
-            $content = $this->vbot->http->get($url);
+            $content = $this->vbot->http->get($url, ['timeout' => 35]);
 
             preg_match('/window.code=(\d+);/', $content, $matches);
 
