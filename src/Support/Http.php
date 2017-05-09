@@ -79,11 +79,11 @@ class Http
     /**
      * @param $url
      * @param string $method
-     * @param array  $options
-     *
+     * @param array $options
+     * @param bool $retry
      * @return string
      */
-    public function request($url, $method = 'GET', $options = [])
+    public function request($url, $method = 'GET', $options = [], $retry = false)
     {
         try {
             $options = array_merge(['timeout' => 60], $options);
@@ -95,6 +95,10 @@ class Http
             return $response->getBody()->getContents();
         } catch (\Exception $e) {
             $this->vbot->console->log($url.$e->getMessage(), Console::ERROR);
+
+            if(!$retry){
+                return $this->request($url, $method, $options, true);
+            }
 
             return false;
         }

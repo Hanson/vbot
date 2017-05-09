@@ -100,7 +100,7 @@ class MessageHandler
      */
     private function handleMessage($selector)
     {
-        if ($selector === 0) {
+        if ($selector == 0) {
             return;
         }
 

@@ -202,7 +202,7 @@ class Contacts extends Collection
         $response = $this->vbot->http->json($url, $data, true);
 
         if(!$response){
-            return false;
+            return [];
         }
 
         foreach ($response['ContactList'] as $item) {
