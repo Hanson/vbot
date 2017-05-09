@@ -180,7 +180,8 @@ class MessageModule
         }
 
         if ($message['type'] === 'text' && $message['content'] === '叫我') {
-            Text::send('hanson1994', '主人');
+            $username = $friends->getUsernameByNickname('HanSon');
+            Text::send($username, '主人');
         }
 
         if ($message['type'] === 'text' && $message['content'] === '头像') {

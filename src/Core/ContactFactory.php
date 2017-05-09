@@ -54,7 +54,7 @@ class ContactFactory
             $seq
         );
 
-        $result = $this->vbot->http->json($url, [], true);
+        $result = $this->vbot->http->json($url, [], true, ['timeout' => 60]);
 
         if (isset($result['MemberList']) && $result['MemberList']) {
             $this->store($result['MemberList']);
@@ -103,7 +103,7 @@ class ContactFactory
             'BaseRequest' => $this->vbot->config['server.baseRequest'],
             'Count'       => $this->vbot->groups->count(),
             'List'        => $list,
-        ], true);
+        ], true, ['timeout' => 60]);
 
         $this->storeMembers($content);
     }

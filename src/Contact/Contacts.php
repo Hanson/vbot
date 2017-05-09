@@ -201,6 +201,10 @@ class Contacts extends Collection
 
         $response = $this->vbot->http->json($url, $data, true);
 
+        if(!$response){
+            return false;
+        }
+
         foreach ($response['ContactList'] as $item) {
             $this->put($item['UserName'], $item);
         }

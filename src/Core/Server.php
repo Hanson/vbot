@@ -214,7 +214,7 @@ class Server
      */
     protected function init($first = true)
     {
-        $this->vbot->console->log('init begin.');
+        $this->beforeInitSuccess();
         $url = $this->vbot->config['server.uri.base'].'/webwxinit?r='.time();
 
         $result = $this->vbot->http->json($url, [
@@ -230,10 +230,21 @@ class Server
             $this->vbot->log->error('Init failed.'.json_encode($result));
         });
 
+        $this->afterInitSuccess($result);
+
         $this->initContactList($result['ContactList']);
         $this->initContact();
 
-        $this->afterInitSuccess($result);
+    }
+
+    /**
+     * before init success.
+     *
+     */
+    private function beforeInitSuccess()
+    {
+        $this->vbot->console->log('current session: '.$this->vbot->config['session']);
+        $this->vbot->console->log('init begin.');
     }
 
     /**
@@ -245,8 +256,8 @@ class Server
     {
         $this->vbot->log->info('response:'.json_encode($content));
         $this->vbot->console->log('init success.');
-        $this->vbot->console->log('current session: '.$this->vbot->config['session']);
         $this->vbot->loginSuccessObserver->trigger();
+        $this->vbot->console->log('init contacts begin.');
     }
 
     protected function initContactList($contactList)
