@@ -45,6 +45,7 @@ class Sync
 
         if (!$content) {
             $this->vbot->console->log('checkSync no response');
+
             return false;
         }
 
