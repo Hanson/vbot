@@ -138,7 +138,7 @@ class MessageModule
         }
 
         if ($message['type'] === 'touch') {
-            Text::send($message['raw']['ToUserName'], $message['content']);
+//            Text::send($message['raw']['ToUserName'], $message['content']);
         }
 
         if ($message['from']['NickName'] === 'Vbot 体验群') {

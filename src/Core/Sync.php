@@ -44,14 +44,14 @@ class Sync
         ]]);
 
         if (!$content) {
+            $this->vbot->console->log('checkSync no response');
             return false;
         }
 
         $this->vbot->console->log($content);
 
-        preg_match('/window.synccheck=\{retcode:"(\d+)",selector:"(\d+)"\}/', $content, $matches);
-
-        return [$matches[1], $matches[2]];
+        return preg_match('/window.synccheck=\{retcode:"(\d+)",selector:"(\d+)"\}/', $content, $matches) ?
+            [$matches[1], $matches[2]] : false;
     }
 
     /**

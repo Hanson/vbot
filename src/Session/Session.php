@@ -30,10 +30,6 @@ class Session
 
     public function has($session)
     {
-        $has = $this->vbot->cache->has('session.'.$session);
-
-        print_r($has);
-
-        return $has;
+        return $this->vbot->cache->has('session.'.$session);
     }
 }

@@ -86,13 +86,15 @@ class Http
     public function request($url, $method = 'GET', $options = [])
     {
         try {
+            $options = array_merge(['timeout' => 5], $options);
+
             $response = $this->getClient()->request($method, $url, $options);
 
             $this->cookieJar->save($this->vbot->config['cookie_file']);
 
             return $response->getBody()->getContents();
         } catch (\Exception $e) {
-            $this->vbot->console->log($e->getMessage(), Console::ERROR);
+            $this->vbot->console->log($url . $e->getMessage(), Console::ERROR);
 
             return false;
         }
