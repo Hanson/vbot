@@ -298,7 +298,9 @@ class Groups extends Contacts
     {
         $group = parent::get($key, $default);
         $this->vbot->console->log('get group username fail:'.$key);
+
         return $group;
+
         return parent::get($key, $this->update($key));
     }
 }

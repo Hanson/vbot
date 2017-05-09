@@ -79,8 +79,9 @@ class Http
     /**
      * @param $url
      * @param string $method
-     * @param array $options
-     * @param bool $retry
+     * @param array  $options
+     * @param bool   $retry
+     *
      * @return string
      */
     public function request($url, $method = 'GET', $options = [], $retry = false)
@@ -96,7 +97,7 @@ class Http
         } catch (\Exception $e) {
             $this->vbot->console->log($url.$e->getMessage(), Console::ERROR);
 
-            if(!$retry){
+            if (!$retry) {
                 return $this->request($url, $method, $options, true);
             }
 
