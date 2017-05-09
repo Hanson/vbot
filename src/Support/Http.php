@@ -94,7 +94,7 @@ class Http
 
             return $response->getBody()->getContents();
         } catch (\Exception $e) {
-            $this->vbot->console->log($url . $e->getMessage(), Console::ERROR);
+            $this->vbot->console->log($url.$e->getMessage(), Console::ERROR);
 
             return false;
         }
