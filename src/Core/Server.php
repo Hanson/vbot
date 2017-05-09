@@ -234,12 +234,10 @@ class Server
 
         $this->initContactList($result['ContactList']);
         $this->initContact();
-
     }
 
     /**
      * before init success.
-     *
      */
     private function beforeInitSuccess()
     {
