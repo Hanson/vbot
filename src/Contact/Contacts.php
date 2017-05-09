@@ -201,7 +201,7 @@ class Contacts extends Collection
 
         $response = $this->vbot->http->json($url, $data, true);
 
-        if(!$response){
+        if (!$response) {
             return [];
         }
 
