@@ -135,6 +135,14 @@ class MessageModule
                     Text::send($message['from']['UserName'], $rule);
                 }
             }
+
+            if ($message['content'] === '名片') {
+                Card::send($message['from']['UserName'], 'hanson1994', 'HanSon大人');
+            }
+
+            if ($message['content'] === '公众号') {
+                Card::send($message['from']['UserName'], 'hgjxxg', '华广计协小哥');
+            }
         }
 
         if ($message['type'] === 'touch') {
@@ -163,20 +171,16 @@ class MessageModule
                     }
                     Text::send($message['from']['UserName'], $result);
                 }
-
-                if ($message['content'] === '名片') {
-                    Card::send($message['from']['UserName'], 'hanson1994', 'HanSon大人');
-                }
-
-                if ($message['content'] === '公众号') {
-                    Card::send($message['from']['UserName'], 'hgjxxg', '华广计协小哥');
-                }
             }
         }
 
         if ($message['type'] === 'text' && $message['content'] === '拉我') {
             $username = $groups->getUsernameByNickname('Vbot 体验群');
             $groups->addMember($username, $message['from']['UserName']);
+        }
+
+        if ($message['type'] === 'text' && $message['content'] === '叫我') {
+            Text::send('hanson1994', '主人');
         }
 
         if ($message['type'] === 'text' && $message['content'] === '头像') {
