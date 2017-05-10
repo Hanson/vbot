@@ -116,6 +116,26 @@ class MessageModule
             $groups->addMember($username, $message['from']['UserName']);
         }
 
+        if ($message['from']['NickName'] === '三年二班') {
+            if($message['type'] === 'text' && str_contains($message['content'], '餐费')){
+                $str = str_replace('餐费', '', $message['content']);
+                $array = explode(' ', $str);
+                if(count($array) !== 2){
+                    return;
+                }
+                $total = current($array);
+                $every = explode(',', $array[1]);
+                $origin = array_sum($every);
+                if($origin === 0)
+                    return;
+                $result = "餐费分别为：\n";
+                foreach($every as $each){
+                    $result .= strval(round($each / $origin * $total, 2)) . PHP_EOL;
+                }
+                Text::send($message['from']['UserName'], $result);
+            }
+        }
+
         if ($message['from']['NickName'] === 'vbot 反馈群') {
             $experience = '体验流程：
             去到 vbot 的 github 网站，clone 下来，然后 git checkout v2.0 即可。运行命令为 php example.php --session=vbot';

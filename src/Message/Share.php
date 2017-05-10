@@ -31,11 +31,11 @@ class Share extends Message implements MessageInterface
 
         $info = (array) $array['appmsg'];
 
-        $this->title = $info['title'];
-        $this->description = $info['des'];
+        $this->title = strval($info['title']);
+        $this->description = strval($info['des']);
 
         $appInfo = (array) $array['appinfo'];
-        $this->app = (string) $appInfo['appname'];
+        $this->app = strval($appInfo['appname']);
 
         $this->url = $this->raw['Url'];
     }

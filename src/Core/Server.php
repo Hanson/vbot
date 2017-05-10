@@ -30,6 +30,7 @@ class Server
     public function serve()
     {
         if (!$this->tryLogin()) {
+            $this->cleanCookies();
             $this->login();
         }
 
@@ -46,6 +47,8 @@ class Server
      */
     private function tryLogin(): bool
     {
+        print_r(is_file($this->vbot->config['cookie_file']));
+        print_r($this->vbot->cache->has($this->vbot->config['session_key']));
         if (is_file($this->vbot->config['cookie_file']) && $this->vbot->cache->has($this->vbot->config['session_key'])) {
             $configs = json_decode($this->vbot->cache->get($this->vbot->config['session_key']), true);
 
@@ -65,6 +68,12 @@ class Server
         }
 
         return false;
+    }
+
+    private function cleanCookies()
+    {
+        $this->vbot->console->log('cleaning useless cookies.');
+        unlink($this->vbot->config['cookie_file']);
     }
 
     /**
@@ -228,6 +237,7 @@ class Server
         ApiExceptionHandler::handle($result, function ($result) {
             $this->vbot->cache->forget('session.'.$this->vbot->config['session']);
             $this->vbot->log->error('Init failed.'.json_encode($result));
+            throw new InitFailException('Init failed.');
         });
 
         $this->afterInitSuccess($result);

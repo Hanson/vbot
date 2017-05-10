@@ -205,6 +205,8 @@ class Contacts extends Collection
             return [];
         }
 
+        $this->vbot->console->log('get group success:'.json_encode($response));
+
         foreach ($response['ContactList'] as $item) {
             $this->put($item['UserName'], $item);
         }
