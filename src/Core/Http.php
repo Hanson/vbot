@@ -95,12 +95,18 @@ class Http
      */
     public function request($url, $method = 'GET', $options = [])
     {
-        $response = $this->getClient()->request($method, $url, $options);
+        try{
+            $options = array_merge(['timeout' => 35], $options);
 
-        if (is_dir(Path::getCurrentSessionPath())) {
-            $this->cookieJar->save(Path::getCurrentSessionPath().'cookies');
+            $response = $this->getClient()->request($method, $url, $options);
+
+            if (is_dir(Path::getCurrentSessionPath())) {
+                $this->cookieJar->save(Path::getCurrentSessionPath().'cookies');
+            }
+
+            return $response->getBody()->getContents();
+        }catch(\Exception $e){
+            return false;
         }
-
-        return $response->getBody()->getContents();
     }
 }

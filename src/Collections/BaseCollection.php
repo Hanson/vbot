@@ -153,6 +153,10 @@ class BaseCollection extends Collection
 
         $response = http()->json($url, $data, true);
 
+        if(!$response){
+            return [];
+        }
+
         foreach ($response['ContactList'] as $item) {
             $this->put($item['UserName'], $item);
         }
