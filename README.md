@@ -193,6 +193,7 @@ donate 名单 （排名按时间倒序）
 
 |捐助者|金额|
 |-----|----|
+|[美羊软件](http://www.yangsoft.cn/)|￥66|
 |匿名| ￥200|
 |[KimiChen](https://github.com/KimiChen)|￥188|
 |倪好 | ￥88 * 2|
