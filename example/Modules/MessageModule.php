@@ -117,20 +117,21 @@ class MessageModule
         }
 
         if ($message['from']['NickName'] === '三年二班') {
-            if($message['type'] === 'text' && str_contains($message['content'], '餐费')){
+            if ($message['type'] === 'text' && str_contains($message['content'], '餐费')) {
                 $str = str_replace('餐费', '', $message['content']);
                 $array = explode(' ', $str);
-                if(count($array) !== 2){
+                if (count($array) !== 2) {
                     return;
                 }
                 $total = current($array);
                 $every = explode(',', $array[1]);
                 $origin = array_sum($every);
-                if($origin === 0)
+                if ($origin === 0) {
                     return;
+                }
                 $result = "餐费分别为：\n";
-                foreach($every as $each){
-                    $result .= strval(round($each / $origin * $total, 2)) . PHP_EOL;
+                foreach ($every as $each) {
+                    $result .= strval(round($each / $origin * $total, 2)).PHP_EOL;
                 }
                 Text::send($message['from']['UserName'], $result);
             }
