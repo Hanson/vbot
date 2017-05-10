@@ -33,7 +33,7 @@ class Sync
 
         $content = http()->get($url, [], ['timeout' => 35]);
 
-        if(!$content){
+        if (!$content) {
             return false;
         }
 
@@ -52,7 +52,7 @@ class Sync
             'rr'          => ~time(),
         ], true, ['timeout' => 5]);
 
-        if(!$result){
+        if (!$result) {
             return false;
         }
 
@@ -62,6 +62,7 @@ class Sync
             return $result;
         } else {
             Console::log('ret:'.$result['BaseResponse']['Ret']);
+
             return false;
         }
     }

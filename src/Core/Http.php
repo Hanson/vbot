@@ -95,7 +95,7 @@ class Http
      */
     public function request($url, $method = 'GET', $options = [])
     {
-        try{
+        try {
             $options = array_merge(['timeout' => 35], $options);
 
             $response = $this->getClient()->request($method, $url, $options);
@@ -105,7 +105,7 @@ class Http
             }
 
             return $response->getBody()->getContents();
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
