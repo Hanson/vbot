@@ -53,7 +53,7 @@ class GroupChange extends Message implements MessageInterface
             }
             $this->action = 'ADD';
             $this->nickname = $match[1];
-            group()->update($this->raw['FromUserName']);
+//            group()->update($this->raw['FromUserName']);
         } elseif (str_contains($this->message, '移出了群聊')) {
             $this->action = 'REMOVE';
         } elseif (str_contains($this->message, '改群名为')) {
@@ -62,7 +62,7 @@ class GroupChange extends Message implements MessageInterface
             $this->updateGroupName($match[1]);
         } elseif (str_contains($this->message, '移出群聊')) {
             $this->action = 'BE_REMOVE';
-            $this->group = group()->pull($this->from['UserName']);
+//            $this->group = group()->pull($this->from['UserName']);
         }
 
         $this->content = $this->message;

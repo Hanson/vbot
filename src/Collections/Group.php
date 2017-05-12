@@ -338,6 +338,6 @@ class Group extends BaseCollection
      */
     public function get($key, $default = null)
     {
-        return parent::get($key, $this->update($key));
+        return parent::get($key, head($this->update($key)));
     }
 }
