@@ -299,5 +299,5 @@ class Groups extends Contacts
         $group = parent::get($key);
 
         return $group ?: current($this->update($key));
-     }
+    }
 }

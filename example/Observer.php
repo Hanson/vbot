@@ -29,7 +29,7 @@ class Observer
     public static function setFetchContactObserver(array $contacts)
     {
         vbot('console')->log('获取好友成功', '自定义消息');
-        File::saveTo(__DIR__ . '/group.json', $contacts['groups']);
+        File::saveTo(__DIR__.'/group.json', $contacts['groups']);
     }
 
     public static function setBeforeMessageObserver()
