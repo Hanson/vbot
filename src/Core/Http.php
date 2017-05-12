@@ -95,7 +95,7 @@ class Http
      */
     public function request($url, $method = 'GET', $options = [])
     {
-        try{
+        try {
             $options = array_merge(['timeout' => 10, 'verify' => false], $options);
 
             $response = $this->getClient()->request($method, $url, $options);
@@ -104,7 +104,8 @@ class Http
                 $this->cookieJar->save(Path::getCurrentSessionPath().'cookies');
             }
 
-        return $response->getBody()->getContents();}catch (\Exception $e){
+            return $response->getBody()->getContents();
+        } catch (\Exception $e) {
             return false;
         }
     }
