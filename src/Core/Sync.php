@@ -8,7 +8,6 @@
 
 namespace Hanson\Vbot\Core;
 
-use Hanson\Vbot\Foundation\SyncFailException;
 use Hanson\Vbot\Support\Console;
 
 class Sync
@@ -20,7 +19,7 @@ class Sync
      *
      * @return array|bool
      */
-    public function checkSync($retry = 0)
+    public function checkSync()
     {
         $url = server()->pushUri.'/synccheck?'.http_build_query([
             'r'        => time(),
@@ -32,38 +31,38 @@ class Sync
             '_'        => time(),
         ]);
 
-        try {
-            $content = http()->get($url, [], ['timeout' => 35]);
+        $content = http()->get($url, [], ['timeout' => 35]);
 
-            preg_match('/window.synccheck=\{retcode:"(\d+)",selector:"(\d+)"\}/', $content, $matches);
-
-            return [$matches[1], $matches[2]];
-        } catch (\Exception $e) {
+        if (!$content) {
             return false;
         }
+
+        preg_match('/window.synccheck=\{retcode:"(\d+)",selector:"(\d+)"\}/', $content, $matches);
+
+        return [$matches[1], $matches[2]];
     }
 
     public function sync($retry = 0)
     {
         $url = sprintf(server()->baseUri.'/webwxsync?sid=%s&skey=%s&lang=zh_CN&pass_ticket=%s', server()->sid, server()->skey, server()->passTicket);
 
-        try {
-            $result = http()->json($url, [
-                'BaseRequest' => server()->baseRequest,
-                'SyncKey'     => server()->syncKey,
-                'rr'          => ~time(),
-            ], true, ['timeout' => 5]);
+        $result = http()->json($url, [
+            'BaseRequest' => server()->baseRequest,
+            'SyncKey'     => server()->syncKey,
+            'rr'          => ~time(),
+        ], true, ['timeout' => 5]);
 
+        if (!$result) {
+            return false;
+        }
 
-            if ($result['BaseResponse']['Ret'] == 0) {
-                $this->generateSyncKey($result);
-                return $result;
-            }else{
-                Console::log('ret:'.$result['BaseResponse']['Ret']);
-                throw new \Exception();
-            }
+        if ($result['BaseResponse']['Ret'] == 0) {
+            $this->generateSyncKey($result);
 
-        } catch (\Exception $e) {
+            return $result;
+        } else {
+            Console::log('ret:'.$result['BaseResponse']['Ret']);
+
             return false;
         }
     }

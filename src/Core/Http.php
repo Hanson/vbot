@@ -10,7 +10,6 @@ namespace Hanson\Vbot\Core;
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Cookie\FileCookieJar;
-use Hanson\Vbot\Support\Console;
 use Hanson\Vbot\Support\Path;
 
 class Http
@@ -105,10 +104,8 @@ class Http
                 $this->cookieJar->save(Path::getCurrentSessionPath().'cookies');
             }
 
-            return $response->getBody()->getContents();
-        }catch (\Exception $e){
+        return $response->getBody()->getContents();}catch (\Exception $e){
             return false;
         }
-
     }
 }

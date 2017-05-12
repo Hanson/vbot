@@ -156,15 +156,15 @@ $robot->server->run();
 
 vbot 已实现以及待实现的功能列表 [点击查看](https://github.com/HanSon/vbot/wiki/todolist)
 
-## 参考项目
+## 相似项目
 
-[lbbniu/WebWechat](https://github.com/lbbniu/WebWechat)
+[littlecodersh/ItChat](https://github.com/littlecodersh/ItChat) python
 
-[littlecodersh/ItChat](https://github.com/littlecodersh/ItChat) 
+[Wechaty - A Javascript Implementation of Wechat Bot Framework](https://github.com/Chatie/wechaty)
 
-感谢楼上两位作者曾对本人耐心解答
+[liuwons/wxBot](https://github.com/liuwons/wxBot) python
 
-[liuwons/wxBot](https://github.com/liuwons/wxBot) 参考了整个微信的登录流程与消息处理
+[lbbniu/WebWechat](https://github.com/lbbniu/WebWechat) php
 
 ## 贡献者
 
@@ -193,6 +193,7 @@ donate 名单 （排名按时间倒序）
 
 |捐助者|金额|
 |-----|----|
+|[美羊软件](http://www.yangsoft.cn/)|￥66|
 |匿名| ￥200|
 |[KimiChen](https://github.com/KimiChen)|￥188|
 |倪好 | ￥88 * 2|

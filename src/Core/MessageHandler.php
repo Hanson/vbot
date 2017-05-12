@@ -162,13 +162,12 @@ class MessageHandler
 
             $checkSync = (new Sync())->checkSync();
 
-            if($checkSync !== false){
+            if ($checkSync !== false) {
                 list($retCode, $selector) = $checkSync;
                 if (!$this->handleCheckSync($retCode, $selector)) {
                     break;
                 }
             }
-
         }
         Console::log('程序结束');
     }
@@ -215,7 +214,7 @@ class MessageHandler
 
         $message = $this->sync->sync();
 
-        if(!$message){
+        if (!$message) {
             return;
         }
 
