@@ -87,7 +87,7 @@ class Http
     public function request($url, $method = 'GET', $options = [], $retry = false)
     {
         try {
-            $options = array_merge(['timeout' => 60], $options);
+            $options = array_merge(['timeout' => 10, 'verify' => false], $options);
 
             $response = $this->getClient()->request($method, $url, $options);
 

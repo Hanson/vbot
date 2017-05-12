@@ -296,11 +296,8 @@ class Groups extends Contacts
      */
     public function get($key, $default = null)
     {
-        $group = parent::get($key, $default);
-        $this->vbot->console->log('get group username fail:'.$key);
+        $group = parent::get($key);
 
-        return $group;
-
-        return parent::get($key, $this->update($key));
-    }
+        return $group ?: current($this->update($key));
+     }
 }

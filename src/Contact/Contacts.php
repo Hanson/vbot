@@ -187,15 +187,13 @@ class Contacts extends Collection
      */
     public function update($username, $list) :array
     {
-        if (is_string($username)) {
-            $username = [$username];
-        }
+        $usernames = is_string($username) ? [$username] : $username;
 
         $url = $this->vbot->config['server.uri.base'].'/webwxbatchgetcontact?type=ex&r='.time();
 
         $data = [
             'BaseRequest' => $this->vbot->config['server.baseRequest'],
-            'Count'       => count($username),
+            'Count'       => count($usernames),
             'List'        => $list,
         ];
 
@@ -204,8 +202,6 @@ class Contacts extends Collection
         if (!$response) {
             return [];
         }
-
-        $this->vbot->console->log('get group success:'.json_encode($response));
 
         foreach ($response['ContactList'] as $item) {
             $this->put($item['UserName'], $item);

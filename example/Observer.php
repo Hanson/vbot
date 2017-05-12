@@ -2,36 +2,38 @@
 
 namespace Hanson\Vbot\Example;
 
+use Hanson\Vbot\Support\File;
+
 class Observer
 {
     public static function setQrCodeObserver($qrCodeUrl)
     {
-        echo $qrCodeUrl;
+        vbot('console')->log('二维码链接：'.$qrCodeUrl, '自定义消息');
     }
 
     public static function setLoginSuccessObserver()
     {
-        echo '登录成功'.PHP_EOL;
+        vbot('console')->log('登录成功', '自定义消息');
     }
 
     public static function setReLoginSuccessObserver()
     {
-        echo '免扫码登录成功'.PHP_EOL;
+        vbot('console')->log('免扫码登录成功', '自定义消息');
     }
 
     public static function setExitObserver()
     {
-        echo '退出程序'.PHP_EOL;
+        vbot('console')->log('退出程序', '自定义消息');
     }
 
     public static function setFetchContactObserver(array $contacts)
     {
-        echo '获取好友成功'.PHP_EOL;
-//        print_r($contacts['groups']);
+        vbot('console')->log('获取好友成功', '自定义消息');
+        File::saveTo(__DIR__ . '/group.json', $contacts['groups']);
     }
 
     public static function setBeforeMessageObserver()
     {
-        echo '准备接收消息'.PHP_EOL;
+        vbot('console')->log('准备接收消息', '自定义消息');
     }
 }

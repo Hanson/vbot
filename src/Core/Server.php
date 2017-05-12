@@ -73,7 +73,9 @@ class Server
     private function cleanCookies()
     {
         $this->vbot->console->log('cleaning useless cookies.');
-        unlink($this->vbot->config['cookie_file']);
+        if(is_file($this->vbot->config['cookie_file'])){
+            unlink($this->vbot->config['cookie_file']);
+        }
     }
 
     /**
