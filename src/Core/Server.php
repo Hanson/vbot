@@ -14,6 +14,7 @@ use Hanson\Vbot\Exceptions\InitFailException;
 use Hanson\Vbot\Exceptions\LoginFailedException;
 use Hanson\Vbot\Exceptions\LoginTimeoutException;
 use Hanson\Vbot\Foundation\Vbot;
+use Swoole\Process;
 
 class Server
 {
@@ -37,7 +38,24 @@ class Server
         $this->init();
         $this->statusNotify();
 
-        $this->vbot->messageHandler->listen();
+        $this->run();
+    }
+
+    private function run()
+    {
+        $server = new \Swoole\Server('127.0.0.1', 9501);
+
+        $handleProcess = new Process([$this->vbot->messageHandler, 'listen']);
+        $apiProcess = new Process([(new CommandHandler()), 'handle']);
+
+        $server->addProcess($handleProcess);
+        $server->addProcess($apiProcess);
+
+        $server->on('receive', function ($serv, $fd, $from_id, $data) use ($apiProcess) {
+            $apiProcess->write($data);
+        });
+
+        $server->start();
     }
 
     /**
@@ -47,8 +65,6 @@ class Server
      */
     private function tryLogin(): bool
     {
-        print_r(is_file($this->vbot->config['cookie_file']));
-        print_r($this->vbot->cache->has($this->vbot->config['session_key']));
         if (is_file($this->vbot->config['cookie_file']) && $this->vbot->cache->has($this->vbot->config['session_key'])) {
             $configs = json_decode($this->vbot->cache->get($this->vbot->config['session_key']), true);
 

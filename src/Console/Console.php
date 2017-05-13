@@ -4,6 +4,7 @@ namespace Hanson\Vbot\Console;
 
 use Carbon\Carbon;
 use Hanson\Vbot\Foundation\Vbot;
+use Monolog\Logger;
 
 class Console
 {
@@ -55,7 +56,9 @@ class Console
     public function log($str, $level = 'INFO')
     {
         if ($this->isOutput()) {
-            $this->vbot->log->log($level, $str);
+            if(in_array($str, Logger::getLevels())){
+                $this->vbot->log->log($level, $str);
+            }
             echo '['.Carbon::now()->toDateTimeString().']'."[{$level}] ".$str.PHP_EOL;
         }
     }

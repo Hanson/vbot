@@ -7,6 +7,8 @@ use Hanson\Vbot\Exceptions\ArgumentException;
 use Hanson\Vbot\Foundation\Vbot;
 use Hanson\Vbot\Message\Text;
 use Illuminate\Support\Collection;
+use Swoole\Process;
+use Swoole\Server;
 
 class MessageHandler
 {

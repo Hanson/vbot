@@ -10,7 +10,7 @@ class ClearSessionCommand extends SymfonyCommand
 {
     protected function configure()
     {
-        $this->setName('vbot:clear:session')
+        $this->setName('vbot:clear')
             ->setDescription('Creates a new user.')
             ->setHelp('This command allows you to create a user...');
     }
