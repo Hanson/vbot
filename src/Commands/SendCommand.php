@@ -36,13 +36,13 @@ class SendCommand extends SymfonyCommand
     {
         $type = $input->getArgument('type');
 
-        $class = '\\Hanson\\Vbot\\Message\\' . ucfirst($type);
+        $class = '\\Hanson\\Vbot\\Message\\'.ucfirst($type);
 
-        if(!class_exists($class)){
+        if (!class_exists($class)) {
             throw new \Exception('type not exist.');
         }
 
-        if(!method_exists(new $class, 'send')){
+        if (!method_exists(new $class(), 'send')) {
             throw new \Exception('method not exist.');
         }
 
@@ -53,8 +53,7 @@ class SendCommand extends SymfonyCommand
     {
         $client = new Client(SWOOLE_SOCK_TCP);
 
-        if (!$client->connect('127.0.0.1', 9501, -1))
-        {
+        if (!$client->connect('127.0.0.1', 9501, -1)) {
             exit("connect failed. Error: {$client->errCode}\n");
         }
         $client->send($data);

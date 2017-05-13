@@ -1,14 +1,11 @@
 <?php
 
-
 namespace Hanson\Vbot\Core;
-
 
 use Swoole\Process;
 
 class CommandHandler
 {
-
     public function handle(Process $process)
     {
         $data = explode(',', $process->read());

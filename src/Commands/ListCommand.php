@@ -35,8 +35,7 @@ class ListCommand extends SymfonyCommand
     {
         $client = new Client(SWOOLE_SOCK_TCP);
 
-        if (!$client->connect('127.0.0.1', 9501, -1))
-        {
+        if (!$client->connect('127.0.0.1', 9501, -1)) {
             exit("connect failed. Error: {$client->errCode}\n");
         }
         echo $result = $client->send($data);
