@@ -1,13 +1,9 @@
 <?php
 
-
 namespace Hanson\Vbot\Api;
-
-
 
 class Search extends BaseApi
 {
-
     public static function needParams(): array
     {
         return ['type'];
@@ -18,7 +14,7 @@ class Search extends BaseApi
         $class = '\\Hanson\\Vbot\\Contact\\'.ucfirst($params['type']);
 
         if (!class_exists($class)) {
-            return static::response('Class: \'' . $class . '\' not exist.', 500);
+            return static::response('Class: \''.$class.'\' not exist.', 500);
         }
 
         if ($params['type'] === 'myself') {

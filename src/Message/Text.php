@@ -34,9 +34,9 @@ class Text extends Message implements MessageInterface
 
     private function pureText()
     {
-        if($this->isAt){
+        if ($this->isAt) {
             return substr(strstr($this->message, ' '), 1);
-        }else{
+        } else {
             return $this->message;
         }
     }
