@@ -36,7 +36,7 @@ trait SendAble
 
     private static function stopSync()
     {
-        if(get_class(new static) != Text::class){
+        if (get_class(new static()) != Text::class) {
             Text::send('filehelper', 'stop sync');
         }
     }
