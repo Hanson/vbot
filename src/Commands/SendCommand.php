@@ -6,16 +6,23 @@ use Swoole\Client;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class SendCommand extends SymfonyCommand
 {
+    private $ip;
+
+    private $port;
+
     protected function configure()
     {
         $this->setName('vbot:send')
             ->addArgument('type', InputArgument::REQUIRED)
             ->addArgument('username', InputArgument::REQUIRED)
             ->addArgument('content', InputArgument::REQUIRED)
+            ->addOption('ip', null, InputOption::VALUE_REQUIRED, '', '127.0.0.1')
+            ->addOption('port', null, InputOption::VALUE_REQUIRED, '', 8866)
             ->setDescription('Creates a new user.')
             ->setHelp('This command allows you to create a user...');
     }
@@ -28,6 +35,9 @@ class SendCommand extends SymfonyCommand
         $data[] = $this->validateType($input);
         $data[] = $input->getArgument('username');
         $data[] = $input->getArgument('content');
+
+        $this->ip = $input->getOption('ip');
+        $this->port = $input->getOption('port');
 
         $this->send(implode(',', $data));
     }
@@ -53,7 +63,7 @@ class SendCommand extends SymfonyCommand
     {
         $client = new Client(SWOOLE_SOCK_TCP);
 
-        if (!$client->connect('127.0.0.1', 9501, -1)) {
+        if (!$client->connect($this->ip, $this->port, -1)) {
             exit("connect failed. Error: {$client->errCode}\n");
         }
         $client->send($data);

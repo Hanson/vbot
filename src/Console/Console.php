@@ -42,11 +42,6 @@ class Console
         return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
     }
 
-    public static function clear()
-    {
-        self::isWin() ? system('cls') : system('clear');
-    }
-
     /**
      * print in terminal.
      *

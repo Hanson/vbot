@@ -7,7 +7,14 @@ $path = __DIR__.'/./../tmp/';
 return [
     'path'     => $path,
     'debug'    => true,
-    'storage'  => 'database', // 默认为 collection
+    /*
+     * swoole 配置项（执行主动发消息命令必须要开启）
+     */
+    'swoole'  => [
+        'status' => true,
+        'ip' => '127.0.0.1',
+        'port' => '8866'
+    ],
     /*
      * 下载配置项
      */
@@ -32,8 +39,8 @@ return [
     'log'      => [
         'level'         => 'debug',
         'permission'    => 0777,
-        'system'        => $path.'log/vbot.log',
-        'message'       => $path.'log/message.log',
+        'system'        => $path.'log',
+        'message'       => $path.'log',
     ],
     /*
      * 缓存配置项
@@ -71,18 +78,6 @@ return [
                 'port'     => 6379,
                 'database' => 13,
             ],
-        ],
-    ],
-    /*
-     * 无需配置，系统生成
-     */
-    'server' => [
-        'uuid' => 'IeUYcTY8ZQ==',
-        'uri'  => [
-            'redirect' => '',
-            'file'     => '',
-            'push'     => '',
-            'base'     => '',
         ],
     ],
 ];

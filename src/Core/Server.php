@@ -38,12 +38,16 @@ class Server
         $this->init();
         $this->statusNotify();
 
-        $this->run();
+        if($this->vbot->config['swoole.status']){
+            $this->run();
+        }else{
+            $this->vbot->messageHandler->listen();
+        }
     }
 
     private function run()
     {
-        $server = new \Swoole\Server('127.0.0.1', 9501);
+        $server = new \Swoole\Server($this->vbot->config->get('swoole.ip', '127.0.0.1'), $this->vbot->config->get('swoole.port', 8866));
 
         $handleProcess = new Process([$this->vbot->messageHandler, 'listen']);
         $apiProcess = new Process([(new CommandHandler()), 'handle']);
@@ -99,7 +103,6 @@ class Server
      */
     public function login()
     {
-        Console::clear();
         $this->getUuid();
         $this->showQrCode();
         $this->waitForLogin();

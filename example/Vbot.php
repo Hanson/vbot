@@ -2,10 +2,7 @@
 
 namespace Hanson\Vbot\Example;
 
-use Hanson\Vbot\Example\Modules\MessageModule;
 use Hanson\Vbot\Foundation\Vbot as Bot;
-use Hanson\Vbot\Message\Text;
-use Illuminate\Support\Collection;
 
 class Vbot
 {
@@ -20,7 +17,7 @@ class Vbot
     {
         $robot = new Bot($this->config);
 
-        $robot->messageHandler->setHandler([MessageModule::class, 'messageHandler']);
+        $robot->messageHandler->setHandler([MessageHandler::class, 'messageHandler']);
 
 //        $robot->messageHandler->setHandler(function(Collection $message){
 //            if($message['type'] === 'text' && $message['content'] === 'hi'){

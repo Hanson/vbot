@@ -20,12 +20,33 @@ class Kernel
 
     public function bootstrap()
     {
+        $this->checkEnvironment();
         $this->registerProviders();
         $this->bootstrapException();
         $this->initializeConfig();
         $this->prepareSession();
         $this->initializePath();
         $this->setDatabase();
+    }
+
+    private function checkEnvironment()
+    {
+        if (PHP_SAPI !== 'cli') {
+            die('Please execute script in terminal!');
+        }
+
+        $mustExtensions = ['gd', 'fileinfo', 'SimpleXML'];
+
+        $diff = array_diff($mustExtensions, get_loaded_extensions());
+
+        if($diff){
+            die('Running script failed! please install extensions: ' . PHP_EOL . implode("\n", $diff) . PHP_EOL);
+        }
+
+        if($this->vbot->config->get('swoole.status') && !in_array('swooles', get_loaded_extensions())){
+            die('Please install extension: swoole. Or you can turn it off in config.' . PHP_EOL);
+        }
+
     }
 
     private function registerProviders()
