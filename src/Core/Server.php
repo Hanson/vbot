@@ -14,7 +14,6 @@ use Hanson\Vbot\Exceptions\InitFailException;
 use Hanson\Vbot\Exceptions\LoginFailedException;
 use Hanson\Vbot\Exceptions\LoginTimeoutException;
 use Hanson\Vbot\Foundation\Vbot;
-use Swoole\Process;
 
 class Server
 {
@@ -44,7 +43,6 @@ class Server
             $this->vbot->messageHandler->listen();
         }
     }
-
 
     /**
      * 尝试登录.

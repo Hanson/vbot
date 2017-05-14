@@ -1,16 +1,13 @@
 <?php
 
-
 namespace Hanson\Vbot\Api;
-
 
 abstract class BaseApi
 {
-
     public static function validate($params)
     {
-        if($diff = array_diff(static::needParams(), array_keys($params))){
-            return static::response('params : \'' . implode('\', \'', $diff) . '\' missing.', 500);
+        if ($diff = array_diff(static::needParams(), array_keys($params))) {
+            return static::response('params : \''.implode('\', \'', $diff).'\' missing.', 500);
         }
 
         return true;
@@ -23,7 +20,7 @@ abstract class BaseApi
 
     public static function execute($params):array
     {
-        if(is_array($result = static::validate($params))){
+        if (is_array($result = static::validate($params))) {
             return $result;
         }
 
@@ -33,5 +30,4 @@ abstract class BaseApi
     abstract public static function needParams():array;
 
     abstract public static function handle($params):array;
-
 }

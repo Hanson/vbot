@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Hanson\Vbot\Core;
-
 
 use Hanson\Vbot\Foundation\Vbot;
 use Swoole\Process;
@@ -10,7 +8,6 @@ use Swoole\Server as SwooleServer;
 
 class Swoole
 {
-
     /**
      * @var Vbot
      */
@@ -29,7 +26,7 @@ class Swoole
 
         $server->addProcess($handleProcess);
 
-        $server->on('receive', function (SwooleServer $server, $fd, $from_id, $data){
+        $server->on('receive', function (SwooleServer $server, $fd, $from_id, $data) {
             $response = $this->vbot->api->handle($data);
 
             $response = $this->makeResponse($response);
@@ -52,13 +49,12 @@ class Swoole
         $response[] = 'HTTP/1.1 200';
 
         foreach ($headers as $key => $val) {
-            $response[] = $key . ':' . $val;
+            $response[] = $key.':'.$val;
         }
 
         $response[] = '';
         $response[] = $data;
 
-        return join("\r\n", $response);
+        return implode("\r\n", $response);
     }
-
 }
