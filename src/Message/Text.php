@@ -52,6 +52,7 @@ class Text extends Message implements MessageInterface
      */
     public static function send($username, $word)
     {
+        vbot('console')->log('send :' . $word . ' to:' . $username);
         if (!$word || !$username) {
             return false;
         }

@@ -3,6 +3,7 @@
 namespace Hanson\Vbot\Message\Traits;
 
 use Hanson\Vbot\Core\ApiExceptionHandler;
+use Hanson\Vbot\Message\Text;
 
 /**
  * Trait SendAble.
@@ -21,11 +22,22 @@ trait SendAble
             json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), true
         );
 
+        static::stopSync();
+
+        sleep(1);
+
         return ApiExceptionHandler::handle($result);
     }
 
     private static function getUrl()
     {
         return vbot('config')['server.uri.base'].DIRECTORY_SEPARATOR.static::API.'pass_ticket='.vbot('config')['server.passTicket'];
+    }
+
+    private static function stopSync()
+    {
+        if(get_class(new static) != Text::class){
+            Text::send('filehelper', 'stop sync');
+        }
     }
 }

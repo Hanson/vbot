@@ -68,8 +68,8 @@ class Hanson
             }
 
             if ($message['type'] === 'recall') {
-                Text::send($message['from']['UserName'], $message['content']);
                 Text::send($message['from']['UserName'], $message['origin']['content']);
+                Text::send($message['from']['UserName'], $message['content']);
             }
 
             if ($message['type'] === 'red_packet') {
