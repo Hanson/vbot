@@ -39,14 +39,13 @@ class Kernel
 
         $diff = array_diff($mustExtensions, get_loaded_extensions());
 
-        if($diff){
-            die('Running script failed! please install extensions: ' . PHP_EOL . implode("\n", $diff) . PHP_EOL);
+        if ($diff) {
+            die('Running script failed! please install extensions: '.PHP_EOL.implode("\n", $diff).PHP_EOL);
         }
 
-        if($this->vbot->config->get('swoole.status') && !in_array('swoole', get_loaded_extensions())){
-            die('Please install extension: swoole. Or you can turn it off in config.' . PHP_EOL);
+        if ($this->vbot->config->get('swoole.status') && !in_array('swoole', get_loaded_extensions())) {
+            die('Please install extension: swoole. Or you can turn it off in config.'.PHP_EOL);
         }
-
     }
 
     private function registerProviders()

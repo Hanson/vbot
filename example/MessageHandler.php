@@ -10,13 +10,7 @@ use Hanson\Vbot\Example\Handlers\Contact\ExperienceGroup;
 use Hanson\Vbot\Example\Handlers\Contact\FeedbackGroup;
 use Hanson\Vbot\Example\Handlers\Contact\Hanson;
 use Hanson\Vbot\Example\Handlers\Type\TextType;
-use Hanson\Vbot\Message\Card;
-use Hanson\Vbot\Message\Emoticon;
-use Hanson\Vbot\Message\File;
-use Hanson\Vbot\Message\Image;
 use Hanson\Vbot\Message\Text;
-use Hanson\Vbot\Message\Video;
-use Hanson\Vbot\Message\Voice;
 use Illuminate\Support\Collection;
 
 class MessageHandler
@@ -32,9 +26,8 @@ class MessageHandler
         /** @var Groups $groups */
         $groups = vbot('groups');
 
-
         if ($message['type'] === 'touch') {
-//            Text::send($message['raw']['ToUserName'], $message['content']);
+            //            Text::send($message['raw']['ToUserName'], $message['content']);
         }
 
         Hanson::messageHandler($message, $friends, $groups);

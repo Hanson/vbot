@@ -51,14 +51,14 @@ class Myself
     private function setLog()
     {
         vbot('log')->pushHandler(new StreamHandler(
-            vbot('config')->get('log.system') . DIRECTORY_SEPARATOR . $this->uin . DIRECTORY_SEPARATOR . 'vbot.log',
+            vbot('config')->get('log.system').DIRECTORY_SEPARATOR.$this->uin.DIRECTORY_SEPARATOR.'vbot.log',
             vbot('config')->get('log.level'),
             true,
             vbot('config')->get('log.permission')
         ));
 
         vbot('messageLog')->pushHandler(new StreamHandler(
-            vbot('config')->get('log.message') . DIRECTORY_SEPARATOR . $this->uin . DIRECTORY_SEPARATOR . 'message.log',
+            vbot('config')->get('log.message').DIRECTORY_SEPARATOR.$this->uin.DIRECTORY_SEPARATOR.'message.log',
             vbot('config')->get('log.level'),
             true,
             vbot('config')->get('log.permission')
