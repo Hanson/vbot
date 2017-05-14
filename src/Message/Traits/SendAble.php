@@ -40,4 +40,6 @@ trait SendAble
             Text::send('filehelper', 'stop sync');
         }
     }
+
+    abstract public static function send(...$args);
 }

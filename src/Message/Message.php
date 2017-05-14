@@ -34,11 +34,6 @@ abstract class Message
     public $sender = null;
 
     /**
-     * @var string 经过处理的内容 （与类型相关 友好显示的文字）
-     */
-    public $content;
-
-    /**
      * @var string 经处理的内容 （与类型无关 有可能是一串xml）
      */
     public $message;

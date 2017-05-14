@@ -36,31 +36,15 @@ class Server
         }
 
         $this->init();
-        $this->statusNotify();
+//        $this->statusNotify();
 
         if ($this->vbot->config['swoole.status']) {
-            $this->run();
+            $this->vbot->swoole->run();
         } else {
             $this->vbot->messageHandler->listen();
         }
     }
 
-    private function run()
-    {
-        $server = new \Swoole\Server($this->vbot->config->get('swoole.ip', '127.0.0.1'), $this->vbot->config->get('swoole.port', 8866));
-
-        $handleProcess = new Process([$this->vbot->messageHandler, 'listen']);
-        $apiProcess = new Process([(new CommandHandler()), 'handle']);
-
-        $server->addProcess($handleProcess);
-        $server->addProcess($apiProcess);
-
-        $server->on('receive', function ($serv, $fd, $from_id, $data) use ($apiProcess) {
-            $apiProcess->write($data);
-        });
-
-        $server->start();
-    }
 
     /**
      * 尝试登录.

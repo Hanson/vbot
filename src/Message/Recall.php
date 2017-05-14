@@ -27,8 +27,6 @@ class Recall extends Message implements MessageInterface
 
         $this->origin = vbot('cache')->get('msg-'.$msgId);
 
-        print_r($this->origin);
-
         if ($this->origin) {
             $this->nickname = $this->origin['sender'] ?
                 $this->origin['sender']['NickName'] :

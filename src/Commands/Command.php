@@ -15,8 +15,7 @@ class Command
 
         $application->add(new ClearSessionCommand());
         $application->add(new MigrationCommand());
-        $application->add(new SendCommand());
-        $application->add(new ListCommand());
+
 
         $application->run();
     }

@@ -17,24 +17,33 @@ class Text extends Message implements MessageInterface
     const TYPE = 'text';
     const API = 'webwxsendmsg?';
 
+    private $isAt = false;
+
+    private $pure;
+
     public function make($msg)
     {
         return $this->getCollection($msg, static::TYPE);
     }
 
-    /**
-     * the message is at robot.
-     *
-     * @return bool
-     */
-    private function isAt()
+    protected function afterCreate()
     {
-        return  str_contains($this->content, '@'.\vbot('myself')->nickname);
+        $this->isAt = str_contains($this->message, '@'.vbot('myself')->nickname);
+        $this->pure = $this->pureText();
+    }
+
+    private function pureText()
+    {
+        if($this->isAt){
+            return substr(strstr($this->message, ' '), 1);
+        }else{
+            return $this->message;
+        }
     }
 
     protected function getExpand(): array
     {
-        return ['isAt' => $this->isAt()];
+        return ['isAt' => $this->isAt, 'pure' => $this->pure];
     }
 
     protected function parseToContent():string
@@ -52,7 +61,6 @@ class Text extends Message implements MessageInterface
      */
     public static function send($username, $word)
     {
-        vbot('console')->log('send :'.$word.' to:'.$username);
         if (!$word || !$username) {
             return false;
         }

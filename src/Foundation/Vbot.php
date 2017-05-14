@@ -15,6 +15,7 @@ use Illuminate\Container\Container;
  * Class Vbot.ShareFactory.
  *
  * @property \Hanson\Vbot\Core\Server $server
+ * @property \Hanson\Vbot\Core\Swoole $swoole
  * @property \Hanson\Vbot\Core\MessageHandler $messageHandler
  * @property \Hanson\Vbot\Core\MessageFactory $messageFactory
  * @property \Hanson\Vbot\Core\ShareFactory $shareFactory
@@ -25,6 +26,7 @@ use Illuminate\Container\Container;
  * @property \Hanson\Vbot\Support\Log $log
  * @property \Hanson\Vbot\Support\Log $messageLog
  * @property \Hanson\Vbot\Support\Http $http
+ * @property \Hanson\Vbot\Api\ApiHandler $api
  * @property \Hanson\Vbot\Console\QrCode $qrCode
  * @property \Hanson\Vbot\Console\Console $console
  * @property \Hanson\Vbot\Observers\Observer $observer
