@@ -38,9 +38,9 @@ class Server
         $this->init();
         $this->statusNotify();
 
-        if($this->vbot->config['swoole.status']){
+        if ($this->vbot->config['swoole.status']) {
             $this->run();
-        }else{
+        } else {
             $this->vbot->messageHandler->listen();
         }
     }

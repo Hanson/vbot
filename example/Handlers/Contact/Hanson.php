@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Hanson\Vbot\Example\Handlers\Contact;
-
 
 use Hanson\Vbot\Contact\Friends;
 use Hanson\Vbot\Contact\Groups;
@@ -17,7 +15,6 @@ use Illuminate\Support\Collection;
 
 class Hanson
 {
-
     public static function messageHandler(Collection $message, Friends $friends, Groups $groups)
     {
         if ($message['from']['NickName'] === 'HanSon') {

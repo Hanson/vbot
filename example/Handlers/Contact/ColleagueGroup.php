@@ -1,21 +1,16 @@
 <?php
 
-
 namespace Hanson\Vbot\Example\Handlers\Contact;
-
 
 use Hanson\Vbot\Contact\Friends;
 use Hanson\Vbot\Contact\Groups;
-use Hanson\Vbot\Message\Card;
 use Hanson\Vbot\Message\Text;
 use Illuminate\Support\Collection;
 
 class ColleagueGroup
 {
-
     public static function messageHandler(Collection $message, Friends $friends, Groups $groups)
     {
-
         if ($message['from']['NickName'] === '三年二班') {
             if ($message['type'] === 'text' && str_contains($message['content'], '餐费')) {
                 $str = str_replace('餐费', '', $message['content']);

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Hanson\Vbot\Example\Handlers\Contact;
-
 
 use Hanson\Vbot\Contact\Friends;
 use Hanson\Vbot\Contact\Groups;
@@ -11,9 +9,8 @@ use Illuminate\Support\Collection;
 
 class ExperienceGroup
 {
-
-    public static function messageHandler(Collection $message, Friends $friends, Groups $groups){
-
+    public static function messageHandler(Collection $message, Friends $friends, Groups $groups)
+    {
         if ($message['from']['NickName'] === 'Vbot 体验群') {
             if ($message['type'] === 'group_change') {
                 Text::send($message['from']['UserName'], '欢迎新人 '.$message['nickname']);

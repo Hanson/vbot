@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Hanson\Vbot\Example\Handlers\Type;
-
 
 use Hanson\Vbot\Contact\Friends;
 use Hanson\Vbot\Contact\Groups;
@@ -12,10 +10,9 @@ use Illuminate\Support\Collection;
 
 class TextType
 {
-
     public static function messageHandler(Collection $message, Friends $friends, Groups $groups)
     {
-        if ($message['type'] === 'text'){
+        if ($message['type'] === 'text') {
             if ($message['content'] === '拉我') {
                 $username = $groups->getUsernameByNickname('Vbot 体验群');
                 $groups->addMember($username, $message['from']['UserName']);
