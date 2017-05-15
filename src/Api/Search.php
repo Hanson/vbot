@@ -23,11 +23,11 @@ class Search extends BaseApi
 
         $type = strtolower($params['type']);
 
-        if(isset($params['filter'])){
-//            $contacts = (new Contacts($this->vbot->$type->toArray()));
+        if (isset($params['filter'])) {
+            //            $contacts = (new Contacts($this->vbot->$type->toArray()));
             $contacts = $this->vbot->$type;
             $result = call_user_func_array([$contacts, $params['method']], $params['filter']);
-        }else{
+        } else {
             $result = $this->vbot->$type;
         }
 

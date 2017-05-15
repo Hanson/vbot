@@ -6,7 +6,6 @@ use Hanson\Vbot\Foundation\Vbot;
 
 abstract class BaseApi
 {
-
     protected $vbot;
 
     public function __construct(Vbot $vbot)
