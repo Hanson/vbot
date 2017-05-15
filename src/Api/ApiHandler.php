@@ -19,10 +19,10 @@ class ApiHandler
     public function handle($request)
     {
         if (!($result = $this->validate($request))) {
-            return;
+            return null;
         }
 
-        return $result['class']::execute($result['params']);
+        return $this->vbot->{$result['class']}->execute($result['params']);
     }
 
     private function validate($request)
@@ -42,7 +42,7 @@ class ApiHandler
         $namespace = '\\Hanson\\Vbot\\Api\\';
 
         if (class_exists($class = $namespace.ucfirst($data['action']))) {
-            return ['params' => $data['params'], 'class' => $class];
+            return ['params' => $data['params'], 'class' => 'api'.ucfirst($data['action'])];
         }
 
         return false;

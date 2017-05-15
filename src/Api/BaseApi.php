@@ -2,32 +2,42 @@
 
 namespace Hanson\Vbot\Api;
 
+use Hanson\Vbot\Foundation\Vbot;
+
 abstract class BaseApi
 {
-    public static function validate($params)
+
+    protected $vbot;
+
+    public function __construct(Vbot $vbot)
     {
-        if ($diff = array_diff(static::needParams(), array_keys($params))) {
-            return static::response('params : \''.implode('\', \'', $diff).'\' missing.', 500);
+        $this->vbot = $vbot;
+    }
+
+    public function validate($params)
+    {
+        if ($diff = array_diff($this->needParams(), array_keys($params))) {
+            return $this->response('params : \''.implode('\', \'', $diff).'\' missing.', 500);
         }
 
         return true;
     }
 
-    protected static function response($result = [], $code = 200):array
+    protected function response($result = [], $code = 200):array
     {
         return ['code' => $code, 'result' => $result];
     }
 
-    public static function execute($params):array
+    public function execute($params):array
     {
-        if (is_array($result = static::validate($params))) {
+        if (is_array($result = $this->validate($params))) {
             return $result;
         }
 
-        return static::handle($params);
+        return $this->handle($params);
     }
 
-    abstract public static function needParams():array;
+    abstract public function needParams():array;
 
-    abstract public static function handle($params):array;
+    abstract public function handle($params):array;
 }

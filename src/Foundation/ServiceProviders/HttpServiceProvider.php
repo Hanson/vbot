@@ -17,8 +17,5 @@ class HttpServiceProvider implements ServiceProviderInterface
         $vbot->singleton('http', function () use ($vbot) {
             return new Http($vbot);
         });
-        $vbot->singleton('api', function () use ($vbot) {
-            return new ApiHandler($vbot);
-        });
     }
 }

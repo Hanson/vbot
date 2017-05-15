@@ -4,25 +4,33 @@ namespace Hanson\Vbot\Api;
 
 class Search extends BaseApi
 {
-    public static function needParams(): array
+    public function needParams(): array
     {
         return ['type'];
     }
 
-    public static function handle($params): array
+    public function handle($params): array
     {
         $class = '\\Hanson\\Vbot\\Contact\\'.ucfirst($params['type']);
 
         if (!class_exists($class)) {
-            return static::response('Class: \''.$class.'\' not exist.', 500);
+            return $this->response('Class: \''.$class.'\' not exist.', 500);
         }
 
         if ($params['type'] === 'myself') {
-            return static::response('Can not get myself from \'search\'.', 500);
+            return $this->response('Can not get myself from \'search\'.', 500);
         }
 
         $type = strtolower($params['type']);
 
-        return static::response([$type => vbot($type)->toArray(), 'count' => vbot($type)->count()], 200);
+        if(isset($params['filter'])){
+//            $contacts = (new Contacts($this->vbot->$type->toArray()));
+            $contacts = $this->vbot->$type;
+            $result = call_user_func_array([$contacts, $params['method']], $params['filter']);
+        }else{
+            $result = $this->vbot->$type;
+        }
+
+        return $this->response([$type => $result], 200);
     }
 }
