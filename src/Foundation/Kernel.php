@@ -36,7 +36,7 @@ class Kernel
         }
 
         if (version_compare(PHP_VERSION, '7.0.0', '<')) {
-            die('Vbot have to run under php 7! Current version is :' . PHP_VERSION);
+            die('Vbot have to run under php 7! Current version is :'.PHP_VERSION);
         }
 
         $mustExtensions = ['gd', 'fileinfo', 'SimpleXML'];

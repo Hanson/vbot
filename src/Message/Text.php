@@ -36,6 +36,7 @@ class Text extends Message implements MessageInterface
     {
         $content = str_replace(' ', ' ', $this->message);
         $isMatch = preg_match('/@(.+?)\s(.+)/', $content, $match);
+
         return $isMatch ? $match[2] : $this->message;
     }
 
