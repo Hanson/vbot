@@ -35,6 +35,10 @@ class Kernel
             die('Please execute script in terminal!');
         }
 
+        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+            die('Vbot have to run under php 7! Current version is :' . PHP_VERSION);
+        }
+
         $mustExtensions = ['gd', 'fileinfo', 'SimpleXML'];
 
         $diff = array_diff($mustExtensions, get_loaded_extensions());

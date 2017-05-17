@@ -34,11 +34,9 @@ class Text extends Message implements MessageInterface
 
     private function pureText()
     {
-        if ($this->isAt) {
-            return substr(strstr($this->message, ' '), 1);
-        } else {
-            return $this->message;
-        }
+        $content = str_replace(' ', ' ', $this->message);
+        $isMatch = preg_match('/@(.+?)\s(.+)/', $content, $match);
+        return $isMatch ? $match[2] : $this->message;
     }
 
     protected function getExpand(): array
