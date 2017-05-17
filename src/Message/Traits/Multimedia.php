@@ -83,8 +83,11 @@ trait Multimedia
         if ($isDownload || $force) {
             $resource = static::getResource($message);
 
-            File::saveTo(vbot('config')['user_path'].static::TYPE.DIRECTORY_SEPARATOR.
-                static::fileName($message), $resource);
+            if($resource){
+                File::saveTo(vbot('config')['user_path'].static::TYPE.DIRECTORY_SEPARATOR.
+                    static::fileName($message), $resource);
+            }
+
         }
     }
 
