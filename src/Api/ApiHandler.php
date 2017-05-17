@@ -19,7 +19,7 @@ class ApiHandler
     public function handle($request)
     {
         if (!($result = $this->validate($request))) {
-            return null;
+            return;
         }
 
         return $this->vbot->{$result['class']}->execute($result['params']);
