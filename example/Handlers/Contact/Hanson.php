@@ -22,7 +22,7 @@ class Hanson
                 if ($message['content'] === 'hi') {
                     Text::send($message['from']['UserName'], 'hi');
                 }
-                if($message['content'] === 'object'){
+                if ($message['content'] === 'object') {
                     print_r($friends->getObject('HanSon', 'NickName'));
                 }
             }
