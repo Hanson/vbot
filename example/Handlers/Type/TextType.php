@@ -47,7 +47,7 @@ class TextType
     {
         try {
             $result = vbot('http')->post('http://www.tuling123.com/openapi/api', [
-                'key'    => '1dce02aef026258eff69635a06b0ab7d',
+                'key'    => '9c598b601d8e47acafd81f07770d4bba',
                 'info'   => $content,
                 'userid' => $id,
             ], true);

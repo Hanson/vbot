@@ -18,8 +18,13 @@ class Hanson
     public static function messageHandler(Collection $message, Friends $friends, Groups $groups)
     {
         if ($message['from']['NickName'] === 'HanSon') {
-            if ($message['type'] === 'text' && $message['content'] === 'hi') {
-                Text::send($message['from']['UserName'], 'hi');
+            if ($message['type'] === 'text') {
+                if ($message['content'] === 'hi') {
+                    Text::send($message['from']['UserName'], 'hi');
+                }
+                if($message['content'] === 'object'){
+                    print_r($friends->getObject('HanSon', 'NickName'));
+                }
             }
 
             if ($message['type'] === 'location') {

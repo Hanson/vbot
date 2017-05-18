@@ -13,10 +13,15 @@ class Contacts extends Collection
      */
     protected $vbot;
 
-    public function __construct(Vbot $vbot)
+    public function __construct()
     {
         parent::__construct();
+    }
+
+    public function setVbot(Vbot $vbot)
+    {
         $this->vbot = $vbot;
+        return $this;
     }
 
     /**
@@ -83,7 +88,7 @@ class Contacts extends Collection
      */
     public function getObject($search, $key, $first = false, $blur = false)
     {
-        $objects = $this->filter(function ($item) use ($search, $key, $blur) {
+        $objects = $this->filter(function ($item, $index) use ($search, $key, $blur) {
             if (!isset($item[$key])) {
                 return false;
             }
@@ -93,8 +98,6 @@ class Contacts extends Collection
             } elseif (!$blur && $item[$key] === $search) {
                 return true;
             }
-
-            return false;
         });
 
         return $first ? $objects->first() : $objects;

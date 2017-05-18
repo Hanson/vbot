@@ -24,22 +24,22 @@ class ContactServiceProvider implements ServiceProviderInterface
             return new Myself();
         });
         $vbot->singleton('friends', function () use ($vbot) {
-            return new Friends($vbot);
+            return (new Friends())->setVbot($vbot);
         });
         $vbot->singleton('groups', function () use ($vbot) {
-            return new Groups($vbot);
+            return (new Groups())->setVbot($vbot);
         });
         $vbot->singleton('members', function () use ($vbot) {
-            return new Members($vbot);
+            return (new Members())->setVbot($vbot);
         });
         $vbot->singleton('officials', function () use ($vbot) {
-            return new Officials($vbot);
+            return (new Officials())->setVbot($vbot);
         });
         $vbot->singleton('specials', function () use ($vbot) {
-            return new Specials($vbot);
+            return (new Specials())->setVbot($vbot);
         });
         $vbot->singleton('contacts', function () use ($vbot) {
-            return new Contacts($vbot);
+            return (new Contacts())->setVbot($vbot);
         });
     }
 }
