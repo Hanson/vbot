@@ -21,6 +21,7 @@ class Contacts extends Collection
     public function setVbot(Vbot $vbot)
     {
         $this->vbot = $vbot;
+
         return $this;
     }
 
