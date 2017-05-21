@@ -36,7 +36,11 @@ class Location extends Message implements MessageInterface
 
     protected function parseToContent():string
     {
-        return current(explode(":\n", $this->message));
+        if($this->raw['FileName'] === '我发起了位置共享'){
+            return '[共享位置]';
+        }else{
+            return current(explode(":\n", $this->message));
+        }
     }
 
     protected function getExpand(): array

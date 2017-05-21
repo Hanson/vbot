@@ -11,7 +11,6 @@ use Hanson\Vbot\Exceptions\CreateGroupException;
 use Hanson\Vbot\Exceptions\FetchUuidException;
 use Hanson\Vbot\Exceptions\LoginFailedException;
 use Hanson\Vbot\Exceptions\LoginTimeoutException;
-use Hanson\Vbot\Exceptions\SyncCheckException;
 use Symfony\Component\Debug\Exception\FatalErrorException;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Throwable;
@@ -24,7 +23,6 @@ class ExceptionHandler
     ];
 
     protected $dontThrow = [
-        SyncCheckException::class,
     ];
 
     protected $fatalException = [

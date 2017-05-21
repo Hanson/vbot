@@ -8,7 +8,6 @@
 
 namespace Hanson\Vbot\Core;
 
-use Hanson\Vbot\Exceptions\SyncCheckException;
 use Hanson\Vbot\Exceptions\WebSyncException;
 use Hanson\Vbot\Foundation\Vbot;
 
@@ -26,8 +25,6 @@ class Sync
 
     /**
      * check if got a new message.
-     *
-     * @throws SyncCheckException
      *
      * @return array|bool
      */

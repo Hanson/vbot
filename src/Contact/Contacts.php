@@ -88,19 +88,9 @@ class Contacts extends Collection
      */
     public function getObject($search, $key, $first = false, $blur = false)
     {
-        $objects = $this->filter(function ($item, $index) use ($search, $key, $blur) {
-            if (!isset($item[$key])) {
-                return false;
-            }
+        $username = $this->getUsername($search, $key, $blur);
 
-            if ($blur && str_contains($item[$key], $search)) {
-                return true;
-            } elseif (!$blur && $item[$key] === $search) {
-                return true;
-            }
-        });
-
-        return $first ? $objects->first() : $objects;
+        return $this->get($username);
     }
 
     /**
