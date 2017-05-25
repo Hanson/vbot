@@ -32,7 +32,7 @@ class GroupChange extends Message implements MessageInterface
             if ($isMatch) {
                 $this->inviter = $match[1];
                 $this->invited = $match[2];
-            }else{
+            } else {
                 preg_match('/"(.+)"通过扫描"?(.+)"?分享的二维码加入群聊/', $this->message, $match);
                 $this->inviter = $match[2];
                 $this->invited = $match[1];

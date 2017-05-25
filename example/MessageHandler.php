@@ -41,7 +41,7 @@ class MessageHandler
 
         if ($message['type'] === 'group_change') {
             if ($message['action'] === 'ADD') {
-                Text::send($message['from']['UserName'], '欢迎新人 '.$message['invited'] . PHP_EOL . '邀请人：' . $message['inviter']);
+                Text::send($message['from']['UserName'], '欢迎新人 '.$message['invited'].PHP_EOL.'邀请人：'.$message['inviter']);
             }
         }
 
