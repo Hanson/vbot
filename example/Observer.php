@@ -36,4 +36,9 @@ class Observer
     {
         vbot('console')->log('准备接收消息', '自定义消息');
     }
+
+    public static function setNeedActivateObserver()
+    {
+        vbot('console')->log('准备挂了，但应该能抢救一会', '自定义消息');
+    }
 }

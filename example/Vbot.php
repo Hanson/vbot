@@ -40,6 +40,8 @@ class Vbot
 
         $robot->observer->setBeforeMessageObserver([Observer::class, 'setBeforeMessageObserver']);
 
+        $robot->observer->setNeedActivateObserver([Observer::class, 'setNeedActivateObserver']);
+
         //$robot->qrCodeObserver->trigger('abc');
 
         $robot->server->serve();

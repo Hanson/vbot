@@ -8,6 +8,7 @@ use Hanson\Vbot\Observers\BeforeMessageObserver;
 use Hanson\Vbot\Observers\ExitObserver;
 use Hanson\Vbot\Observers\FetchContactObserver;
 use Hanson\Vbot\Observers\LoginSuccessObserver;
+use Hanson\Vbot\Observers\NeedActivateObserver;
 use Hanson\Vbot\Observers\Observer;
 use Hanson\Vbot\Observers\QrCodeObserver;
 use Hanson\Vbot\Observers\ReLoginSuccessObserver;
@@ -39,6 +40,9 @@ class ObserverServiceProvider implements ServiceProviderInterface
         });
         $vbot->singleton('beforeMessageObserver', function () use ($vbot) {
             return new BeforeMessageObserver($vbot);
+        });
+        $vbot->singleton('needActivateObserver', function () use ($vbot) {
+            return new NeedActivateObserver($vbot);
         });
     }
 }

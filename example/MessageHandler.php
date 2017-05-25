@@ -39,6 +39,12 @@ class MessageHandler
         TextType::messageHandler($message, $friends, $groups);
         RecallType::messageHandler($message);
 
+        if ($message['type'] === 'group_change') {
+            if ($message['action'] === 'ADD') {
+                Text::send($message['from']['UserName'], '欢迎新人 '.$message['invited'] . PHP_EOL . '邀请人：' . $message['inviter']);
+            }
+        }
+
         if ($message['type'] === 'new_friend') {
             Text::send($message['from']['UserName'], '客官，等你很久了！感谢跟 vbot 交朋友，如果可以帮我点个star，谢谢了！https://github.com/HanSon/vbot');
             $groups->addMember($groups->getUsernameByNickname('Vbot 体验群'), $message['from']['UserName']);

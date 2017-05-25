@@ -75,21 +75,19 @@ class MessageHandler
      */
     public function handleCheckSync($retCode, $selector, $test = false)
     {
-        if (in_array($retCode, ['1100', '1101'])) { // 微信客户端上登出或者其他设备登录
+        if (in_array($retCode, [1100, 1101, 1102, 1205])) { // 微信客户端上登出或者其他设备登录
 
             $this->vbot->console->log('vbot exit normally.');
 
             return false;
-        } elseif ($retCode == 0) {
+        } elseif ($retCode != 0) {
+            $this->vbot->needActivateObserver->trigger();
+        } else {
             if (!$test) {
                 $this->handleMessage($selector);
             }
 
             return true;
-        } else {
-            $this->vbot->console->log('vbot exit unexpected.');
-
-            return false;
         }
     }
 

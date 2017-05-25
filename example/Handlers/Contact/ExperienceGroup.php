@@ -13,7 +13,7 @@ class ExperienceGroup
     {
         if ($message['from']['NickName'] === 'Vbot 体验群') {
             if ($message['type'] === 'group_change') {
-                Text::send($message['from']['UserName'], '欢迎新人 '.$message['nickname']);
+                Text::send($message['from']['UserName'], '欢迎新人 '.$message['invited']);
             }
 
             if ($message['type'] === 'text') {

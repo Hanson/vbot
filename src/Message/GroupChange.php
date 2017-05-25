@@ -14,12 +14,9 @@ class GroupChange extends Message implements MessageInterface
 
     public $action;
 
-    /**
-     * 新人进群的昵称（可能单个可能多个）.
-     *
-     * @var
-     */
-    public $nickname;
+    public $inviter;
+
+    public $invited;
 
     public function make($msg)
     {
@@ -31,12 +28,16 @@ class GroupChange extends Message implements MessageInterface
         if (str_contains($this->message, '邀请你')) {
             $this->action = 'INVITE';
         } elseif (str_contains($this->message, '加入了群聊') || str_contains($this->message, '分享的二维码加入群聊')) {
-            $isMatch = preg_match('/邀请"(.+)"加入了群聊/', $this->message, $match);
-            if (!$isMatch) {
-                preg_match('/"(.+)"通过扫描.+分享的二维码加入群聊/', $this->message, $match);
+            $isMatch = preg_match('/"?(.+)"?邀请"(.+)"加入了群聊/', $this->message, $match);
+            if ($isMatch) {
+                $this->inviter = $match[1];
+                $this->invited = $match[2];
+            }else{
+                preg_match('/"(.+)"通过扫描"?(.+)"?分享的二维码加入群聊/', $this->message, $match);
+                $this->inviter = $match[2];
+                $this->invited = $match[1];
             }
             $this->action = 'ADD';
-            $this->nickname = $match[1];
         } elseif (str_contains($this->message, '移出了群聊')) {
             $this->action = 'REMOVE';
         } elseif (str_contains($this->message, '改群名为')) {
@@ -48,7 +49,7 @@ class GroupChange extends Message implements MessageInterface
 
     protected function getExpand():array
     {
-        return ['action' => $this->action, 'nickname' => $this->nickname];
+        return ['action' => $this->action, 'inviter' => $this->inviter, 'invited' => $this->invited];
     }
 
     protected function parseToContent(): string

@@ -14,6 +14,7 @@ use Hanson\Vbot\Foundation\Vbot;
  * @method setReLoginSuccessObserver($callback)
  * @method setExitObserver($callback)
  * @method setFetchContactObserver($callback)
+ * @method setNeedActivateObserver($callback)
  * @method setBeforeMessageObserver($callback)
  */
 class Observer
