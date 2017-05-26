@@ -22,7 +22,7 @@ class Swoole
     {
         $server = new SwooleServer($this->vbot->config->get('swoole.ip', '127.0.0.1'), $this->vbot->config->get('swoole.port', 8866));
 
-        $handleProcess = new Process(function($worker) use (&$server){
+        $handleProcess = new Process(function ($worker) use (&$server) {
             $this->vbot->messageHandler->listen($server);
         });
         $handleProcess->start();

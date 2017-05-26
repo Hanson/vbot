@@ -4,7 +4,6 @@ namespace Hanson\Vbot\Core;
 
 use Carbon\Carbon;
 use Hanson\Vbot\Exceptions\ArgumentException;
-use Hanson\Vbot\Exceptions\LogoutException;
 use Hanson\Vbot\Foundation\Vbot;
 use Hanson\Vbot\Message\Text;
 use Illuminate\Support\Collection;
@@ -37,13 +36,12 @@ class MessageHandler
             }
 
             if (!$this->handleCheckSync($checkSync[0], $checkSync[1])) {
-                if($server){
+                if ($server) {
                     $server->shutdown();
-                } else{
+                } else {
                     break;
                 }
             }
-
         }
     }
 
