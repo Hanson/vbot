@@ -28,7 +28,7 @@ class Content
     ];
 
     /**
-     * 格式化Content.
+     * format XML for Content.
      *
      * @param $content
      *
@@ -71,20 +71,5 @@ class Content
         }
 
         return str_replace($match[0], $match[1], $content);
-    }
-
-    /**
-     * 去掉@的内容.
-     *
-     * @param $content
-     *
-     * @return null
-     */
-    public static function filterAt($content)
-    {
-        $content = str_replace(' ', ' ', $content);
-        $isMatch = preg_match('/@(.+?)\s(.+)/', $content, $match);
-
-        return $isMatch ? $match[2] : null;
     }
 }

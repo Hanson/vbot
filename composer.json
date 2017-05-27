@@ -15,21 +15,31 @@
             "email": "h@hanc.cc"
         }
     ],
+    "bin": ["bin/vbot"],
     "require": {
         "guzzlehttp/guzzle": "^6.2",
-        "endroid/qrcode": "^1.7",
-        "pimple/pimple": "^3.0",
-        "illuminate/support": "^5.3",
         "nesbot/carbon": "^1.21",
+        "symfony/console": "3.*",
+        "monolog/monolog": "^1.22",
         "aferrandini/phpqrcode": "^1.0",
-        "symfony/console": "3.*"
+        "illuminate/config": "^5.4",
+        "illuminate/cache": "^5.4",
+        "illuminate/filesystem": "^5.4",
+        "illuminate/container": "^5.4",
+        "illuminate/redis": "^5.4",
+        "illuminate/database": "^5.4"
     },
     "autoload": {
         "files": [
-            "src/helpers.php"
+            "src/Support/helpers.php"
         ],
         "psr-4": {
             "Hanson\\Vbot\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Hanson\\Vbot\\Example\\": "example/"
         }
     }
 }

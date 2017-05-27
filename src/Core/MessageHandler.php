@@ -1,203 +1,97 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Hanson
- * Date: 2016/12/14
- * Time: 23:08.
- */
 
 namespace Hanson\Vbot\Core;
 
 use Carbon\Carbon;
-use Closure;
-use Hanson\Vbot\Message\Entity\Emoticon;
-use Hanson\Vbot\Message\Entity\Image;
-use Hanson\Vbot\Message\Entity\Message;
-use Hanson\Vbot\Message\Entity\Text;
-use Hanson\Vbot\Message\Entity\Video;
-use Hanson\Vbot\Support\Console;
-use Hanson\Vbot\Support\Path;
+use Hanson\Vbot\Exceptions\ArgumentException;
+use Hanson\Vbot\Foundation\Vbot;
+use Hanson\Vbot\Message\Text;
+use Illuminate\Support\Collection;
 
 class MessageHandler
 {
     /**
-     * @var MessageHandler
+     * @var Vbot
      */
-    public static $instance = null;
+    protected $vbot;
 
-    private $handler;
+    protected $handler;
 
-    private $customHandler;
-
-    private $exitHandler;
-
-    private $exceptionHandler;
-
-    private $onceHandler;
-
-    private $sync;
-
-    private $messageFactory;
-
-    public function __construct()
+    public function __construct(Vbot $vbot)
     {
-        $this->sync = new Sync();
-        $this->messageFactory = new MessageFactory();
+        $this->vbot = $vbot;
     }
 
-    /**
-     * 设置单例模式.
-     *
-     * @return MessageHandler
-     */
-    public static function getInstance()
+    public function listen($server = null)
     {
-        if (static::$instance === null) {
-            static::$instance = new self();
-        }
-
-        return static::$instance;
-    }
-
-    /**
-     * 消息处理器.
-     *
-     * @param Closure $closure
-     *
-     * @throws \Exception
-     */
-    public function setMessageHandler(Closure $closure)
-    {
-        if (!$closure instanceof Closure) {
-            throw new \Exception('message handler must be a closure!');
-        }
-
-        $this->handler = $closure;
-    }
-
-    /**
-     * 自定义处理器.
-     *
-     * @param Closure $closure
-     *
-     * @throws \Exception
-     */
-    public function setCustomHandler(Closure $closure)
-    {
-        if (!$closure instanceof Closure) {
-            throw new \Exception('custom handler must be a closure!');
-        }
-
-        $this->customHandler = $closure;
-    }
-
-    /**
-     * 退出处理器.
-     *
-     * @param Closure $closure
-     *
-     * @throws \Exception
-     */
-    public function setExitHandler(Closure $closure)
-    {
-        if (!$closure instanceof Closure) {
-            throw new \Exception('exit handler must be a closure!');
-        }
-
-        $this->exitHandler = $closure;
-    }
-
-    /**
-     * 异常处理器.
-     *
-     * @param Closure $closure
-     *
-     * @throws \Exception
-     */
-    public function setExceptionHandler(Closure $closure)
-    {
-        if (!$closure instanceof Closure) {
-            throw new \Exception('exit handler must be a closure!');
-        }
-
-        $this->exceptionHandler = $closure;
-    }
-
-    /**
-     * 执行一次的处理器.
-     *
-     * @param Closure $closure
-     *
-     * @throws \Exception
-     */
-    public function setOnceHandler(Closure $closure)
-    {
-        if (!$closure instanceof Closure) {
-            throw new \Exception('exit handler must be a closure!');
-        }
-
-        $this->onceHandler = $closure;
-    }
-
-    /**
-     * 轮询消息API接口.
-     */
-    public function listen()
-    {
-        if ($this->onceHandler instanceof Closure) {
-            call_user_func_array($this->onceHandler, []);
-        }
+        $this->vbot->beforeMessageObserver->trigger();
 
         $time = 0;
 
         while (true) {
-            if ($this->customHandler instanceof Closure) {
-                call_user_func_array($this->customHandler, []);
+            $time = $this->heartbeat($time);
+
+            if (!($checkSync = $this->checkSync())) {
+                continue;
             }
 
-            if (time() - $time > 1800) {
-                Text::send('filehelper', '心跳 '.Carbon::now()->toDateTimeString());
-                $time = time();
-            }
-
-            $checkSync = (new Sync())->checkSync();
-
-            if ($checkSync !== false) {
-                list($retCode, $selector) = $checkSync;
-                if (!$this->handleCheckSync($retCode, $selector)) {
+            if (!$this->handleCheckSync($checkSync[0], $checkSync[1])) {
+                if ($server) {
+                    $server->shutdown();
+                } else {
                     break;
                 }
             }
         }
-        Console::log('程序结束');
     }
 
+    /**
+     * make a heartbeat every 30 minutes.
+     *
+     * @param $time
+     *
+     * @return int
+     */
+    private function heartbeat($time)
+    {
+        if (time() - $time > 1800) {
+            Text::send('filehelper', 'heart beat '.Carbon::now()->toDateTimeString());
+
+            return time();
+        }
+
+        return $time;
+    }
+
+    private function checkSync()
+    {
+        return $this->vbot->sync->checkSync();
+    }
+
+    /**
+     * handle a sync from wechat.
+     *
+     * @param $retCode
+     * @param $selector
+     * @param bool $test
+     *
+     * @return bool
+     */
     public function handleCheckSync($retCode, $selector, $test = false)
     {
-        if (in_array($retCode, ['1100', '1101'])) { // 微信客户端上登出或者其他设备登录
-            Console::log('微信客户端正常退出');
-            if ($this->exitHandler) {
-                call_user_func_array($this->exitHandler, []);
-            }
+        if (in_array($retCode, [1100, 1101, 1102, 1205])) { // 微信客户端上登出或者其他设备登录
+
+            $this->vbot->console->log('vbot exit normally.');
 
             return false;
-        } elseif ($retCode == 0) {
+        } elseif ($retCode != 0) {
+            $this->vbot->needActivateObserver->trigger();
+        } else {
             if (!$test) {
-                $this->handlerMessage($selector);
+                $this->handleMessage($selector);
             }
 
             return true;
-        } else {
-            Console::log('微信客户端异常退出');
-            if ($this->exceptionHandler) {
-                call_user_func_array($this->exceptionHandler, []);
-            }
-
-            if ($this->exitHandler) {
-                call_user_func_array($this->exitHandler, []);
-            }
-
-            return false;
         }
     }
 
@@ -206,47 +100,26 @@ class MessageHandler
      *
      * @param $selector
      */
-    private function handlerMessage($selector)
+    private function handleMessage($selector)
     {
-        if ($selector === 0) {
+        if ($selector == 0) {
             return;
         }
 
-        $message = $this->sync->sync();
+        $message = $this->vbot->sync->sync();
 
-        if (!$message) {
-            return;
-        }
+        $this->log($message);
 
-        if (count($message['ModContactList']) > 0) {
-            foreach ($message['ModContactList'] as $contact) {
-                if (str_contains($contact['UserName'], '@@')) {
-                    group()->put($contact['UserName'], $contact);
-                } else {
-                    contact()->put($contact['UserName'], $contact);
-                }
-            }
-        }
+        $this->storeContactsFromMessage($message);
 
         if ($message['AddMsgList']) {
             foreach ($message['AddMsgList'] as $msg) {
-                $content = $this->messageFactory->make($msg);
-                if ($content) {
-                    $this->debugMessage($content);
-                    $this->addToMessageCollection($content);
+                $collection = $this->vbot->messageFactory->make($msg);
+                if ($collection) {
+                    $this->cache($msg, $collection);
+                    $this->console($collection);
                     if ($this->handler) {
-                        $reply = call_user_func_array($this->handler, [$content]);
-                        if ($reply) {
-                            if ($reply instanceof Image) {
-                                Image::sendByMsgId($content->from['UserName'], $reply->raw['MsgId']);
-                            } elseif ($reply instanceof Video) {
-                                Video::sendByMsgId($content->from['UserName'], $reply->raw['MsgId']);
-                            } elseif ($reply instanceof Emoticon) {
-                                Emoticon::sendByMsgId($content->from['UserName'], $reply->raw['MsgId']);
-                            } else {
-                                Text::send($content->from['UserName'], $reply);
-                            }
-                        }
+                        call_user_func_array($this->handler, [$collection]);
                     }
                 }
             }
@@ -254,36 +127,47 @@ class MessageHandler
     }
 
     /**
-     * @param $message Message
+     * log the message.
+     *
+     * @param $message
      */
-    private function addToMessageCollection($message)
+    private function log($message)
     {
-        message()->put($message->raw['MsgId'], $message);
-
-        foreach (message()->all() as $msgId => $item) {
-            if ($item->raw['CreateTime'] + 120 < time()) {
-                message()->pull($msgId);
-            } else {
-                break;
-            }
-        }
-
-        if (server()->config['debug']) {
-            $file = fopen(Path::getCurrentUinPath().'message.json', 'a');
-            fwrite($file, json_encode($message).PHP_EOL);
-            fclose($file);
+        if ($this->vbot->messageLog && ($message['ModContactList'] || $message['AddMsgList'])) {
+            $this->vbot->messageLog->info(json_encode($message));
         }
     }
 
-    /**
-     * debug出消息.
-     *
-     * @param $content
-     */
-    private function debugMessage(Message $content)
+    private function console(Collection $collection)
     {
-        if (server()->config['debug']) {
-            Console::log("[{$content->raw['MsgId']}] ".$content->content, Console::MESSAGE);
+        $this->vbot->console->log($collection['content']);
+    }
+
+    private function storeContactsFromMessage($message)
+    {
+        if (count($message['ModContactList']) > 0) {
+            $this->vbot->contactFactory->store($message['ModContactList']);
         }
+    }
+
+    private function cache($msg, Collection $collection)
+    {
+        $this->vbot->cache->put('msg-'.$msg['MsgId'], $collection->toArray(), 2);
+    }
+
+    /**
+     * set a message handler.
+     *
+     * @param $callback
+     *
+     * @throws ArgumentException
+     */
+    public function setHandler($callback)
+    {
+        if (!is_callable($callback)) {
+            throw new ArgumentException('Argument must be callable in '.get_class());
+        }
+
+        $this->handler = $callback;
     }
 }

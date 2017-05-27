@@ -8,18 +8,44 @@
 
 namespace Hanson\Vbot\Foundation;
 
-use ErrorException;
-use Hanson\Vbot\Core\Server;
-use Hanson\Vbot\Support\Console;
-use Hanson\Vbot\Support\Path;
-use Illuminate\Support\Collection;
-use Pimple\Container;
-use Throwable;
+use Illuminate\Config\Repository;
+use Illuminate\Container\Container;
 
 /**
- * Class Robot.
+ * Class Vbot.ShareFactory.
  *
- * @property Server $server
+ * @property \Hanson\Vbot\Core\Server $server
+ * @property \Hanson\Vbot\Core\Swoole $swoole
+ * @property \Hanson\Vbot\Core\MessageHandler $messageHandler
+ * @property \Hanson\Vbot\Core\MessageFactory $messageFactory
+ * @property \Hanson\Vbot\Core\ShareFactory $shareFactory
+ * @property \Hanson\Vbot\Message\Text $text
+ * @property \Hanson\Vbot\Core\Sync $sync
+ * @property \Hanson\Vbot\Core\ContactFactory $contactFactory
+ * @property \Hanson\Vbot\Foundation\ExceptionHandler $exception
+ * @property \Hanson\Vbot\Support\Log $log
+ * @property \Hanson\Vbot\Support\Log $messageLog
+ * @property \Hanson\Vbot\Support\Http $http
+ * @property \Hanson\Vbot\Api\ApiHandler $api
+ * @property \Hanson\Vbot\Console\QrCode $qrCode
+ * @property \Hanson\Vbot\Console\Console $console
+ * @property \Hanson\Vbot\Observers\Observer $observer
+ * @property \Hanson\Vbot\Observers\QrCodeObserver $qrCodeObserver
+ * @property \Hanson\Vbot\Observers\NeedActivateObserver $needActivateObserver
+ * @property \Hanson\Vbot\Observers\LoginSuccessObserver $loginSuccessObserver
+ * @property \Hanson\Vbot\Observers\ReLoginSuccessObserver $reLoginSuccessObserver
+ * @property \Hanson\Vbot\Observers\ExitObserver $exitObserver
+ * @property \Hanson\Vbot\Observers\FetchContactObserver $fetchContactObserver
+ * @property \Hanson\Vbot\Observers\BeforeMessageObserver $beforeMessageObserver
+ * @property \Illuminate\Config\Repository $config
+ * @property \Illuminate\Cache\Repository $cache
+ * @property \Hanson\Vbot\Contact\Myself $myself
+ * @property \Hanson\Vbot\Contact\Friends $friends
+ * @property \Hanson\Vbot\Contact\Contacts $contacts
+ * @property \Hanson\Vbot\Contact\Groups $groups
+ * @property \Hanson\Vbot\Contact\Members $members
+ * @property \Hanson\Vbot\Contact\Officials $officials
+ * @property \Hanson\Vbot\Contact\Specials $specials
  */
 class Vbot extends Container
 {
@@ -29,101 +55,44 @@ class Vbot extends Container
      * @var array
      */
     protected $providers = [
+        ServiceProviders\LogServiceProvider::class,
         ServiceProviders\ServerServiceProvider::class,
+        ServiceProviders\ExceptionServiceProvider::class,
+        ServiceProviders\CacheServiceProvider::class,
+        ServiceProviders\HttpServiceProvider::class,
+        ServiceProviders\ObserverServiceProvider::class,
+        ServiceProviders\ConsoleServiceProvider::class,
+        ServiceProviders\MessageServiceProvider::class,
+        ServiceProviders\ContactServiceProvider::class,
+        ServiceProviders\ApiServiceProvider::class,
     ];
 
-    public function __construct($config)
+    public function __construct(array $config)
     {
-        parent::__construct();
+        $this->initializeConfig($config);
 
-        $this->setConfig($config);
+        (new Kernel($this))->bootstrap();
 
-        $this->exceptionHandler();
-
-        $this->registerProviders();
+        static::$instance = $this;
     }
 
-    /**
-     * 设置Config.
-     *
-     * @param $config
-     */
-    private function setConfig($config)
+    private function initializeConfig(array $config)
     {
-        $config = array_merge($config, Console::getParams());
-
-        $this->setPath($config);
-
-        $this['config'] = function () use ($config) {
-            return new Collection($config);
-        };
-    }
-
-    /**
-     * 设置session目录以及.
-     *
-     * @param $config
-     *
-     * @throws \Exception
-     *
-     * @return mixed
-     */
-    private function setPath(&$config)
-    {
-        Path::setConfig($config);
+        $this->config = new Repository($config);
     }
 
     /**
      * Register providers.
      */
-    private function registerProviders()
+    public function registerProviders()
     {
         foreach ($this->providers as $provider) {
             $this->register(new $provider());
         }
     }
 
-    private function exceptionHandler()
+    private function register(ServiceProviderInterface $instance)
     {
-        set_error_handler([$this, 'handleError']);
-        set_exception_handler([$this, 'handleException']);
-    }
-
-    public function handleError($level, $message, $file = '', $line = 0)
-    {
-        if (error_reporting() & $level) {
-            throw new ErrorException($message, 0, $level, $file, $line);
-        }
-    }
-
-    public function handleException(Throwable $e)
-    {
-        Console::log('异常：'.get_class($e).$e->getMessage());
-//        if ($e instanceof SyncFailException) {
-            server()->run();
-//        }
-    }
-
-    /**
-     * Magic get access.
-     *
-     * @param string $id
-     *
-     * @return mixed
-     */
-    public function __get($id)
-    {
-        return $this->offsetGet($id);
-    }
-
-    /**
-     * Magic set access.
-     *
-     * @param string $id
-     * @param mixed  $value
-     */
-    public function __set($id, $value)
-    {
-        $this->offsetSet($id, $value);
+        $instance->register($this);
     }
 }
