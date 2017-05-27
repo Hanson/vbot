@@ -34,7 +34,7 @@ class Groups extends Contacts
      */
     public function getGroupsByNickname($nickname, $blur = false)
     {
-        return $this->getObject($nickname, 'NickName', false, $blur);
+        return $this->getObject($nickname, 'NickName', $blur);
     }
 
     /**

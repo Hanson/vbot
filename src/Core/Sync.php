@@ -46,8 +46,6 @@ class Sync
             return false;
         }
 
-        $this->vbot->console->log($content);
-
         return preg_match('/window.synccheck=\{retcode:"(\d+)",selector:"(\d+)"\}/', $content, $matches) ?
             [$matches[1], $matches[2]] : false;
     }
@@ -76,7 +74,6 @@ class Sync
         if ($result && $result['BaseResponse']['Ret'] == 0) {
             $this->generateSyncKey($result);
         }
-        $this->vbot->console->log('ret:'.$result['BaseResponse']['Ret']);
 
         return $result;
     }

@@ -1,18 +1,15 @@
 <?php
 
-require 'database.php';
-
 $path = __DIR__.'/./../tmp/';
 
 return [
     'path'     => $path,
-    'debug'    => true,
     /*
      * swoole 配置项（执行主动发消息命令必须要开启）
      */
     'swoole'  => [
-        'status' => true,
-        'ip'     => '192.168.10.10',
+        'status' => false,
+        'ip'     => '127.0.0.1',
         'port'   => '8866',
     ],
     /*
@@ -46,7 +43,7 @@ return [
      * 缓存配置项
      */
     'cache' => [
-        'default' => 'redis',
+        'default' => 'file',
         'stores'  => [
             'file' => [
                 'driver' => 'file',
@@ -59,17 +56,6 @@ return [
         ],
     ],
     'database' => [
-        'mysql' => [
-            'driver'    => 'mysql',
-            'host'      => DB_HOST,
-            'port'      => DB_PORT,
-            'database'  => DB_NAME,
-            'username'  => DB_USER,
-            'password'  => DB_PASSWORD,
-            'charset'   => 'utf8',
-            'collation' => 'utf8_unicode_ci',
-            'prefix'    => '',
-        ],
         'redis' => [
             'client'  => 'predis',
             'default' => [

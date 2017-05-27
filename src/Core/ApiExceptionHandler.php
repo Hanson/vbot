@@ -14,7 +14,6 @@ class ApiExceptionHandler
         }
 
         if ($bag['BaseResponse']['Ret'] != 0) {
-            print_r($bag);
             if ($callback) {
                 call_user_func_array($callback, $bag);
             }

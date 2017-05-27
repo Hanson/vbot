@@ -36,6 +36,8 @@ class Transfer extends Message implements MessageInterface
      */
     private $memo;
 
+    private $content;
+
     public function make($msg)
     {
         return $this->getCollection($msg, static::TYPE);

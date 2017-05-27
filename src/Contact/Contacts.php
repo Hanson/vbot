@@ -82,12 +82,11 @@ class Contacts extends Collection
      *
      * @param $search
      * @param $key
-     * @param bool $first
      * @param bool $blur
      *
      * @return mixed|static
      */
-    public function getObject($search, $key, $first = false, $blur = false)
+    public function getObject($search, $key, $blur = false)
     {
         $username = $this->getUsername($search, $key, $blur);
 

@@ -15,8 +15,6 @@ class Myself
 
     public $sex;
 
-    public $alias;
-
     public function init($user)
     {
         $this->nickname = Content::emojiHandle($user['NickName']);
