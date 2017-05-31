@@ -52,7 +52,7 @@ vbot示例源码为 https://github.com/hanson/vbot/blob/master/example/Example.p
 
 ## 文档
 
-[详细文档](http://hanson.github.io/vbot)
+[详细文档](https://hanson.github.io/vbot)
 
 ## 参考项目
 
