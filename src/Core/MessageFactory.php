@@ -77,7 +77,7 @@ class MessageFactory
                     return (new Transfer())->make($msg);
                 } elseif ($msg['FileName'] === '我发起了位置共享') {
                     return (new Location())->make($msg);
-                } elseif ($msg['Content'] === '该类型暂不支持，请在手机上查看') {
+                } elseif (str_contains($msg['Content'], '该类型暂不支持，请在手机上查看')) {
                     return;
                 } else {
                     return $this->vbot->shareFactory->make($msg);
