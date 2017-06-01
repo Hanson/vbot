@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Hanson\Vbot\Example\Handlers\Service;
-
 
 use Hanson\Vbot\Message\Text;
 use Illuminate\Support\Collection;
@@ -21,13 +19,13 @@ class GuessNumber
             if ($message['pure'] === '猜数字') {
                 if ($isBegin) {
                     Text::send($username, '猜数字已经开始，还没结束呢');
-                    Text::send($username, '当前区间为：' . static::$array[$username]['begin'].' 到 '.static::$array[$username]['end']);
-                }else{
+                    Text::send($username, '当前区间为：'.static::$array[$username]['begin'].' 到 '.static::$array[$username]['end']);
+                } else {
                     Text::send($username, '猜数字开始，请猜一个 1 ~ 99 的数字，中了就赢了哦');
                     static::$array[$username] = [
-                        'begin' => 0,
-                        'end' => 100,
-                        'target' => random_int(1, 99)
+                        'begin'  => 0,
+                        'end'    => 100,
+                        'target' => random_int(1, 99),
                     ];
                 }
             } elseif (is_numeric($message['content']) && $isBegin) {
@@ -38,10 +36,10 @@ class GuessNumber
                         Text::send($username, $message['sender']['NickName'].'你赢了！数字就为：'.static::$array[$username]['target']);
                         unset(static::$array[$username]);
                     } elseif ($message['content'] > $target) {
-                            Text::send($username, '当前区间为：' . static::$array[$username]['begin'].' 到 '.$message['content']);
-                            static::$array[$username]['end'] = $message['content'];
+                        Text::send($username, '当前区间为：'.static::$array[$username]['begin'].' 到 '.$message['content']);
+                        static::$array[$username]['end'] = $message['content'];
                     } else {
-                        Text::send($username, '当前区间为：' . $message['content'].' 到 '.static::$array[$username]['end']);
+                        Text::send($username, '当前区间为：'.$message['content'].' 到 '.static::$array[$username]['end']);
                         static::$array[$username]['begin'] = $message['content'];
                     }
                 }

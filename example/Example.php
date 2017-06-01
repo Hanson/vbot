@@ -4,7 +4,7 @@ namespace Hanson\Vbot\Example;
 
 use Hanson\Vbot\Foundation\Vbot as Bot;
 
-class example
+class Example
 {
     private $config;
 
