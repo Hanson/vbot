@@ -18,11 +18,7 @@ use Throwable;
 class ExceptionHandler
 {
     protected $dontReport = [
-//        ConfigErrorException::class
         CreateGroupException::class,
-    ];
-
-    protected $dontThrow = [
     ];
 
     protected $fatalException = [
@@ -85,17 +81,6 @@ class ExceptionHandler
         return false;
     }
 
-    protected function shouldntThrow(Exception $e)
-    {
-        foreach ($this->dontThrow as $type) {
-            if ($e instanceof $type) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     /**
      * set a exception handler.
      *
@@ -153,11 +138,7 @@ class ExceptionHandler
 
         $this->throwFatalException($e);
 
-        if (!$this->shouldntThrow($e)) {
-            throw $e;
-        }
-
-        return false;
+        throw $e;
     }
 
     /**
