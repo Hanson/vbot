@@ -104,7 +104,7 @@ donate 名单 （排名按时间倒序）
 |9688| ￥8.88|
 |[kisexu](https://github.com/kisexu)| ￥88|
 |匿名的某师兄| ￥181.80|
-|[summer](https://github.com/summerblue) 以及这是用vbot实现的半自动购书流程[Laravel 入门教程(推荐)](http://t.laravel-china.org/laravel-tutorial/5.1/buy-it)|￥66.66|
+|[summer](https://github.com/summerblue)|￥66.66|
 |A梦|￥18.88 * 4 |
 |[toby2016](https://github.com/toby2016)|￥5|
 
