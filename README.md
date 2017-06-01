@@ -71,13 +71,13 @@ donate 名单 （排名按时间倒序）
 
 |捐助者|金额|
 |-----|----|
+|[桥边红药的博客](https://www.96qbhy.com)|￥21 * 2|
 |匿名| ￥66|
 |小浪| ￥10|
 |[美羊软件](http://www.yangsoft.cn/)|￥66|
 |匿名| ￥200|
 |[KimiChen](https://github.com/KimiChen)|￥188|
 |倪好 | ￥88 * 2|
-|[桥边红药的博客](https://www.96qbhy.com)|￥21|
 |匿名| ￥6.66|
 |[liuhui5354](https://github.com/liuhui5354)|￥6.66|
 |匿名| ￥6.66|
