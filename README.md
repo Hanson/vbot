@@ -37,7 +37,7 @@ composer install
 2、composer
 
 ```
-composer require "hanson/vbot:v2.0-rc1"
+composer require "hanson/vbot:v2.0-rc2"
 ```
 
 ## 体验
