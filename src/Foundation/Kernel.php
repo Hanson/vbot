@@ -26,7 +26,6 @@ class Kernel
         $this->initializeConfig();
         $this->prepareSession();
         $this->initializePath();
-        $this->setDatabase();
     }
 
     private function checkEnvironment()
@@ -105,18 +104,5 @@ class Kernel
 
         $this->vbot->config['cookie_file'] = $this->vbot->config['path'].'/cookies/'.$this->vbot->config['session'];
         $this->vbot->config['user_path'] = $this->vbot->config['path'].'/users/';
-    }
-
-    private function setDatabase()
-    {
-        if ($this->vbot->config['storage'] === 'database') {
-            $capsule = new Manager();
-
-            $capsule->addConnection($this->vbot->config['database.mysql']);
-
-            $capsule->setAsGlobal();
-
-            (new ContactServiceProvider())->register($this->vbot);
-        }
     }
 }

@@ -13,8 +13,7 @@ class Command
     {
         $application = new Application();
 
-        $application->add(new ClearSessionCommand());
-        $application->add(new MigrationCommand());
+        $application->add(new RunExampleCommand());
 
         $application->run();
     }
