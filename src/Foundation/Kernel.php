@@ -2,9 +2,7 @@
 
 namespace Hanson\Vbot\Foundation;
 
-use Hanson\Vbot\Foundation\ServiceProviders\ContactServiceProvider;
 use Hanson\Vbot\Session\Session;
-use Illuminate\Database\Capsule\Manager;
 
 class Kernel
 {
