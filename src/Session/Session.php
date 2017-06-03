@@ -25,7 +25,8 @@ class Session
     {
         $arguments = getopt(null, ['session::']);
 
-        return isset($arguments['session']) && $arguments['session'] ? $arguments['session'] : $this->randomKey();
+        return isset($arguments['session']) && $arguments['session'] ? $arguments['session'] :
+            $this->vbot->config->get('session', $this->randomKey());
     }
 
     public function has($session)

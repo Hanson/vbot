@@ -8,6 +8,7 @@
 
 namespace Hanson\Vbot\Core;
 
+use Carbon\Carbon;
 use Hanson\Vbot\Console\Console;
 use Hanson\Vbot\Exceptions\FetchUuidException;
 use Hanson\Vbot\Exceptions\InitFailException;
@@ -35,7 +36,6 @@ class Server
         }
 
         $this->init();
-//        $this->statusNotify();
 
         if ($this->vbot->config['swoole.status']) {
             $this->vbot->swoole->run();
@@ -55,6 +55,7 @@ class Server
             $configs = json_decode($this->vbot->cache->get($this->vbot->config['session_key']), true);
 
             $this->vbot->config['server'] = $configs;
+            $this->vbot->config['server.time'] = $this->vbot->config['server.time'] ?: Carbon::now()->toDateTimeString();
 
             if (!($checkSync = $this->vbot->sync->checkSync())) {
                 return false;
@@ -68,6 +69,7 @@ class Server
                 return true;
             }
         }
+        $this->vbot->config['server.time'] = Carbon::now()->toDateTimeString();
 
         return false;
     }
@@ -214,7 +216,7 @@ class Server
      */
     private function saveServer()
     {
-        $this->vbot->cache->forever('session.'.$this->vbot->config['session'], json_encode($this->vbot->config['server']));
+        $this->vbot->cache->put('session.'.$this->vbot->config['session'], json_encode($this->vbot->config['server']), 30);
     }
 
     /**

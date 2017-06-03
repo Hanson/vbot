@@ -8,9 +8,13 @@ class Example
 {
     private $config;
 
-    public function __construct()
+    public function __construct($session = null)
     {
         $this->config = require_once __DIR__.'/config.php';
+
+        if ($session) {
+            $this->config['session'] = $session;
+        }
     }
 
     public function run()
