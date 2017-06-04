@@ -8,6 +8,8 @@
 
 namespace Hanson\Vbot\Message;
 
+use Illuminate\Support\Arr;
+
 class Official extends Message implements MessageInterface
 {
     const TYPE = 'official';
@@ -17,6 +19,8 @@ class Official extends Message implements MessageInterface
     private $description;
 
     private $url;
+
+    private $articles;
 
     private $app;
 
@@ -32,7 +36,8 @@ class Official extends Message implements MessageInterface
         $info = (array) $array['appmsg'];
 
         $this->title = $info['title'];
-        $this->description = $info['des'];
+        $this->description = (string) $info['des'];
+        $this->articles = $this->getArticles($info);
 
         $appInfo = (array) $array['appinfo'];
 
@@ -43,11 +48,32 @@ class Official extends Message implements MessageInterface
 
     protected function getExpand():array
     {
-        return ['title' => $this->title, 'description' => $this->description, 'app' => $this->app, 'url' => $this->url];
+        return ['title' => $this->title, 'description' => $this->description, 'app' => $this->app, 'url' => $this->url,
+            'articles' => $this->articles];
     }
 
     protected function parseToContent(): string
     {
         return '[公众号消息]';
+    }
+
+    private function getArticles($info) {
+        if ($m = (array) Arr::get($info, 'mmreader') AND isset($m['category'])) {
+            $articles = [];
+
+            foreach ($m['category'] as $key => $article) {
+                if ($key === 'item') {
+                    $articles[] = [
+                        'title' => (string) Arr::get((array)$article, 'title'),
+                        'cover' => (string) Arr::get((array)$article, 'cover'),
+                        'url' => (string) Arr::get((array)$article, 'url'),
+                    ];
+                }
+            }
+
+            return $articles;
+        }
+
+        return [];
     }
 }
