@@ -49,7 +49,7 @@ class Official extends Message implements MessageInterface
     protected function getExpand():array
     {
         return ['title' => $this->title, 'description' => $this->description, 'app' => $this->app, 'url' => $this->url,
-            'articles' => $this->articles];
+            'articles'  => $this->articles, ];
     }
 
     protected function parseToContent(): string
@@ -57,16 +57,17 @@ class Official extends Message implements MessageInterface
         return '[公众号消息]';
     }
 
-    private function getArticles($info) {
-        if ($m = (array) Arr::get($info, 'mmreader') AND isset($m['category'])) {
+    private function getArticles($info)
+    {
+        if ($m = (array) Arr::get($info, 'mmreader') and isset($m['category'])) {
             $articles = [];
 
             foreach ($m['category'] as $key => $article) {
                 if ($key === 'item') {
                     $articles[] = [
-                        'title' => (string) Arr::get((array)$article, 'title'),
-                        'cover' => (string) Arr::get((array)$article, 'cover'),
-                        'url' => (string) Arr::get((array)$article, 'url'),
+                        'title' => (string) Arr::get((array) $article, 'title'),
+                        'cover' => (string) Arr::get((array) $article, 'cover'),
+                        'url'   => (string) Arr::get((array) $article, 'url'),
                     ];
                 }
             }
