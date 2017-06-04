@@ -29,7 +29,7 @@
 #### composer
 
 ```
-composer require "hanson/vbot:v2.0-rc4"
+composer require "hanson/vbot:v2.0-rc5"
 ```
 
 ## 体验
