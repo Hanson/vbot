@@ -56,8 +56,6 @@ vbot示例源码为 https://github.com/hanson/vbot/blob/master/example/Example.p
   
 [lbbniu/WebWechat](https://github.com/lbbniu/WebWechat) php
 
-感谢楼上两位作者曾对本人耐心解答
-
 ## donate 名单
 
 
