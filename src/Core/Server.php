@@ -216,7 +216,7 @@ class Server
      */
     private function saveServer()
     {
-        $this->vbot->cache->put('session.'.$this->vbot->config['session'], json_encode($this->vbot->config['server']), 30);
+        $this->vbot->cache->forever('session.'.$this->vbot->config['session'], json_encode($this->vbot->config['server']));
     }
 
     /**
