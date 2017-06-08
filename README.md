@@ -26,18 +26,10 @@
 
 **运行微信账号的语言设置务必设置为简体中文！！否则可能出现未知的错误！**
 
-1、git
+#### composer
 
 ```
-git clone https://github.com/HanSon/vbot.git
-cd vbot
-composer install
-```
-
-2、composer
-
-```
-composer require "hanson/vbot:v2.0-rc2"
+composer require "hanson/vbot:v2.0-rc4"
 ```
 
 ## 体验
@@ -54,11 +46,15 @@ vbot示例源码为 https://github.com/hanson/vbot/blob/master/example/Example.p
 
 [详细文档](https://hanson.github.io/vbot)
 
-## 参考项目
+## 相似项目
 
-[lbbniu/WebWechat](https://github.com/lbbniu/WebWechat)
+[littlecodersh/ItChat](https://github.com/littlecodersh/ItChat) python
+  
+[Wechaty - A Javascript Implementation of Wechat Bot Framework](https://github.com/Chatie/wechaty)
 
-[littlecodersh/ItChat](https://github.com/littlecodersh/ItChat) 
+[liuwons/wxBot](https://github.com/liuwons/wxBot) python
+  
+[lbbniu/WebWechat](https://github.com/lbbniu/WebWechat) php
 
 感谢楼上两位作者曾对本人耐心解答
 
