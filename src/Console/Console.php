@@ -51,7 +51,7 @@ class Console
     public function log($str, $level = 'INFO')
     {
         if ($this->isOutput()) {
-            if (in_array($str, Logger::getLevels())) {
+            if (in_array($level, Logger::getLevels())) {
                 $this->vbot->log->log($level, $str);
             }
             echo '['.Carbon::now()->toDateTimeString().']'."[{$level}] ".$str.PHP_EOL;
@@ -65,7 +65,7 @@ class Console
      */
     public function message($str)
     {
-        if ($this->isOutput() && array_get($this->config, 'message', true)) {
+        if (array_get($this->config, 'message', true)) {
             $this->log($str, self::MESSAGE);
         }
     }
@@ -73,9 +73,5 @@ class Console
     public function isOutput()
     {
         return array_get($this->config, 'output', true);
-    }
-
-    public static function __callStatic($method, $args)
-    {
     }
 }

@@ -141,7 +141,7 @@ class MessageHandler
 
     private function console(Collection $collection)
     {
-        $this->vbot->console->log($collection['content']);
+        $this->vbot->console->message($collection['content']);
     }
 
     private function storeContactsFromMessage($message)
