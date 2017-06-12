@@ -68,7 +68,7 @@ donate 名单 （排名按时间倒序）
 |匿名| ￥6.66|
 |匿名| ￥6.66|
 |匿名| ￥6.66|
-|[KimiChen](https://github.com/vochina)|￥18.88|
+|[vochina](https://github.com/vochina)|￥18.88|
 |bug| ￥6.66 + 66|
 |李大善人| ￥666|
 |J| ￥6.66|
