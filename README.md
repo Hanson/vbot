@@ -36,9 +36,9 @@ composer require hanson/vbot
 
 <img src="https://ws2.sinaimg.cn/large/685b97a1gy1fdordpa0cgj20e80e811z.jpg" height="320">
 
-扫码后，验证输入“echo”即可自动加为好友并且拉入vbot群。
+扫码后，验证输入“echo”即可自动加为好友并且拉入vbot体验群。
 
-vbot并非24小时执行，有时会因为开发调试等原因暂停功能。如果碰巧遇到关闭情况，可加Q群 492548647 了解开放时间。执行后发送“拉我”即可自动邀请进群。
+vbot并非24小时执行，有时会因为开发调试等原因暂停功能。
 
 vbot示例源码为 https://github.com/hanson/vbot/blob/master/example/Example.php
 
