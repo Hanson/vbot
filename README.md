@@ -56,6 +56,8 @@ vbot示例源码为 https://github.com/hanson/vbot/blob/master/example/Example.p
   
 [lbbniu/WebWechat](https://github.com/lbbniu/WebWechat) php
 
+[songtianyi/wechat-go](https://github.com/songtianyi/wechat-go) go
+
 ## donate 名单
 
 
