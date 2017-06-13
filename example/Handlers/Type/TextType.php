@@ -55,7 +55,7 @@ class TextType
             $result = vbot('http')->post('http://www.tuling123.com/openapi/api', [
                 'key'    => '9c598b601d8e47acafd81f07770d4bba',
                 'info'   => $content,
-                'userid' => $id,
+                'userid' => md5($id),
             ], true);
 
             return isset($result['url']) ? $result['text'].$result['url'] : $result['text'];
