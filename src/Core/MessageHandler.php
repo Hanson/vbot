@@ -26,6 +26,8 @@ class MessageHandler
     {
         $this->vbot->beforeMessageObserver->trigger();
 
+        $this->vbot->messageExtension->initExtensions();
+
         $time = 0;
 
         while (true) {
@@ -122,6 +124,7 @@ class MessageHandler
                     if ($this->handler) {
                         call_user_func_array($this->handler, [$collection]);
                     }
+                    $this->vbot->messageExtension->exec($collection);
                 }
             }
         }
