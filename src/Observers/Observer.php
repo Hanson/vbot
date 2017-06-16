@@ -35,7 +35,9 @@ class Observer
     {
         $args = func_get_args();
 
-        call_user_func_array($this->getCallback(), $args);
+        if (!empty($this->getCallback())) {
+            call_user_func_array($this->getCallback(), $args);
+        }
     }
 
     protected function setCallback($callback)
