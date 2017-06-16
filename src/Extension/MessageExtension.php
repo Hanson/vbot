@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Hanson\Vbot\Extension;
 
 use Hanson\Vbot\Exceptions\ExtensionException;
@@ -24,6 +23,7 @@ class MessageExtension
      * 读取消息拓展.
      *
      * @param $extensions
+     *
      * @throws ExtensionException
      */
     public function load($extensions)
@@ -43,7 +43,7 @@ class MessageExtension
     public function initExtensions()
     {
         foreach ($this->extensions as $extension) {
-            (new $extension)->init();
+            (new $extension())->init();
         }
     }
 
@@ -55,7 +55,7 @@ class MessageExtension
     public function exec($collection)
     {
         foreach ($this->extensions as $extension) {
-            (new $extension)->messageHandler($collection);
+            (new $extension())->messageHandler($collection);
         }
     }
 
@@ -63,6 +63,7 @@ class MessageExtension
      * 添加消息拓展.
      *
      * @param $extension
+     *
      * @throws ExtensionException
      */
     private function addExtension($extension)
@@ -73,6 +74,4 @@ class MessageExtension
 
         $this->extensions[] = $extension;
     }
-
-
 }
