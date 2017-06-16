@@ -34,7 +34,7 @@ abstract class Message
     public $sender = null;
 
     /**
-     * 发送者 username
+     * 发送者 username.
      *
      * @var
      */
@@ -71,7 +71,7 @@ abstract class Message
         $this->setUsername();
 
         return ['raw' => $this->raw, 'from' => $this->from, 'fromType' => $this->fromType, 'sender' => $this->sender,
-            'message' => $this->message, 'time' => $this->time, 'username' => $this->username];
+            'message' => $this->message, 'time' => $this->time, 'username' => $this->username, ];
     }
 
     /**

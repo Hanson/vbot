@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Hanson\Vbot\Extension;
-
 
 use Hanson\Vbot\Exceptions\ExtensionException;
 use Hanson\Vbot\Message\Text;
@@ -18,16 +16,16 @@ abstract class AbstractMessageHandler
 
     public $zhName;
 
-    static $status = true;
+    public static $status = true;
 
-    static $admin;
+    public static $admin;
 
     /**
-     * 拓展配置
+     * 拓展配置.
      *
      * @var
      */
-    static $config;
+    public static $config;
 
     /**
      * 初始化拓展.
@@ -50,19 +48,19 @@ abstract class AbstractMessageHandler
      * 开发者需要实现的方法.
      *
      * @param Collection $collection
+     *
      * @return mixed
      */
     abstract public function handler(Collection $collection);
 
     /**
-     * 消息处理器
+     * 消息处理器.
      *
      * @param Collection $collection
      */
     final public function messageHandler(Collection $collection)
     {
         if ($collection['type'] === 'text' && $this->isAdmin($collection['username'])) {
-
             if (starts_with($collection['content'], $this->name.' ')) {
                 $content = str_replace($this->name.' ', '', $collection['content']);
 
@@ -99,7 +97,7 @@ abstract class AbstractMessageHandler
     }
 
     /**
-     * 设置拓展开关
+     * 设置拓展开关.
      *
      * @param bool $boolean
      * @param $collection
@@ -139,6 +137,7 @@ abstract class AbstractMessageHandler
      * 判断是否管理员.
      *
      * @param $username
+     *
      * @return bool
      */
     private function isAdmin($username)

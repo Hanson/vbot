@@ -9,7 +9,6 @@ use Hanson\Vbot\Example\Handlers\Contact\ColleagueGroup;
 use Hanson\Vbot\Example\Handlers\Contact\ExperienceGroup;
 use Hanson\Vbot\Example\Handlers\Contact\FeedbackGroup;
 use Hanson\Vbot\Example\Handlers\Contact\Hanson;
-use Hanson\Vbot\Example\Handlers\Service\GuessNumber;
 use Hanson\Vbot\Example\Handlers\Type\RecallType;
 use Hanson\Vbot\Example\Handlers\Type\TextType;
 use Hanson\Vbot\Message\Emoticon;
