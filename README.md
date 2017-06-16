@@ -9,6 +9,10 @@
   <a target="_blank" href="https://www.yousails.com">
     <img src="https://yousails.com/banners/brand.png" width=350>
   </a>
+  <br><br>
+  <a href="https://laravist.com">
+    <img width="300px" src="https://fuss10.elemecdn.com/4/87/c072c1651b0efd1c5cde39bc8b422png.png">
+  </a>
 </p>
 
 ## 安装
