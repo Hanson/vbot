@@ -23,6 +23,10 @@ class Example
 
         $robot->messageHandler->setHandler([MessageHandler::class, 'messageHandler']);
 
+        $robot->messageExtension->load([
+            // some extensions
+        ]);
+
         $robot->observer->setQrCodeObserver([Observer::class, 'setQrCodeObserver']);
 
         $robot->observer->setLoginSuccessObserver([Observer::class, 'setLoginSuccessObserver']);

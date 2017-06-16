@@ -9,7 +9,6 @@ use Hanson\Vbot\Example\Handlers\Contact\ColleagueGroup;
 use Hanson\Vbot\Example\Handlers\Contact\ExperienceGroup;
 use Hanson\Vbot\Example\Handlers\Contact\FeedbackGroup;
 use Hanson\Vbot\Example\Handlers\Contact\Hanson;
-use Hanson\Vbot\Example\Handlers\Service\GuessNumber;
 use Hanson\Vbot\Example\Handlers\Type\RecallType;
 use Hanson\Vbot\Example\Handlers\Type\TextType;
 use Hanson\Vbot\Message\Emoticon;
@@ -40,7 +39,6 @@ class MessageHandler
 
         TextType::messageHandler($message, $friends, $groups);
         RecallType::messageHandler($message);
-        GuessNumber::messageHandler($message);
 
         if ($message['type'] === 'new_friend') {
             Text::send($message['from']['UserName'], '客官，等你很久了！感谢跟 vbot 交朋友，如果可以帮我点个star，谢谢了！https://github.com/HanSon/vbot');

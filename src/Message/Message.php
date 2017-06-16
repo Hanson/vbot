@@ -34,6 +34,13 @@ abstract class Message
     public $sender = null;
 
     /**
+     * 发送者 username.
+     *
+     * @var
+     */
+    public $username;
+
+    /**
      * @var string 经处理的内容 （与类型无关 有可能是一串xml）
      */
     public $message;
@@ -61,9 +68,10 @@ abstract class Message
         $this->setFromType();
         $this->setMessage();
         $this->setTime();
+        $this->setUsername();
 
         return ['raw' => $this->raw, 'from' => $this->from, 'fromType' => $this->fromType, 'sender' => $this->sender,
-            'message' => $this->message, 'time' => $this->time, ];
+            'message' => $this->message, 'time' => $this->time, 'username' => $this->username, ];
     }
 
     /**
@@ -101,6 +109,11 @@ abstract class Message
         if ($this->fromType === self::FROM_TYPE_GROUP) {
             $this->handleGroupContent();
         }
+    }
+
+    private function setUsername()
+    {
+        $this->username = $this->fromType === 'Group' ? $this->sender['UserName'] : $this->from['UserName'];
     }
 
     /**
