@@ -19,6 +19,7 @@ use Illuminate\Container\Container;
  * @property \Hanson\Vbot\Core\MessageHandler $messageHandler
  * @property \Hanson\Vbot\Core\MessageFactory $messageFactory
  * @property \Hanson\Vbot\Core\ShareFactory $shareFactory
+ * @property \Hanson\Vbot\Extension\MessageExtension $messageExtension
  * @property \Hanson\Vbot\Message\Text $text
  * @property \Hanson\Vbot\Core\Sync $sync
  * @property \Hanson\Vbot\Core\ContactFactory $contactFactory
@@ -65,6 +66,7 @@ class Vbot extends Container
         ServiceProviders\MessageServiceProvider::class,
         ServiceProviders\ContactServiceProvider::class,
         ServiceProviders\ApiServiceProvider::class,
+        ServiceProviders\ExtensionServiceProvider::class,
     ];
 
     public function __construct(array $config)

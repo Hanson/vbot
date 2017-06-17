@@ -29,16 +29,16 @@
 #### composer
 
 ```
-composer require "hanson/vbot:v2.0-rc4"
+composer require hanson/vbot
 ```
 
 ## 体验
 
 <img src="https://ws2.sinaimg.cn/large/685b97a1gy1fdordpa0cgj20e80e811z.jpg" height="320">
 
-扫码后，验证输入“echo”即可自动加为好友并且拉入vbot群。
+扫码后，验证输入“echo”即可自动加为好友并且拉入vbot体验群。
 
-vbot并非24小时执行，有时会因为开发调试等原因暂停功能。如果碰巧遇到关闭情况，可加Q群 492548647 了解开放时间。执行后发送“拉我”即可自动邀请进群。
+vbot并非24小时执行，有时会因为开发调试等原因暂停功能。
 
 vbot示例源码为 https://github.com/hanson/vbot/blob/master/example/Example.php
 
@@ -56,7 +56,7 @@ vbot示例源码为 https://github.com/hanson/vbot/blob/master/example/Example.p
   
 [lbbniu/WebWechat](https://github.com/lbbniu/WebWechat) php
 
-感谢楼上两位作者曾对本人耐心解答
+[songtianyi/wechat-go](https://github.com/songtianyi/wechat-go) go
 
 ## donate 名单
 
@@ -67,10 +67,19 @@ donate 名单 （排名按时间倒序）
 
 |捐助者|金额|
 |-----|----|
+|匿名| ￥18.88|
+|[桥边红药的博客](https://www.96qbhy.com)|￥21 * 2 + 5 + 20|
+|匿名| ￥6.66|
+|bug| ￥6.66 + 66 + 5|
+|匿名| ￥6.66|
+|匿名| ￥6.66|
+|匿名| ￥6.66|
+|[vochina](https://github.com/vochina)|￥18.88|
+|李大善人| ￥666|
+|J| ￥6.66|
+|匿名| ￥10|
 |细高| ￥6.66|
-|bug| ￥6.66|
 |匿名| ￥20|
-|[桥边红药的博客](https://www.96qbhy.com)|￥21 * 2|
 |匿名| ￥66|
 |小浪| ￥10|
 |[美羊软件](http://www.yangsoft.cn/)|￥66|

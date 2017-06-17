@@ -26,6 +26,8 @@ class MessageHandler
     {
         $this->vbot->beforeMessageObserver->trigger();
 
+        $this->vbot->messageExtension->initExtensions();
+
         $time = 0;
 
         while (true) {
@@ -82,6 +84,7 @@ class MessageHandler
         if (in_array($retCode, [1100, 1101, 1102, 1205])) { // 微信客户端上登出或者其他设备登录
 
             $this->vbot->console->log('vbot exit normally.');
+            $this->vbot->cache->forget('session.'.$this->vbot->config['session']);
 
             return false;
         } elseif ($retCode != 0) {
@@ -121,6 +124,7 @@ class MessageHandler
                     if ($this->handler) {
                         call_user_func_array($this->handler, [$collection]);
                     }
+                    $this->vbot->messageExtension->exec($collection);
                 }
             }
         }
@@ -140,7 +144,7 @@ class MessageHandler
 
     private function console(Collection $collection)
     {
-        $this->vbot->console->log($collection['content']);
+        $this->vbot->console->message($collection['content']);
     }
 
     private function storeContactsFromMessage($message)
