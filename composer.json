@@ -36,10 +36,5 @@
         "psr-4": {
             "Hanson\\Vbot\\": "src/"
         }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Hanson\\Vbot\\Example\\": "example/"
-        }
     }
 }
