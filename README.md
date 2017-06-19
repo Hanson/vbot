@@ -9,6 +9,10 @@
   <a target="_blank" href="https://www.yousails.com">
     <img src="https://yousails.com/banners/brand.png" width=350>
   </a>
+  <br><br>
+  <a href="https://laravist.com">
+    <img width="300px" src="https://fuss10.elemecdn.com/4/87/c072c1651b0efd1c5cde39bc8b422png.png">
+  </a>
 </p>
 
 ## 安装
@@ -67,6 +71,9 @@ donate 名单 （排名按时间倒序）
 
 |捐助者|金额|
 |-----|----|
+|匿名| ￥6.66|
+|[xiaoyongbrother](https://github.com/xiaoyongbrother)|￥8.88|
+|[panda](https://github.com/wujunze)|￥10.24|
 |匿名| ￥18.88|
 |[桥边红药的博客](https://www.96qbhy.com)|￥21 * 2 + 5 + 20|
 |匿名| ￥6.66|
