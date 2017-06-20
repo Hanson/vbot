@@ -47,7 +47,7 @@ class Console
      *
      * @param $str
      * @param string $level
-     * @param bool $log
+     * @param bool   $log
      */
     public function log($str, $level = 'INFO', $log = false)
     {
