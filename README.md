@@ -71,7 +71,7 @@ donate 名单 （排名按时间倒序）
 
 |捐助者|金额|
 |-----|----|
-|[淘布布网](www.taobubu.com)|￥50|
+|[淘布布网](http://www.taobubu.com)|￥50|
 |匿名| ￥6.66|
 |[xiaoyongbrother](https://github.com/xiaoyongbrother)|￥8.88|
 |[panda](https://github.com/wujunze)|￥10.24|
