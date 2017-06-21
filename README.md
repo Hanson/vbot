@@ -71,6 +71,8 @@ donate 名单 （排名按时间倒序）
 
 |捐助者|金额|
 |-----|----|
+|匿名| ￥66|
+|[yeyupl](https://github.com/yeyupl)| ￥99|
 |[shengbinxu](https://github.com/shengbinxu)|￥20|
 |[桥边红药的博客](https://www.96qbhy.com)|￥21 * 2 + 5 + 20 + 22|
 |[淘布布网](http://www.taobubu.com)|￥50|
