@@ -30,18 +30,22 @@ class ShareFactory
 
     public function make($msg)
     {
-        $xml = Content::formatContent($msg['Content']);
+        try {
+            $xml = Content::formatContent($msg['Content']);
 
-        $this->parse($xml);
+            $this->parse($xml);
 
-        if ($this->type == 6) {
-            return (new File())->make($msg);
-        } elseif ($this->vbot->officials->get($msg['FromUserName'])) {
-            return (new Official())->make($msg);
-        } elseif ($this->type == 33) {
-            return (new Mina())->make($msg);
-        } else {
-            return (new Share())->make($msg);
+            if ($this->type == 6) {
+                return (new File())->make($msg);
+            } elseif ($this->vbot->officials->get($msg['FromUserName'])) {
+                return (new Official())->make($msg);
+            } elseif ($this->type == 33) {
+                return (new Mina())->make($msg);
+            } else {
+                return (new Share())->make($msg);
+            }
+        } catch (\Exception $e) {
+            return null;
         }
     }
 
