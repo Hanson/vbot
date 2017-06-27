@@ -45,7 +45,7 @@ class ShareFactory
                 return (new Share())->make($msg);
             }
         } catch (\Exception $e) {
-            return null;
+            return;
         }
     }
 
