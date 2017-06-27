@@ -71,6 +71,7 @@ donate 名单 （排名按时间倒序）
 
 |捐助者|金额|
 |-----|----|
+|匿名| ￥66.66|
 |匿名| ￥66|
 |[yeyupl](https://github.com/yeyupl)| ￥99|
 |[shengbinxu](https://github.com/shengbinxu)|￥20|
