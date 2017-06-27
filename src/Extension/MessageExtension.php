@@ -12,7 +12,19 @@ class MessageExtension
      */
     protected $vbot;
 
-    protected $extensions = [];
+    /**
+     * 业务扩展
+     *
+     * @var array
+     */
+    protected $serviceExtensions = [];
+
+    /**
+     * 基础扩展
+     *
+     * @var array
+     */
+    public $baseExtensions = [];
 
     public function __construct(Vbot $vbot)
     {
@@ -20,7 +32,7 @@ class MessageExtension
     }
 
     /**
-     * 读取消息拓展.
+     * 读取业务消息拓展.
      *
      * @param $extensions
      *
@@ -33,18 +45,45 @@ class MessageExtension
         }
 
         foreach ($extensions as $extension) {
-            $this->addExtension($extension);
+            $this->addServiceExtension($extension);
         }
+
+        $this->serviceExtensions = array_unique($this->serviceExtensions);
     }
 
     /**
-     * 初始化拓展.
+     * 初始化业务拓展.
      */
-    public function initExtensions()
+    public function initServiceExtensions()
     {
-        foreach ($this->extensions as $extension) {
-            (new $extension())->init();
+        $tmpExtensions = [];
+
+        foreach ($this->serviceExtensions as $serviceExtensions) {
+            $extension = new $serviceExtensions();
+
+            $tmpExtensions[] = $extension->init();
+
+            $this->baseExtensions = array_merge($this->baseExtensions, $extension->baseExtensions);
         }
+
+        $this->serviceExtensions = $tmpExtensions;
+        $this->baseExtensions = array_unique($this->baseExtensions);
+
+        $this->initBaseExtensions();
+    }
+
+    /**
+     * 初始化基础扩展
+     */
+    private function initBaseExtensions()
+    {
+        $tmpExtensions = [];
+
+        foreach ($this->baseExtensions as $baseExtension) {
+            $tmpExtensions[] = (new $baseExtension)->init();
+        }
+
+        $this->baseExtensions = $tmpExtensions;
     }
 
     /**
@@ -54,24 +93,24 @@ class MessageExtension
      */
     public function exec($collection)
     {
-        foreach ($this->extensions as $extension) {
-            (new $extension())->messageHandler($collection);
+        foreach ($this->serviceExtensions as $extension) {
+            $extension->messageHandler($collection);
         }
     }
 
     /**
-     * 添加消息拓展.
+     * 添加业务消息拓展.
      *
      * @param $extension
      *
      * @throws ExtensionException
      */
-    private function addExtension($extension)
+    private function addServiceExtension($extension)
     {
         if ($extension instanceof AbstractMessageHandler) {
             throw new ExtensionException($extension.' is not extend AbstractMessageHandler');
         }
 
-        $this->extensions[] = $extension;
+        $this->serviceExtensions[] = $extension;
     }
 }

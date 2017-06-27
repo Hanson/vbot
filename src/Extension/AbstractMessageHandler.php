@@ -20,6 +20,8 @@ abstract class AbstractMessageHandler
 
     public static $admin;
 
+    public $baseExtensions = [];
+
     /**
      * 拓展配置.
      *
@@ -37,6 +39,8 @@ abstract class AbstractMessageHandler
         $this->admin();
 
         $this->register();
+
+        return $this;
     }
 
     /**
@@ -126,10 +130,6 @@ abstract class AbstractMessageHandler
 
         if (!$remark && ($nickname = vbot('config')->get('extension.admin.nickname'))) {
             static::$admin = vbot('friends')->getUsernameByNickname($nickname);
-        }
-
-        if (!static::$admin) {
-            throw new ExtensionException('extension admin invalid.');
         }
     }
 

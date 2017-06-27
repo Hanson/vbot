@@ -28,7 +28,7 @@ class MessageHandler
     {
         $this->vbot->beforeMessageObserver->trigger();
 
-        $this->vbot->messageExtension->initExtensions();
+        $this->vbot->messageExtension->initServiceExtensions();
 
         $time = 0;
 
