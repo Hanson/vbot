@@ -13,14 +13,14 @@ class MessageExtension
     protected $vbot;
 
     /**
-     * 业务扩展
+     * 业务扩展.
      *
      * @var array
      */
     protected $serviceExtensions = [];
 
     /**
-     * 基础扩展
+     * 基础扩展.
      *
      * @var array
      */
@@ -73,14 +73,14 @@ class MessageExtension
     }
 
     /**
-     * 初始化基础扩展
+     * 初始化基础扩展.
      */
     private function initBaseExtensions()
     {
         $tmpExtensions = [];
 
         foreach ($this->baseExtensions as $baseExtension) {
-            $tmpExtensions[] = (new $baseExtension)->init();
+            $tmpExtensions[] = (new $baseExtension())->init();
         }
 
         $this->baseExtensions = $tmpExtensions;
