@@ -34,8 +34,7 @@
             "src/Support/helpers.php"
         ],
         "psr-4": {
-            "Hanson\\Vbot\\": "src/",
-            "Hanson\\Vbot\\Example\\": "example/"
+            "Hanson\\Vbot\\": "src/"
         }
     }
 }

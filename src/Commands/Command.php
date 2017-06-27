@@ -13,8 +13,6 @@ class Command
     {
         $application = new Application();
 
-        $application->add(new RunExampleCommand());
-
         $application->run();
     }
 }

@@ -47,11 +47,12 @@ class Console
      *
      * @param $str
      * @param string $level
+     * @param bool   $log
      */
-    public function log($str, $level = 'INFO')
+    public function log($str, $level = 'INFO', $log = false)
     {
         if ($this->isOutput()) {
-            if (in_array($level, Logger::getLevels())) {
+            if ($log && in_array($level, array_keys(Logger::getLevels()))) {
                 $this->vbot->log->log($level, $str);
             }
             echo '['.Carbon::now()->toDateTimeString().']'."[{$level}] ".$str.PHP_EOL;

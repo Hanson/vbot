@@ -17,6 +17,8 @@ class MessageHandler
 
     protected $handler;
 
+    protected $customHandler;
+
     public function __construct(Vbot $vbot)
     {
         $this->vbot = $vbot;
@@ -26,11 +28,15 @@ class MessageHandler
     {
         $this->vbot->beforeMessageObserver->trigger();
 
-        $this->vbot->messageExtension->initExtensions();
+        $this->vbot->messageExtension->initServiceExtensions();
 
         $time = 0;
 
         while (true) {
+            if ($this->customHandler) {
+                call_user_func($this->customHandler);
+            }
+
             $time = $this->heartbeat($time);
 
             if (!($checkSync = $this->checkSync())) {
@@ -173,5 +179,21 @@ class MessageHandler
         }
 
         $this->handler = $callback;
+    }
+
+    /**
+     * set a custom handler.
+     *
+     * @param $callback
+     *
+     * @throws ArgumentException
+     */
+    public function setCustomHandler($callback)
+    {
+        if (!is_callable($callback)) {
+            throw new ArgumentException('Argument must be callable in '.get_class());
+        }
+
+        $this->customHandler = $callback;
     }
 }
