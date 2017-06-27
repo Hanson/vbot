@@ -123,7 +123,7 @@ class Friends extends Contacts
             'BaseRequest'        => $this->vbot->config['server.baseRequest'],
             'Opcode'             => $code,
             'VerifyUserListSize' => 1,
-            'VerifyUserList'     => $userList,
+            'VerifyUserList'     => [$userList],
             'VerifyContent'      => $content,
             'SceneListCount'     => 1,
             'SceneList'          => [33],

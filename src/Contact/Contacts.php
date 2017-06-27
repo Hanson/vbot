@@ -90,7 +90,7 @@ class Contacts extends Collection
     {
         $username = $this->getUsername($search, $key, $blur);
 
-        return $this->get($username);
+        return $username ? $this->get($username) : null;
     }
 
     /**
