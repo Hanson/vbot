@@ -35,7 +35,7 @@ class Text extends Message implements MessageInterface
     private function pureText()
     {
         $content = str_replace(' ', ' ', $this->message);
-        $isMatch = preg_match('/@(.+?)\s(.+)/', $content, $match);
+        $isMatch = preg_match('/^@(.+?)\s([\s\S]*)/', $content, $match);
 
         return $isMatch ? $match[2] : $this->message;
     }
