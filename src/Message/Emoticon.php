@@ -39,6 +39,10 @@ class Emoticon extends Message implements MessageInterface
     {
         $file = is_string($mix) ? $mix : static::getDefaultFile($mix['raw']);
 
+        if (!is_file($file)) {
+            return false;
+        }
+
         $response = static::uploadMedia($username, $file);
 
         return static::sendMsg([
