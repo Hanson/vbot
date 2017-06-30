@@ -71,6 +71,7 @@ donate 名单 （排名按时间倒序）
 
 |捐助者|金额|
 |-----|----|
+|[summer](https://github.com/summerblue)|￥66.66 + 200|
 |[gaojiyong](https://github.com/gaojiyong)| ￥8.88 * 2|
 |匿名| ￥66.66|
 |匿名| ￥66|
@@ -122,7 +123,6 @@ donate 名单 （排名按时间倒序）
 |9688| ￥8.88|
 |[kisexu](https://github.com/kisexu)| ￥88|
 |匿名的某师兄| ￥181.80|
-|[summer](https://github.com/summerblue)|￥66.66|
 |A梦|￥18.88 * 4 |
 |[toby2016](https://github.com/toby2016)|￥5|
 
