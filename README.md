@@ -42,9 +42,7 @@ composer require hanson/vbot
 
 扫码后，验证输入“echo”即可自动加为好友并且拉入vbot体验群。
 
-vbot并非24小时执行，有时会因为开发调试等原因暂停功能。
-
-vbot示例源码为 https://github.com/hanson/vbot/blob/master/example/Example.php
+vbot示例源码为 https://github.com/HanSon/my-vbot
 
 ## 文档
 
