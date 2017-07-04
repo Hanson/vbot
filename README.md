@@ -69,6 +69,7 @@ donate 名单 （排名按时间倒序）
 
 |捐助者|金额|
 |-----|----|
+|J| ￥6.66|
 |[summer](https://github.com/summerblue)|￥66.66 + 200|
 |[gaojiyong](https://github.com/gaojiyong)| ￥8.88 * 2|
 |匿名| ￥66.66|
