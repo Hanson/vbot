@@ -88,7 +88,7 @@ abstract class AbstractMessageHandler
             return;
         }
 
-        $this->handler($collection);
+        return $this->handler($collection);
     }
 
     final public function applicationInfo($collection)
