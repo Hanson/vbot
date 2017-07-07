@@ -16,7 +16,7 @@ abstract class AbstractMessageHandler
 
     public $zhName;
 
-    public static $status = true;
+    public $status = true;
 
     public static $admin;
 
@@ -84,7 +84,7 @@ abstract class AbstractMessageHandler
             }
         }
 
-        if (!static::$status) {
+        if (!$this->status) {
             return;
         }
 
@@ -93,7 +93,7 @@ abstract class AbstractMessageHandler
 
     final public function applicationInfo($collection)
     {
-        $status = static::$status ? '开' : '关';
+        $status = $this->status ? '开' : '关';
 
         $admin = static::$admin;
 
@@ -108,9 +108,9 @@ abstract class AbstractMessageHandler
      */
     final public function setStatus(bool $boolean, $collection)
     {
-        static::$status = $boolean;
+        $this->status = $boolean;
 
-        $status = static::$status ? '开' : '关';
+        $status = $this->status ? '开' : '关';
 
         Text::send($collection['from']['UserName'], "应用：{$this->zhName} 状态已更改为：{$status}");
     }
