@@ -94,7 +94,9 @@ class MessageExtension
     public function exec($collection)
     {
         foreach ($this->serviceExtensions as $extension) {
-            $extension->messageHandler($collection);
+            if ($extension->messageHandler($collection)) {
+                return;
+            }
         }
     }
 
