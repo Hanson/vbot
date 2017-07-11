@@ -70,7 +70,7 @@ donate 名单 （排名按时间倒序）
 |捐助者|金额|
 |-----|----|
 |匿名| ￥18.8|
-|J| ￥6.66 * 2|
+|J| ￥6.66 * 4|
 |[summer](https://github.com/summerblue)|￥66.66 + 200|
 |[gaojiyong](https://github.com/gaojiyong)| ￥8.88 * 2|
 |匿名| ￥66.66|
@@ -90,7 +90,6 @@ donate 名单 （排名按时间倒序）
 |匿名| ￥6.66|
 |[vochina](https://github.com/vochina)|￥18.88|
 |李大善人| ￥666|
-|J| ￥6.66|
 |匿名| ￥10|
 |细高| ￥6.66|
 |匿名| ￥20|
