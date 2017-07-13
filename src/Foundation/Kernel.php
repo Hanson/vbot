@@ -56,9 +56,12 @@ class Kernel
 
     private function prepareSession()
     {
-        $session = new Session($this->vbot);
-
-        $sessionKey = $session->currentSession();
+        if(empty($this->vbot->config['session'])){
+            $session = new Session($this->vbot);
+            $sessionKey = $session->currentSession();
+        }else{
+            $sessionKey = $this->vbot->config['session'];
+        }
 
         $this->vbot->config['session'] = $sessionKey;
         $this->vbot->config['session_key'] = 'session.'.$sessionKey;
