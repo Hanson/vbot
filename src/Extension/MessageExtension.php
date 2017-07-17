@@ -90,6 +90,7 @@ class MessageExtension
      * 执行拓展.
      *
      * @param $collection
+     *
      * @return bool
      */
     public function exec($collection)
