@@ -90,12 +90,13 @@ class MessageExtension
      * 执行拓展.
      *
      * @param $collection
+     * @return bool
      */
     public function exec($collection)
     {
         foreach ($this->serviceExtensions as $extension) {
             if ($extension->messageHandler($collection)) {
-                return;
+                return true;
             }
         }
     }
