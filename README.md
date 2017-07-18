@@ -69,6 +69,7 @@ donate 名单 （排名按时间倒序）
 
 |捐助者|金额|
 |-----|----|
+|堃| ￥26.66|
 |J| ￥6.66 * 5|
 |[yaoshanliang](https://github.com/yaoshanliang)| ￥6.66|
 |匿名| ￥18.8|
