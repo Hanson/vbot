@@ -27,14 +27,14 @@ abstract class AbstractMessageHandler
      *
      * @var
      */
-    public static $config;
+    public $config;
 
     /**
      * 初始化拓展.
      */
     public function init()
     {
-        static::$config = vbot('config')->get('extension.'.$this->name);
+        $this->config = vbot('config')->get('extension.'.$this->name);
 
         $this->admin();
 
@@ -61,6 +61,7 @@ abstract class AbstractMessageHandler
      * 消息处理器.
      *
      * @param Collection $collection
+     * @return mixed
      */
     final public function messageHandler(Collection $collection)
     {
@@ -85,7 +86,7 @@ abstract class AbstractMessageHandler
         }
 
         if (!$this->status) {
-            return;
+            return false;
         }
 
         return $this->handler($collection);
