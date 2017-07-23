@@ -61,6 +61,7 @@ abstract class AbstractMessageHandler
      * 消息处理器.
      *
      * @param Collection $collection
+     *
      * @return mixed
      */
     final public function messageHandler(Collection $collection)
