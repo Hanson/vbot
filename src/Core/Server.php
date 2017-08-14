@@ -176,6 +176,7 @@ class Server
         }
 
         $this->vbot->console->log('login time out!', Console::ERROR);
+
         throw new LoginTimeoutException('Login time out.');
     }
 
@@ -242,6 +243,7 @@ class Server
         ApiExceptionHandler::handle($result, function ($result) {
             $this->vbot->cache->forget('session.'.$this->vbot->config['session']);
             $this->vbot->log->error('Init failed.'.json_encode($result));
+
             throw new InitFailException('Init failed.');
         });
 

@@ -23,7 +23,7 @@ class MessageServiceProvider implements ServiceProviderInterface
             return new ShareFactory($vbot);
         });
 
-//        $vbot->bind('text', function () use ($vbot) {
+        //        $vbot->bind('text', function () use ($vbot) {
 //            return new Text($vbot);
 //        });
 //        $vbot->singleton('text', function () use ($vbot) {

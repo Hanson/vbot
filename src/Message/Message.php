@@ -29,19 +29,22 @@ abstract class Message
     public $from;
 
     /**
-     * @var array 当from为群组时，sender为用户发送者
+     * @var array 当from为群组时，sender为用户发送�
      */
     public $sender = null;
 
     /**
-     * 发送者 username.
+     * 发送�
+     * username.
      *
      * @var
      */
     public $username;
 
     /**
-     * @var string 经处理的内容 （与类型无关 有可能是一串xml）
+     * @var string 经处理的�
+     * 容 （与类型无�
+     * � 有可能是一串xml）
      */
     public $message;
 
@@ -51,7 +54,8 @@ abstract class Message
     public $time;
 
     /**
-     * @var string 消息发送者类型
+     * @var string 消息发送�
+     * 类型
      */
     public $fromType;
 
@@ -75,7 +79,8 @@ abstract class Message
     }
 
     /**
-     * 设置消息发送者.
+     * 设置消息发送�
+     * .
      */
     private function setFrom()
     {
@@ -117,7 +122,8 @@ abstract class Message
     }
 
     /**
-     * 处理群发消息的内容.
+     * 处理群发消息的�
+     * 容.
      */
     private function handleGroupContent()
     {

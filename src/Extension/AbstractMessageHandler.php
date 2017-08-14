@@ -23,7 +23,8 @@ abstract class AbstractMessageHandler
     public $baseExtensions = [];
 
     /**
-     * 拓展配置.
+     * 拓展�
+     * �置.
      *
      * @var
      */
@@ -49,7 +50,8 @@ abstract class AbstractMessageHandler
     abstract public function register();
 
     /**
-     * 开发者需要实现的方法.
+     * 开发�
+     * 需要实现的方法.
      *
      * @param Collection $collection
      *
@@ -103,7 +105,8 @@ abstract class AbstractMessageHandler
     }
 
     /**
-     * 设置拓展开关.
+     * 设置拓展开�
+     * �.
      *
      * @param bool $boolean
      * @param $collection

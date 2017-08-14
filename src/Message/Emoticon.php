@@ -57,7 +57,8 @@ class Emoticon extends Message implements MessageInterface
     }
 
     /**
-     * 从本地表情库随机发送一个.
+     * 从本地表�
+     * 库随机发送一个.
      *
      * @param $username
      *
