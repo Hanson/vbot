@@ -31,7 +31,8 @@ class Card extends Message implements MessageInterface
     private $description;
 
     /**
-     * 国内为省，国外为国.
+     * 国�
+     * 为省，国外为国.
      *
      * @var string
      */

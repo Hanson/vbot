@@ -16,7 +16,8 @@ class Transfer extends Message implements MessageInterface
     const TYPE = 'transfer';
 
     /**
-     * 转账金额 单位 元.
+     * 转账金额 单位 �
+     * �.
      *
      * @var string
      */
