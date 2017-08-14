@@ -36,14 +36,6 @@
 composer require hanson/vbot
 ```
 
-## 体验
-
-<img src="https://ws2.sinaimg.cn/large/685b97a1gy1fdordpa0cgj20e80e811z.jpg" height="320">
-
-扫码后，验证输入“echo”即可自动加为好友并且拉入vbot体验群。
-
-vbot示例源码为 https://github.com/HanSon/my-vbot
-
 ## 文档
 
 [详细文档](https://hanson.github.io/vbot)
