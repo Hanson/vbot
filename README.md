@@ -61,6 +61,7 @@ donate 名单 （排名按时间倒序）
 
 |捐助者|金额|
 |-----|----|
+|[elrond-g](https://github.com/elrond-g)| ￥6.66|
 |匿名| ￥10|
 |[醉赞](http://zuizan100.com)| ￥188|
 |堃| ￥26.66|
