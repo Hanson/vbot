@@ -61,6 +61,7 @@ donate 名单 （排名按时间倒序）
 
 |捐助者|金额|
 |-----|----|
+|匿名| ￥6.66|
 |[后三排](https://housanpai.com)|￥20|
 |[RunnerLee](https://github.com/RunnerLee)| ￥20|
 |[elrond-g](https://github.com/elrond-g)| ￥6.66|
