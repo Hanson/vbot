@@ -55,12 +55,12 @@ class File extends Message implements MessageInterface
         $fileName = end($explode);
 
         return static::sendMsg([
-            'Type'        => 6,
-            'Content'     => sprintf("<appmsg appid='wxeb7ec651dd0aefa9' sdkver=''><title>%s</title><des></des><action></action><type>6</type><content></content><url></url><lowurl></lowurl><appattach><totallen>%s</totallen><attachid>%s</attachid><fileext>%s</fileext></appattach><extinfo></extinfo></appmsg>", basename($file), filesize($file), $mediaId, $fileName),
-            'FromUserName'=> vbot('myself')->username,
-            'ToUserName'  => $username,
-            'LocalID'     => time() * 1e4,
-            'ClientMsgId' => time() * 1e4,
+            'Type'         => 6,
+            'Content'      => sprintf("<appmsg appid='wxeb7ec651dd0aefa9' sdkver=''><title>%s</title><des></des><action></action><type>6</type><content></content><url></url><lowurl></lowurl><appattach><totallen>%s</totallen><attachid>%s</attachid><fileext>%s</fileext></appattach><extinfo></extinfo></appmsg>", basename($file), filesize($file), $mediaId, $fileName),
+            'FromUserName' => vbot('myself')->username,
+            'ToUserName'   => $username,
+            'LocalID'      => time() * 1e4,
+            'ClientMsgId'  => time() * 1e4,
         ]);
     }
 
