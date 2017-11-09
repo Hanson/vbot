@@ -23,8 +23,7 @@ abstract class AbstractMessageHandler
     public $baseExtensions = [];
 
     /**
-     * 拓展�
-     * �置.
+     * 拓展配置.
      *
      * @var
      */
@@ -50,8 +49,7 @@ abstract class AbstractMessageHandler
     abstract public function register();
 
     /**
-     * 开发�
-     * 需要实现的方法.
+     * 开发者需要实现的方法.
      *
      * @param Collection $collection
      *
@@ -105,8 +103,7 @@ abstract class AbstractMessageHandler
     }
 
     /**
-     * 设置拓展开�
-     * �.
+     * 设置拓展开关.
      *
      * @param bool $boolean
      * @param $collection
@@ -145,7 +142,7 @@ abstract class AbstractMessageHandler
      *
      * @return bool
      */
-    private function isAdmin($username)
+    final public function isAdmin($username) : bool
     {
         return $username === static::$admin || $username === vbot('myself')->username;
     }
