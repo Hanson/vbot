@@ -35,7 +35,9 @@ class Swoole
             $server->send($fd, $response);
         });
         $setting = $this->vbot->config->get('swoole.setting', []);
-        $server->set($setting);
+        if (!empty($setting)) {
+            $server->set($setting);
+        }
         $server->start();
     }
 
