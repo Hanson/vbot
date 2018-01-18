@@ -25,7 +25,7 @@ class Swoole
         $handleProcess = new Process(function ($worker) use (&$server) {
             $this->vbot->messageHandler->listen($server);
         });
-        $handleProcess->start();
+        $server->addProcess($handleProcess);
 
         $server->on('receive', function (SwooleServer $server, $fd, $from_id, $data) {
             $response = $this->vbot->api->handle($data);
@@ -34,8 +34,9 @@ class Swoole
 
             $server->send($fd, $response);
         });
+        $setting = $this->vbot->config->get('swoole.setting', array());
+        $server->set($setting);
         $server->start();
-        exit;
     }
 
     private function makeResponse($data)
