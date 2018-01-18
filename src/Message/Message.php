@@ -29,7 +29,7 @@ abstract class Message
     public $from;
 
     /**
-     * @var array 当from为群组时，sender为用户发送者
+     * @var array 当from为群组时，sender为用户发送�
      */
     public $sender = null;
 
