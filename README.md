@@ -6,6 +6,10 @@
 <p align="center">
   <b>Special thanks to the generous sponsorship by:</b>
   <br><br>
+  <a target="_blank" href="https://www.jetbrains.com/phpstorm">
+    <img src="https://i.loli.net/2018/03/21/5ab223b75cdfa.png" width=250>
+  </a>
+  <br><br>
   <a target="_blank" href="https://www.yousails.com">
     <img src="https://yousails.com/banners/brand.png" width=350>
   </a>
