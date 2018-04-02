@@ -19,7 +19,7 @@
     "require": {
         "guzzlehttp/guzzle": "^6.2",
         "nesbot/carbon": "^1.21",
-        "symfony/console": "3.*",
+        "symfony/console": "3.*|4.*",
         "monolog/monolog": "^1.22",
         "aferrandini/phpqrcode": "^1.0",
         "illuminate/config": "^5.4",
