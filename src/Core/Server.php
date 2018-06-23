@@ -190,7 +190,11 @@ class Server
         $content = $this->vbot->http->get($this->vbot->config['server.uri.redirect']);
 
         $data = (array) simplexml_load_string($content, 'SimpleXMLElement', LIBXML_NOCDATA);
-
+        
+        if (isset($data['ret']) && $data['ret'] == 1203) {
+            throw new LoginFailedException($data['message']);
+        }
+        
         $this->vbot->config['server.skey'] = $data['skey'];
         $this->vbot->config['server.sid'] = $data['wxsid'];
         $this->vbot->config['server.uin'] = $data['wxuin'];
