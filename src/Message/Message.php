@@ -43,8 +43,8 @@ abstract class Message
 
     /**
      * @var string 经处理的�
-     * 容 （与类型无�
-     * � 有可能是一串xml）
+     *             容 （与类型无�
+     *             � 有可能是一串xml）
      */
     public $message;
 
@@ -55,7 +55,7 @@ abstract class Message
 
     /**
      * @var string 消息发送�
-     * 类型
+     *             类型
      */
     public $fromType;
 
