@@ -13,7 +13,6 @@ use Hanson\Vbot\Exceptions\FetchUuidException;
 use Hanson\Vbot\Exceptions\LoginFailedException;
 use Hanson\Vbot\Exceptions\LoginTimeoutException;
 use Symfony\Component\Debug\Exception\FatalErrorException;
-use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Throwable;
 
 class ExceptionHandler
@@ -123,7 +122,6 @@ class ExceptionHandler
      *
      * @param \Throwable $e
      *
-     * @throws FatalThrowableError
      * @throws Throwable
      *
      * @return bool
