@@ -130,10 +130,6 @@ class ExceptionHandler
      */
     public function handleException(Throwable $e)
     {
-        if (!$e instanceof Exception) {
-            $e = new FatalThrowableError($e);
-        }
-
         $this->vbot->log->error($e->getMessage());
 
         $this->report($e);
