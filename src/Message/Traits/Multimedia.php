@@ -62,7 +62,7 @@ trait Multimedia
     {
         $serverConfig = vbot('config')['server'];
 
-        return $serverConfig['uri']['base'].DIRECTORY_SEPARATOR.static::DOWNLOAD_API."{$message['MsgId']}&skey={$serverConfig['skey']}";
+        return $serverConfig['uri']['base'].'/'.static::DOWNLOAD_API."{$message['MsgId']}&skey={$serverConfig['skey']}";
     }
 
     protected static function getDownloadOption($message)
