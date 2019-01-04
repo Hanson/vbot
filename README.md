@@ -65,12 +65,12 @@ donate 名单 （排名按时间倒序）
 
 |捐助者|金额|
 |-----|----|
+|[阿震](https://github.com/zzDylan)|￥100 + 10|
 |馒头| ￥66.66|
 |匿名| ￥33.33|
 |[腾狮科技](https://twinstek.com)| ￥88.88|
 |晓明|￥88.8|
 |陈冲|￥888 + 8.88|
-|[阿震](https://github.com/zzDylan)|￥100|
 |[15007163260](https://github.com/15007163260)|￥8.88|
 |[桥边红药的博客](https://www.96qbhy.com)|￥21 * 2 + 5 + 20 + 22 + 100|
 |[greedying](https://github.com/greedying)|￥30|
