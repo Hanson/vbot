@@ -196,7 +196,7 @@ class Groups extends Contacts
      *
      * @return bool
      */
-    private function add($username)
+    public function add($username)
     {
         $result = $this->vbot->http->json(sprintf('%s/webwxbatchgetcontact?type=ex&r=%s&pass_ticket=%s', $this->vbot->config['server.uri.base'], time(), $this->vbot->config['server.passTicket']), [
             'Count'       => 1,
