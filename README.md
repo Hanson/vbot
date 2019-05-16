@@ -12,6 +12,7 @@
   <br><br>
 </p>
 ### 更新bug:
+
 2019.5.17 修复cache为redis时，Illuminate\Redis\RedisManager 构造函数缺少参数的错误；
 
 ## 安装
