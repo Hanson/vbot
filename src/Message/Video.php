@@ -41,7 +41,7 @@ class Video extends Message implements MessageInterface
             return false;
         }
 
-        $response = static::uploadMedia($username, $file);
+        $response = static::uploadVideo($username, $file);
 
         return static::sendMsg([
             'Type'         => 43,
