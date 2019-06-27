@@ -99,7 +99,7 @@ trait Multimedia
     {
         return vbot('config')['user_path'].static::TYPE.DIRECTORY_SEPARATOR.static::fileName($message);
     }
-    
+
     /**
      * @param $username
      * @param $file
@@ -112,24 +112,24 @@ trait Multimedia
             return false;
         }
 
-        $url = vbot('config')['server.uri.file'] . '/webwxuploadmedia?f=json';
+        $url = vbot('config')['server.uri.file'].'/webwxuploadmedia?f=json';
 
-        static::$file           = $file;
+        static::$file = $file;
         list($mime, $mediaType) = static::getMediaType($file);
 
-        $result        = '';
-        $fileSize      = filesize($file);
-        $streamLen     = 524288;
-        $chunks        = ceil($fileSize / $streamLen);
-        $chunk         = 0;
+        $result = '';
+        $fileSize = filesize($file);
+        $streamLen = 524288;
+        $chunks = ceil($fileSize / $streamLen);
+        $chunk = 0;
         $clientMediaId = Common::getMillisecond();
-        $fp            = fopen($file, "rb");
+        $fp = fopen($file, 'rb');
         while (!feof($fp)) {
             $data = [
                 'id'                 => 'WU_FILE_0',
                 'name'               => basename($file),
                 'type'               => $mime,
-                'lastModifiedDate'   => gmdate('D M d Y H:i:s TO', filemtime($file)) . ' (CST)',
+                'lastModifiedDate'   => gmdate('D M d Y H:i:s TO', filemtime($file)).' (CST)',
                 'size'               => $fileSize,
                 'chunks'             => $chunks,
                 'chunk'              => $chunk,

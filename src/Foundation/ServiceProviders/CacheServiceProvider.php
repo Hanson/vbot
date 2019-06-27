@@ -7,7 +7,6 @@ use Hanson\Vbot\Foundation\Vbot;
 use Illuminate\Cache\CacheManager;
 use Illuminate\Cache\MemcachedConnector;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Redis\Database;
 use Illuminate\Redis\RedisManager;
 
 class CacheServiceProvider implements ServiceProviderInterface
