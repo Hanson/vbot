@@ -5,6 +5,7 @@ namespace Hanson\Vbot\Message\Traits;
 use Hanson\Vbot\Console\Console;
 use Hanson\Vbot\Core\ApiExceptionHandler;
 use Hanson\Vbot\Exceptions\ArgumentException;
+use Hanson\Vbot\Support\Common;
 use Hanson\Vbot\Support\File;
 
 trait Multimedia
