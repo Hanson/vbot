@@ -235,7 +235,7 @@ class Server
         $result = $this->vbot->http->json($url, [
             'BaseRequest' => $this->vbot->config['server.baseRequest'],
         ], true);
-        
+
         ApiExceptionHandler::handle($result, function ($result) {
             $this->vbot->cache->forget('session.'.$this->vbot->config['session']);
             $this->vbot->log->error('Init failed.'.json_encode($result));
