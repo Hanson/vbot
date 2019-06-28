@@ -230,22 +230,22 @@ class Server
     protected function init($first = true)
     {
         $this->beforeInitSuccess();
-        $url = $this->vbot->config['server.uri.base'].'/webwxinit?r='.time();
+        $url = $this->vbot->config['server.uri.base'].'/webwxinit?r='.time().'&pass_ticket='.$this->vbot->config['server.passTicket'];
 
         $result = $this->vbot->http->json($url, [
             'BaseRequest' => $this->vbot->config['server.baseRequest'],
         ], true);
-
-        $this->generateSyncKey($result, $first);
-
-        $this->vbot->myself->init($result['User']);
-
+        
         ApiExceptionHandler::handle($result, function ($result) {
             $this->vbot->cache->forget('session.'.$this->vbot->config['session']);
             $this->vbot->log->error('Init failed.'.json_encode($result));
 
             throw new InitFailException('Init failed.');
         });
+
+        $this->generateSyncKey($result, $first);
+
+        $this->vbot->myself->init($result['User']);
 
         $this->afterInitSuccess($result);
 
