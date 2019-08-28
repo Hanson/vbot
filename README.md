@@ -58,6 +58,7 @@ donate 名单 （排名按时间倒序）
 
 |捐助者|金额|
 |-----|----|
+|[yuexueyu](https://github.com/yuexueyu)|￥6.66|
 |林子| ￥8.88|
 |[阿震](https://github.com/zzDylan)|￥100 + 10|
 |馒头| ￥66.66|
