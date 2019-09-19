@@ -5,6 +5,7 @@ namespace Hanson\Vbot\Message\Traits;
 use Hanson\Vbot\Console\Console;
 use Hanson\Vbot\Core\ApiExceptionHandler;
 use Hanson\Vbot\Exceptions\ArgumentException;
+use Hanson\Vbot\Support\Common;
 use Hanson\Vbot\Support\File;
 
 trait Multimedia
@@ -98,6 +99,71 @@ trait Multimedia
     protected static function getDefaultFile($message)
     {
         return vbot('config')['user_path'].static::TYPE.DIRECTORY_SEPARATOR.static::fileName($message);
+    }
+
+    /**
+     * @param $username
+     * @param $file
+     *
+     * @return bool|mixed|string
+     */
+    public static function uploadVideo($username, $file)
+    {
+        if (!is_file($file)) {
+            return false;
+        }
+
+        $url = vbot('config')['server.uri.file'].'/webwxuploadmedia?f=json';
+
+        static::$file = $file;
+        list($mime, $mediaType) = static::getMediaType($file);
+
+        $result = '';
+        $fileSize = filesize($file);
+        $streamLen = 524288;
+        $chunks = ceil($fileSize / $streamLen);
+        $chunk = 0;
+        $clientMediaId = Common::getMillisecond();
+        $fp = fopen($file, 'rb');
+        while (!feof($fp)) {
+            $data = [
+                'id'                 => 'WU_FILE_0',
+                'name'               => basename($file),
+                'type'               => $mime,
+                'lastModifiedDate'   => gmdate('D M d Y H:i:s TO', filemtime($file)).' (CST)',
+                'size'               => $fileSize,
+                'chunks'             => $chunks,
+                'chunk'              => $chunk,
+                'mediatype'          => $mediaType,
+                'uploadmediarequest' => json_encode([
+                    'BaseRequest'   => vbot('config')['server.baseRequest'],
+                    'ClientMediaId' => $clientMediaId,
+                    'TotalLen'      => $fileSize,
+                    'StartPos'      => 0,
+                    'DataLen'       => $fileSize,
+                    'MediaType'     => 4,
+                    'UploadType'    => 2,
+                    'FromUserName'  => vbot('myself')->username,
+                    'ToUserName'    => $username,
+                    'FileMd5'       => md5_file($file),
+                ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                'webwx_data_ticket'  => static::getTicket(),
+                'pass_ticket'        => vbot('config')['server.passTicket'],
+                'filename'           => fread($fp, $streamLen),
+            ];
+
+            $data = static::dataToMultipart($data);
+
+            $result = vbot('http')->request($url, 'post', [
+                'multipart' => $data,
+            ]);
+            $result = json_decode($result, true);
+
+            $chunk++;
+        }
+        fclose($fp);
+
+        return ApiExceptionHandler::handle($result);
     }
 
     /**
