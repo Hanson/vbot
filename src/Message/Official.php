@@ -46,7 +46,7 @@ class Official extends Message implements MessageInterface
         $this->url = $this->raw['Url'];
     }
 
-    protected function getExpand():array
+    protected function getExpand(): array
     {
         return ['title' => $this->title, 'description' => $this->description, 'app' => $this->app, 'url' => $this->url,
             'articles'  => $this->articles, ];

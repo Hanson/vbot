@@ -142,7 +142,7 @@ abstract class AbstractMessageHandler
      *
      * @return bool
      */
-    final public function isAdmin($username) : bool
+    final public function isAdmin($username): bool
     {
         return $username === static::$admin || $username === vbot('myself')->username;
     }

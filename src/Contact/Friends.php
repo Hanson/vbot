@@ -143,7 +143,7 @@ class Friends extends Contacts
      *
      * @return array
      */
-    public function update($username, $list = null) :array
+    public function update($username, $list = null): array
     {
         $username = is_array($username) ?: [$username];
 

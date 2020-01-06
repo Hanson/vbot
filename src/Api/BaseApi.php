@@ -22,12 +22,12 @@ abstract class BaseApi
         return true;
     }
 
-    protected function response($result = [], $code = 200):array
+    protected function response($result = [], $code = 200): array
     {
         return ['code' => $code, 'result' => $result];
     }
 
-    public function execute($params):array
+    public function execute($params): array
     {
         if (is_array($result = $this->validate($params))) {
             return $result;
@@ -36,7 +36,7 @@ abstract class BaseApi
         return $this->handle($params);
     }
 
-    abstract public function needParams():array;
+    abstract public function needParams(): array;
 
-    abstract public function handle($params):array;
+    abstract public function handle($params): array;
 }

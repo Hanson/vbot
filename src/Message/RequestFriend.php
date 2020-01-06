@@ -34,7 +34,7 @@ class RequestFriend extends Message implements MessageInterface
         }
     }
 
-    protected function getExpand():array
+    protected function getExpand(): array
     {
         return ['info' => $this->info, 'avatar' => $this->avatar];
     }

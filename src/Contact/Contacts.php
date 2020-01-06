@@ -176,7 +176,7 @@ class Contacts extends Collection
      *
      * @return array
      */
-    public function update($username, $list) :array
+    public function update($username, $list): array
     {
         $usernames = is_string($username) ? [$username] : $username;
 

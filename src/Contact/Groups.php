@@ -179,10 +179,10 @@ class Groups extends Contacts
     {
         $result = $this->vbot->http->post(sprintf('%s/webwxupdatechatroom?fun=modtopic&pass_ticket=%s', $this->vbot->config['server.uri.base'], $this->vbot->config['server.passTicket']),
             json_encode([
-            'BaseRequest'  => $this->vbot->config['server.baseRequest'],
-            'ChatRoomName' => $group,
-            'NewTopic'     => $name,
-        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), true);
+                'BaseRequest'  => $this->vbot->config['server.baseRequest'],
+                'ChatRoomName' => $group,
+                'NewTopic'     => $name,
+            ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), true);
 
         return $result['BaseResponse']['Ret'] == 0;
     }
@@ -226,7 +226,7 @@ class Groups extends Contacts
      *
      * @return array
      */
-    public function update($username, $list = null) :array
+    public function update($username, $list = null): array
     {
         $username = is_array($username) ?: [$username];
 
