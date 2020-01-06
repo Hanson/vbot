@@ -58,7 +58,7 @@ class Transfer extends Message implements MessageInterface
         $this->transactionId = $fee['transcationid'];
     }
 
-    protected function getExpand():array
+    protected function getExpand(): array
     {
         return ['fee' => $this->fee, 'transaction_id' => $this->transactionId, 'memo' => $this->memo];
     }

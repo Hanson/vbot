@@ -31,7 +31,7 @@ class Mina extends Message implements MessageInterface
         $this->url = $info['url'];
     }
 
-    protected function getExpand():array
+    protected function getExpand(): array
     {
         return ['title' => $this->title, 'url' => $this->url];
     }

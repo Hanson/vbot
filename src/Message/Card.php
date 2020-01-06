@@ -50,7 +50,7 @@ class Card extends Message implements MessageInterface
         return $this->getCollection($msg, static::TYPE);
     }
 
-    protected function getExpand():array
+    protected function getExpand(): array
     {
         return [
             'info'        => $this->info, 'avatar' => $this->bigAvatar, 'small_avatar' => $this->smallAvatar,

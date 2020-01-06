@@ -34,7 +34,7 @@ class Recall extends Message implements MessageInterface
         }
     }
 
-    protected function getExpand():array
+    protected function getExpand(): array
     {
         return ['origin' => $this->origin, 'nickname' => $this->nickname];
     }

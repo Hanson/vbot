@@ -64,7 +64,7 @@ abstract class Message
      */
     public $raw;
 
-    protected function create($msg):array
+    protected function create($msg): array
     {
         $this->raw = $msg;
 
@@ -162,12 +162,12 @@ abstract class Message
     {
     }
 
-    protected function getExpand():array
+    protected function getExpand(): array
     {
         return [];
     }
 
-    abstract protected function parseToContent():string;
+    abstract protected function parseToContent(): string;
 
     public function __toString()
     {

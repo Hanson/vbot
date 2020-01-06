@@ -47,7 +47,7 @@ class GroupChange extends Message implements MessageInterface
         }
     }
 
-    protected function getExpand():array
+    protected function getExpand(): array
     {
         return ['action' => $this->action, 'inviter' => $this->inviter, 'invited' => $this->invited];
     }

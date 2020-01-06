@@ -45,7 +45,7 @@ class Text extends Message implements MessageInterface
         return ['isAt' => $this->isAt, 'pure' => $this->pure];
     }
 
-    protected function parseToContent():string
+    protected function parseToContent(): string
     {
         return $this->message;
     }
