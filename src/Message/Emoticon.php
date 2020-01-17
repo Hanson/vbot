@@ -15,8 +15,8 @@ use Hanson\Vbot\Support\File;
 
 class Emoticon extends Message implements MessageInterface
 {
-    use SendAble, Multimedia;
-
+    use SendAble;
+    use Multimedia;
     const API = 'webwxsendemoticon?fun=sys&f=json&';
     const DOWNLOAD_API = 'webwxgetmsgimg?&MsgID=';
     const EXT = '.gif';

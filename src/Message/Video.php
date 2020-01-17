@@ -14,8 +14,8 @@ use Hanson\Vbot\Message\Traits\SendAble;
 
 class Video extends Message implements MessageInterface
 {
-    use SendAble, Multimedia;
-
+    use SendAble;
+    use Multimedia;
     const API = 'webwxsendvideomsg?fun=async&f=json&';
     const DOWNLOAD_API = 'webwxgetvideo?msgid=';
     const EXT = '.mp4';
