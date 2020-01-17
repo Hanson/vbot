@@ -14,8 +14,8 @@ use Hanson\Vbot\Message\Traits\SendAble;
 
 class Image extends Message implements MessageInterface
 {
-    use Multimedia, SendAble;
-
+    use Multimedia;
+    use SendAble;
     const API = 'webwxsendmsgimg?fun=async&f=json&';
     const DOWNLOAD_API = 'webwxgetmsgimg?&MsgID=';
     const EXT = '.jpg';

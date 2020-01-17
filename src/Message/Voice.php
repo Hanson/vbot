@@ -14,8 +14,8 @@ use Hanson\Vbot\Message\Traits\SendAble;
 
 class Voice extends Message implements MessageInterface
 {
-    use Multimedia, SendAble;
-
+    use Multimedia;
+    use SendAble;
     const API = 'webwxsendappmsg?fun=async&f=json&';
     const DOWNLOAD_API = 'webwxgetvoice?msgid=';
     const EXT = '.mp3';
