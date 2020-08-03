@@ -18,8 +18,10 @@ trait SendAble
             'Scene'       => 0,
         ];
 
-        $result = vbot('http')->post(static::getUrl(),
-            json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), true
+        $result = vbot('http')->post(
+            static::getUrl(),
+            json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+            true
         );
 
         static::stopSync();

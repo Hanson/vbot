@@ -47,7 +47,8 @@ class ContactFactory
      */
     public function fetchAllContacts($seq = 0)
     {
-        $url = sprintf($this->vbot->config['server.uri.base'].'/webwxgetcontact?pass_ticket=%s&skey=%s&r=%s&seq=%s',
+        $url = sprintf(
+            $this->vbot->config['server.uri.base'].'/webwxgetcontact?pass_ticket=%s&skey=%s&r=%s&seq=%s',
             $this->vbot->config['server.passTicket'],
             $this->vbot->config['server.skey'],
             time(),
@@ -90,8 +91,10 @@ class ContactFactory
      */
     public function fetchGroupMembers()
     {
-        $url = sprintf($this->vbot->config['server.uri.base'].'/webwxbatchgetcontact?type=ex&r=%s&pass_ticket=%s',
-            time(), $this->vbot->config['server.passTicket']
+        $url = sprintf(
+            $this->vbot->config['server.uri.base'].'/webwxbatchgetcontact?type=ex&r=%s&pass_ticket=%s',
+            time(),
+            $this->vbot->config['server.passTicket']
         );
 
         $list = [];

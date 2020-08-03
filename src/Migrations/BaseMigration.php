@@ -7,9 +7,9 @@ use Phinx\Migration\AbstractMigration;
 
 class BaseMigration extends AbstractMigration
 {
-    /** @var \Illuminate\Database\Capsule\Manager $capsule */
+    /** @var \Illuminate\Database\Capsule\Manager */
     public $capsule;
-    /** @var \Illuminate\Database\Schema\Builder $capsule */
+    /** @var \Illuminate\Database\Schema\Builder */
     public $schema;
 
     public function init()

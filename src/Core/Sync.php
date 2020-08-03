@@ -59,7 +59,8 @@ class Sync
      */
     public function sync()
     {
-        $url = sprintf($this->vbot->config['server.uri.base'].'/webwxsync?sid=%s&skey=%s&lang=zh_CN&pass_ticket=%s',
+        $url = sprintf(
+            $this->vbot->config['server.uri.base'].'/webwxsync?sid=%s&skey=%s&lang=zh_CN&pass_ticket=%s',
             $this->vbot->config['server.sid'],
             $this->vbot->config['server.skey'],
             $this->vbot->config['server.passTicket']
