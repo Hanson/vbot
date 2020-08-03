@@ -16,10 +16,6 @@
 
 WEB 协议不再稳定
 
-提供 vbot 安卓机器人（基于安卓协议） [点击此处下载](https://github.com/Hanson/vbot/releases/download/2.0.15/MicroChat.7z)
-
-详情使用咨询 QQ：524291355
-
 ## 安装
 
 ### 环境要求
