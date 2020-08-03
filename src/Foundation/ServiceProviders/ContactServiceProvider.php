@@ -20,7 +20,7 @@ class ContactServiceProvider implements ServiceProviderInterface
         $vbot->bind('contactFactory', function () use ($vbot) {
             return new ContactFactory($vbot);
         });
-        $vbot->singleton('myself', function () use ($vbot) {
+        $vbot->singleton('myself', function () {
             return new Myself();
         });
         $vbot->singleton('friends', function () use ($vbot) {

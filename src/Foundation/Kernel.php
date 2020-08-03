@@ -29,11 +29,11 @@ class Kernel
     private function checkEnvironment()
     {
         if (PHP_SAPI !== 'cli') {
-            die('Please execute script in terminal!');
+            exit('Please execute script in terminal!');
         }
 
         if (version_compare(PHP_VERSION, '7.0.0', '<')) {
-            die('Vbot have to run under php 7! Current version is :'.PHP_VERSION);
+            exit('Vbot have to run under php 7! Current version is :'.PHP_VERSION);
         }
 
         $mustExtensions = ['gd', 'fileinfo', 'SimpleXML'];
@@ -41,11 +41,11 @@ class Kernel
         $diff = array_diff($mustExtensions, get_loaded_extensions());
 
         if ($diff) {
-            die('Running script failed! please install extensions: '.PHP_EOL.implode("\n", $diff).PHP_EOL);
+            exit('Running script failed! please install extensions: '.PHP_EOL.implode("\n", $diff).PHP_EOL);
         }
 
         if ($this->vbot->config->get('swoole.status') && !in_array('swoole', get_loaded_extensions())) {
-            die('Please install extension: swoole. Or you can turn it off in config.'.PHP_EOL);
+            exit('Please install extension: swoole. Or you can turn it off in config.'.PHP_EOL);
         }
     }
 

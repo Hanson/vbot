@@ -177,12 +177,15 @@ class Groups extends Contacts
      */
     public function setGroupName($group, $name)
     {
-        $result = $this->vbot->http->post(sprintf('%s/webwxupdatechatroom?fun=modtopic&pass_ticket=%s', $this->vbot->config['server.uri.base'], $this->vbot->config['server.passTicket']),
+        $result = $this->vbot->http->post(
+            sprintf('%s/webwxupdatechatroom?fun=modtopic&pass_ticket=%s', $this->vbot->config['server.uri.base'], $this->vbot->config['server.passTicket']),
             json_encode([
                 'BaseRequest'  => $this->vbot->config['server.baseRequest'],
                 'ChatRoomName' => $group,
                 'NewTopic'     => $name,
-            ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), true);
+            ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+            true
+        );
 
         return $result['BaseResponse']['Ret'] == 0;
     }
