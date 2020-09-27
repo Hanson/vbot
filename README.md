@@ -14,7 +14,9 @@
 
 ## 提示
 
-WEB 协议不再稳定
+现在微信网页已经禁止大部分账号登录，强烈不建议生产环境中使用，仅供学习参考。
+
+如需稳定可靠的生产协议，请联系 QQ 524291355
 
 ## 安装
 
@@ -39,7 +41,7 @@ composer require hanson/vbot
 
 ## 文档
 
-[详细文档](https://hanson.github.io/vbot)
+[详细文档](http://vbot.hanc.cc)
 
 ## 相似项目
 
