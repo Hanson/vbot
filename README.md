@@ -18,6 +18,11 @@
 
 如需稳定可靠的生产协议，请联系 QQ 524291355
 
+## 交流群
+
+![225e85ca5c45a999cc8a1075ad7bb09](https://user-images.githubusercontent.com/10583423/131942818-fe8904a3-747b-4084-8e28-b9c2a38a0259.jpg)
+
+
 ## 安装
 
 ### 环境要求
