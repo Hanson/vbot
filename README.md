@@ -20,7 +20,7 @@
 
 ## 交流群
 
-![225e85ca5c45a999cc8a1075ad7bb09](https://user-images.githubusercontent.com/10583423/131942818-fe8904a3-747b-4084-8e28-b9c2a38a0259.jpg)
+![7d5daed934565a639d8fbac75e2a3f5](https://user-images.githubusercontent.com/10583423/133231092-f4a25839-4d2d-4bcb-8cb8-cbde9ed7768a.jpg)
 
 
 ## 安装
