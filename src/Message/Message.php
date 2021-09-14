@@ -9,7 +9,6 @@
 namespace Hanson\Vbot\Message;
 
 use Carbon\Carbon;
-use Hanson\Vbot\Foundation\Vbot;
 use Hanson\Vbot\Support\Content;
 use Illuminate\Support\Collection;
 
