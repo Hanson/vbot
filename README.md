@@ -14,13 +14,13 @@
 
 ## 提示
 
-强烈不建议生产环境中使用，仅供学习参考。
+仅供学习参考。
 
 如需稳定可靠的生产协议，请联系 QQ 524291355
 
 ## 交流群
 
-![b2d2e0a3ba65d7355bb83c4aeda9540](https://user-images.githubusercontent.com/10583423/135378684-6b1e7ce0-b995-4aba-be88-7b8cf4f8c519.jpg)
+![2cf8b1631d5b9c56e1dd2c6a9b42ee6](https://user-images.githubusercontent.com/10583423/136640881-231f2ba1-cc5c-4107-96b6-cda8b763bdc2.jpg)
 
 
 ## 安装
