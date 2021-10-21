@@ -20,7 +20,10 @@
 
 ## 交流群
 
-加我微信拉进交流群
+* *扫二维码*
+* 备注  **vbot**
+* 将自动加好友并拉群
+
 ![0504d75fccc62a7b9b2325bffeea547](https://user-images.githubusercontent.com/10583423/138202288-9d2243be-52ae-4483-8fad-2bf5786da1af.jpg)
 
 
