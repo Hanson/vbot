@@ -20,7 +20,8 @@
 
 ## 交流群
 
-![2cf8b1631d5b9c56e1dd2c6a9b42ee6](https://user-images.githubusercontent.com/10583423/136640881-231f2ba1-cc5c-4107-96b6-cda8b763bdc2.jpg)
+加我微信拉进交流群
+![0504d75fccc62a7b9b2325bffeea547](https://user-images.githubusercontent.com/10583423/138202288-9d2243be-52ae-4483-8fad-2bf5786da1af.jpg)
 
 
 ## 安装
