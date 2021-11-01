@@ -237,7 +237,7 @@ class Server
     {
         $this->beforeInitSuccess();
         $url = $this->vbot->config['server.uri.base'].'/webwxinit?r='.(-time() / 1579).'&pass_ticket='.$this->vbot->config['server.passTicket'];
-        
+
         $result = $this->vbot->http->post($url, json_encode([
             'BaseRequest' => $this->vbot->config['server.baseRequest'],
         ], JSON_UNESCAPED_SLASHES), true);
