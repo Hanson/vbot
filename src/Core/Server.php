@@ -236,7 +236,7 @@ class Server
     protected function init($first = true)
     {
         $this->beforeInitSuccess();
-        $url = $this->vbot->config['server.uri.base'].'/webwxinit?r='.time().'&pass_ticket='.$this->vbot->config['server.passTicket'];
+        $url = $this->vbot->config['server.uri.base'].'/webwxinit?r='.(-time() / 1579).'&pass_ticket='.$this->vbot->config['server.passTicket'];
 
         $result = $this->vbot->http->json($url, [
             'BaseRequest' => $this->vbot->config['server.baseRequest'],
