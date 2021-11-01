@@ -237,10 +237,10 @@ class Server
     {
         $this->beforeInitSuccess();
         $url = $this->vbot->config['server.uri.base'].'/webwxinit?r='.(-time() / 1579).'&pass_ticket='.$this->vbot->config['server.passTicket'];
-
-        $result = $this->vbot->http->json($url, [
+        
+        $result = $this->vbot->http->post($url, json_encode([
             'BaseRequest' => $this->vbot->config['server.baseRequest'],
-        ], true);
+        ], JSON_UNESCAPED_SLASHES), true);
 
         ApiExceptionHandler::handle($result, function ($result) {
             $this->vbot->cache->forget('session.'.$this->vbot->config['session']);
