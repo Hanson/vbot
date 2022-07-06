@@ -20,6 +20,8 @@
 
 稳定协议支持 *微信与企业微信*
 
+稳定协议文档 [文档地址](https://www.apifox.cn/apidoc/shared-71b9855b-693c-48fc-858b-cde2c5afe5a8)
+
 ## 交流群
 
 * *扫二维码*
