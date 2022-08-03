@@ -55,8 +55,7 @@ composer require hanson/vbot
 ```
 
 ## 文档
-
-[详细文档](http://vbot.hanc.cc)
+[详细文档](http://create.hanc.cc/vbot)
 
 ## 相似项目
 
