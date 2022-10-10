@@ -36,5 +36,10 @@
         "psr-4": {
             "Hanson\\Vbot\\": "src/"
         }
+    },
+    "config": {
+        "allow-plugins": {
+            "kylekatarnls/update-helper": true
+        }
     }
 }
