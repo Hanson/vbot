@@ -45,15 +45,3 @@ composer require hanson/vbot
 
 ## 文档
 [详细文档](http://create.hanc.cc/vbot)
-
-## 相似项目
-
-[littlecodersh/ItChat](https://github.com/littlecodersh/ItChat) python
-  
-[Wechaty - A Javascript Implementation of Wechat Bot Framework](https://github.com/Chatie/wechaty)
-
-[liuwons/wxBot](https://github.com/liuwons/wxBot) python
-  
-[lbbniu/WebWechat](https://github.com/lbbniu/WebWechat) php
-
-[songtianyi/wechat-go](https://github.com/songtianyi/wechat-go) go
