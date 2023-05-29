@@ -84,7 +84,6 @@ class Common
              * 如果由于不检查成员导致的群名重复，在最后会由于匹配多于一条记录而报错，守住底线，保证程序不出错.
              */
             if (count($group['MemberList']) > 0) {
-
                 //首位群员标识不匹配
                 if ('' != $firstMemberAttr) {
                     if ($firstMemberAttr == $group['MemberList'][0]['AttrStatus']) {
