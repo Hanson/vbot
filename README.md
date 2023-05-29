@@ -46,5 +46,9 @@ composer require hanson/vbot
 ## 文档
 [详细文档](http://create.hanc.cc/vbot)
 
+## 聚合聊天
+![cd788338d401375c814f0fd66f4fbb81](https://github.com/Hanson/vbot/assets/10583423/034ce0fb-12c2-4ce0-8335-cf5132b17bca)
+
+
 ## 联系我
 ![c1dd0c62c37d4a9ab8c6aa7a4e51573](https://user-images.githubusercontent.com/10583423/220509100-a4ecf72e-5d98-41bb-bcbf-41f955c99ba4.jpg)
