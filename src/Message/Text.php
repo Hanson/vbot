@@ -53,7 +53,7 @@ class Text extends Message implements MessageInterface
     /**
      * send a text message.
      *
-     * @param $word string
+     * @param $word     string
      * @param $username string
      *
      * @return bool|mixed

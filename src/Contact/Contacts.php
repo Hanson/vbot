@@ -28,7 +28,7 @@ class Contacts extends Collection
     /**
      * 根据昵称获取对象
      *
-     * @param $nickname
+     * @param      $nickname
      * @param bool $blur
      *
      * @return bool|string
@@ -54,8 +54,8 @@ class Contacts extends Collection
     /**
      * 获取Username.
      *
-     * @param $search
-     * @param $key
+     * @param      $search
+     * @param      $key
      * @param bool $blur
      *
      * @return string
@@ -80,8 +80,8 @@ class Contacts extends Collection
     /**
      * 获取整个数组.
      *
-     * @param $search
-     * @param $key
+     * @param      $search
+     * @param      $key
      * @param bool $blur
      *
      * @return mixed|static

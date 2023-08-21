@@ -106,7 +106,7 @@ abstract class AbstractMessageHandler
      * 设置拓展开关.
      *
      * @param bool $boolean
-     * @param $collection
+     * @param      $collection
      */
     final public function setStatus(bool $boolean, $collection)
     {
