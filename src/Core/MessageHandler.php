@@ -79,8 +79,8 @@ class MessageHandler
     /**
      * handle a sync from wechat.
      *
-     * @param $retCode
-     * @param $selector
+     * @param      $retCode
+     * @param      $selector
      * @param bool $test
      *
      * @return bool

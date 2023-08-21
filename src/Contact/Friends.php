@@ -61,7 +61,7 @@ class Friends extends Contacts
     /**
      * 设置是否置顶.
      *
-     * @param $username
+     * @param      $username
      * @param bool $isStick
      *
      * @return bool
@@ -83,7 +83,7 @@ class Friends extends Contacts
     /**
      * 主动添加好友.
      *
-     * @param $username
+     * @param      $username
      * @param null $content
      */
     public function add($username, $content = null)
@@ -110,8 +110,8 @@ class Friends extends Contacts
     /**
      * 验证通过好友.
      *
-     * @param $code
-     * @param $userList
+     * @param      $code
+     * @param      $userList
      * @param null $content
      *
      * @return bool
@@ -138,7 +138,7 @@ class Friends extends Contacts
     /**
      * 更新群组.
      *
-     * @param $username
+     * @param      $username
      * @param null $list
      *
      * @return array

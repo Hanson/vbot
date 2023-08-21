@@ -15,7 +15,7 @@ trait Multimedia
     /**
      * download multimedia.
      *
-     * @param $message
+     * @param      $message
      * @param null $callback
      *
      * @throws ArgumentException
@@ -74,7 +74,7 @@ trait Multimedia
     /**
      * download resource to a default path.
      *
-     * @param $message
+     * @param      $message
      * @param bool $force
      */
     protected static function autoDownload($message, $force = false)

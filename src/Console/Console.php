@@ -45,7 +45,7 @@ class Console
     /**
      * print in terminal.
      *
-     * @param $str
+     * @param        $str
      * @param string $level
      * @param bool   $log
      */
