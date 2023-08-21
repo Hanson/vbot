@@ -77,7 +77,7 @@ class Http
     }
 
     /**
-     * @param $url
+     * @param        $url
      * @param string $method
      * @param array  $options
      * @param bool   $retry

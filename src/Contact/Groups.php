@@ -27,7 +27,7 @@ class Groups extends Contacts
     /**
      * 根据群名筛选群组.
      *
-     * @param $nickname
+     * @param      $nickname
      * @param bool $blur
      *
      * @return static
@@ -63,8 +63,8 @@ class Groups extends Contacts
     /**
      * 根据昵称搜索群成员.
      *
-     * @param $groupUsername
-     * @param $memberNickname
+     * @param      $groupUsername
+     * @param      $memberNickname
      * @param bool $blur
      *
      * @return array|bool
@@ -224,7 +224,7 @@ class Groups extends Contacts
     /**
      * 更新群组.
      *
-     * @param $username
+     * @param      $username
      * @param null $list
      *
      * @return array
