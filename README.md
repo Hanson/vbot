@@ -50,6 +50,7 @@ composer require hanson/vbot
 https://github.com/juhe-scrm/juhe-scrm
 
 ## 聚合聊天
+https://juhebot.com
 ![cd788338d401375c814f0fd66f4fbb81](https://github.com/Hanson/vbot/assets/10583423/034ce0fb-12c2-4ce0-8335-cf5132b17bca)
 
 
