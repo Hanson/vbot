@@ -22,6 +22,8 @@
 
 企微文档 [文档地址](https://www.apifox.cn/apidoc/shared-d478def0-67c1-4161-b385-eef8a94e9d17)
 
+小红书文档 [文档地址](https://apifox.com/apidoc/shared-c41cf343-9eca-4060-868e-76b159406a8b/doc-3618652)
+
 ## 安装
 
 ### 环境要求
