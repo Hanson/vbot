@@ -27,7 +27,7 @@ class CacheServiceProvider implements ServiceProviderInterface
         $vbot->singleton('redis', function ($vbot) {
             $config = $vbot->config['database.redis'];
 
-            return new RedisManager(array_get($config, 'client', 'predis'), $config);
+            return new RedisManager(array_get($vbot, $config, 'client', 'predis'), $config);
         });
         $vbot->bind('redis.connection', function ($vbot) {
             return $vbot['redis']->connection();
