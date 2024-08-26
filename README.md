@@ -24,6 +24,8 @@
 
 小红书文档 [文档地址](https://apifox.com/apidoc/shared-c41cf343-9eca-4060-868e-76b159406a8b/doc-3618652)
 
+美团爬虫加微信
+
 ## 安装
 
 ### 环境要求
