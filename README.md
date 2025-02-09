@@ -34,12 +34,17 @@ composer require hanson/vbot
 ## 文档
 [详细文档](http://create.hanc.cc/vbot)
 
-## SCRM 开源源码
-https://github.com/juhe-scrm/juhe-scrm
-
 ## 聚合聊天
 https://juhebot.com
 ![cd788338d401375c814f0fd66f4fbb81](https://github.com/Hanson/vbot/assets/10583423/034ce0fb-12c2-4ce0-8335-cf5132b17bca)
+
+## AI 自动回复
+[申请试用 AI 自动回复(对接 COZE/FASTGPT)](https://juhexbot.feishu.cn/share/base/form/shrcnBVjXcWjfVSOY0Y7qLVNndd)
+
+![image](https://github.com/user-attachments/assets/322a368f-cdf5-44c1-8a49-325d56b5ad84)
+
+## SCRM 开源源码
+https://github.com/juhe-scrm/juhe-scrm
 
 
 ## 联系我
