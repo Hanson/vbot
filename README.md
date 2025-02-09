@@ -1,20 +1,6 @@
-<p align="center">
-<a href="http://hanc.cc"><img src="https://img.shields.io/badge/contact-@HanSon-orange.svg?style=flat"></a>
-<img src="https://img.shields.io/badge/license-MIT-green.svg?style=flat">
-</p>
-
-<p align="center">
-  <b>Special thanks to the generous sponsorship by:</b>
-  <br><br>
-  <a target="_blank" href="https://www.jetbrains.com/?from=laravel-work-exception">
-    <img src="https://i.loli.net/2018/03/21/5ab223b75cdfa.png" width=250>
-  </a>
-  <br><br>
-</p>
-
 ## 提示
 
-本项目为**网页协议**，仅供学习参考。
+本项目为**微信网页协议**，仅供学习参考。
 
 如需稳定可靠的生产协议或需要定制需求，可看下面的文档 *微信与企业微信*
 
@@ -22,7 +8,7 @@
 
 企微文档 [文档地址](https://www.apifox.cn/apidoc/shared-d478def0-67c1-4161-b385-eef8a94e9d17)
 
-小红书文档 [文档地址](https://apifox.com/apidoc/shared-c41cf343-9eca-4060-868e-76b159406a8b/doc-3618652)
+[申请试用 AI 自动回复(对接 COZE/FASTGPT)](https://juhexbot.feishu.cn/share/base/form/shrcnBVjXcWjfVSOY0Y7qLVNndd)
 
 ## 安装
 
