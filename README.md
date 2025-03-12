@@ -8,7 +8,7 @@
 
 企微文档 [文档地址](https://www.apifox.cn/apidoc/shared-d478def0-67c1-4161-b385-eef8a94e9d17)
 
-[申请试用 AI 自动回复(对接 COZE/FASTGPT)](https://juhexbot.feishu.cn/share/base/form/shrcnBVjXcWjfVSOY0Y7qLVNndd)
+[申请试用 AI 自动回复(对接 COZE/FASTGPT)](https://juhebot.com/register)
 
 ## 安装
 
