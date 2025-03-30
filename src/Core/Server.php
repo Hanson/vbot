@@ -325,4 +325,11 @@ class Server
 
         $this->vbot->config['server.syncKeyStr'] = implode('|', $syncKey);
     }
+    /**
+     * logout wechat
+     */
+    protected function logout(){
+        $url = 'https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxlogout?redirect=1&type=0&skey='.$this->vbot->config['server.skey'];
+        $this->vbot->http->post($url, ['sid'=>$this->vbot->config['server.sid'], 'uin'=>$this->vbot->config['server.uin']]);
+    }
 }
