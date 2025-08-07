@@ -4,9 +4,11 @@
 
 如需稳定可靠的生产协议或需要定制需求，可看下面的文档 *微信与企业微信*
 
-个微文档 [文档地址](https://www.apifox.cn/apidoc/shared-71b9855b-693c-48fc-858b-cde2c5afe5a8)
+个微文档 [文档地址](https://weixins.apifox.cn/)
 
-企微文档 [文档地址](https://www.apifox.cn/apidoc/shared-d478def0-67c1-4161-b385-eef8a94e9d17)
+企微文档 [文档地址](https://wework.apifox.cn/)
+
+视频号下载 [文档地址](https://wechat-finder.apifox.cn/)
 
 [申请试用 AI 自动回复(对接 COZE/FASTGPT)](https://juhebot.com/register)
 
