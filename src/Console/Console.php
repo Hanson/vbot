@@ -51,6 +51,7 @@ class Console
      */
     public function log($str, $level = 'INFO', $log = false)
     {
+        $str = $this->vbot->lang->get($str);
         if ($this->isOutput()) {
             if ($log && in_array($level, array_keys(Logger::getLevels()))) {
                 $this->vbot->log->log($level, $str);
