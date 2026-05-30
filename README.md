@@ -50,4 +50,4 @@ https://github.com/juhe-scrm/juhe-scrm
 
 
 ## 联系我
-![c1dd0c62c37d4a9ab8c6aa7a4e51573](https://user-images.githubusercontent.com/10583423/220509100-a4ecf72e-5d98-41bb-bcbf-41f955c99ba4.jpg)
+<img width="820" height="1219" alt="820524d4b284a5a6106945fc0d68155" src="https://github.com/user-attachments/assets/24d06896-5c7f-4353-ab74-0a7a51635573" />
